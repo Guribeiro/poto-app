@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { loadAsync } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { ScreenProvider } from 'responsive-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from './src/shared/hooks/theme';
+import { Provider } from 'react-redux';
+import store from './src/shared/store';
 import {
   InriaSerif_300Light,
   InriaSerif_400Regular,
@@ -12,9 +13,6 @@ import {
 } from '@expo-google-fonts/inria-serif';
 
 import Routes from './src/shared/routes';
-
-import Welcome from './src/modules/authentication/screens/Welcome';
-import Signin from './src/modules/authentication/screens/Signin';
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -50,14 +48,15 @@ export default function App() {
   if (!appIsReady) return null
 
   return (
-    <SafeAreaProvider onLayout={onLayoutRootView}>
-      <ScreenProvider baseFontSize={16}>
-        <ThemeProvider>
-          <Routes />
-        </ThemeProvider>
-      </ScreenProvider>
-    </SafeAreaProvider>
-
+    <Provider store={store}>
+      <SafeAreaProvider onLayout={onLayoutRootView}>
+        <ScreenProvider baseFontSize={16}>
+          <ThemeProvider>
+            <Routes />
+          </ThemeProvider>
+        </ScreenProvider>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 

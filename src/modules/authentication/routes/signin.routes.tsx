@@ -28,7 +28,7 @@ const SigninRoutes = ():JSX.Element => {
         contentStyle: {
           backgroundColor: theme.palette.colors.shapes.strong,
         },
-        presentation: 'fullScreenModal'
+        presentation: 'containedModal'
       }}
     >
       <Screen name="Welcome" component={Welcome} />

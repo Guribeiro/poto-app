@@ -1,6 +1,12 @@
 import styled from 'styled-components/native';
+
+import Constants from 'expo-constants';
+import { Feather } from '@expo/vector-icons';
+
 import { Text } from '../../../../shared/common/components/Text';
 
+
+const { statusBarHeight } = Constants;
 export const Container = styled.View`
   flex: 1;
   width: 100%;
@@ -30,8 +36,22 @@ export const BackgroundShadeContainer = styled.View`
   opacity: .4;
 `;
 
+export const Header = styled.View`
+   padding: ${({ theme }) => theme.screen.rem(1) + statusBarHeight}px
+    ${({ theme }) => theme.screen.rem(0.625)}px
+    ${({ theme }) => theme.screen.rem(1)}px;
+  width: 100%;
+
+`;
+
+export const Icon = styled(Feather)`
+  color: ${({ theme }) => theme.palette.colors.secondary};
+  font-size: ${({ theme }) => theme.screen.rem(1.8, true)}px;
+`;
+
 export const LogoContainer = styled.View`
-  margin-top: ${({ theme }) => theme.screen.rem(4)}px;
+  margin-top: ${({theme}) => theme.screen.rem(2)}px;
+  align-items: center;
 `;
 
 export const FormContainer = styled.View`
@@ -46,10 +66,10 @@ export const Footer = styled.View`
   width: 100%;
 
   border-top-width: 1px;
-  border-top-color: ${({theme}) => theme.palette.colors.texts.light};
+  border-top-color: ${({ theme }) => theme.palette.colors.texts.light};
   border-top-style: solid;
 
-  padding: ${({theme}) => theme.screen.rem(1)}px 0;
+  padding: ${({ theme }) => theme.screen.rem(1)}px 0;
 
   align-items: center;
 

@@ -1,15 +1,15 @@
 import React from 'react';
 import { TextInputProps } from 'react-native';
 // import TextError from '@modules/transactions/components/Inputs/TextError';
-import { Container, InputTextContainer, InputLabel, TextInputRow } from './styles';
+import { Container, InputTextContainer, InputLabel, TextInputRow, ErrorText } from './styles';
 
 interface InputProps extends TextInputProps {
   label?: string;
   required?: boolean;
-  error?: boolean | undefined;
+  error?: string | undefined;
 }
 
-const InputText = ({
+const InputPasswordText = ({
   label,
   required,
   error,
@@ -17,7 +17,7 @@ const InputText = ({
 }: InputProps): JSX.Element => {
   return (
     <Container>
-      {/* {error && <TextError>{error.message}</TextError>} */}
+      {error && <ErrorText>{error}</ErrorText>}
       <InputLabel>
         {label}
         {required && '*'}
@@ -34,4 +34,4 @@ const InputText = ({
   );
 };
 
-export default InputText;
+export default InputPasswordText;

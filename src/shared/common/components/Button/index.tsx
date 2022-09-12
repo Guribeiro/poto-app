@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import {TouchableOpacityProps, TouchableOpacity} from 'react-native';
 
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler'
 import { Text } from '../Text';
@@ -9,7 +10,7 @@ const Container = styled.View`
 
 `;
 
-const Touchable = styled(RectButton)`
+const Touchable = styled(TouchableOpacity)`
   padding: ${({theme}) => theme.screen.rem(1)}px;
   align-items: center;
 `;
@@ -17,7 +18,7 @@ const Touchable = styled(RectButton)`
 type ButtonProps = {
   children: string;
   loading?: boolean;
-} & RectButtonProps;
+} & TouchableOpacityProps;
 
 const Button = ({ children, loading, ...rest }: ButtonProps): JSX.Element => {
   return (

@@ -1,8 +1,10 @@
 import styled from 'styled-components/native';
-import { TextInput } from 'react-native';
+import { TextInput, TouchableOpacity } from 'react-native';
 import { Text } from '../../../../shared/common/components/Text';
+import { Feather } from '@expo/vector-icons';
 
-export const Container = styled.View``;
+export const Container = styled.View`
+`;
 
 interface TextInputRowProps {
   error: boolean;
@@ -37,4 +39,13 @@ export const ErrorText = styled(Text)`
   position: absolute;
   bottom: -24px;
   right: 0;
+`;
+
+export const Icon = styled(Feather)`
+  color: ${({ theme }) => theme.palette.colors.white};
+  font-size: ${({ theme }) => theme.screen.rem(1.4, true)}px;
+`;
+
+export const TogglePasswordVisibility = styled(TouchableOpacity)`
+  padding-bottom: 4px;
 `;
