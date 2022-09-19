@@ -9,7 +9,7 @@ interface InputProps extends TextInputProps {
   error?: string | undefined;
 }
 
-const InputPasswordText = ({
+const InputText = ({
   label,
   required,
   error,
@@ -34,4 +34,4 @@ const InputPasswordText = ({
   );
 };
 
-export default InputPasswordText;
+export default InputText;
