@@ -24,7 +24,7 @@ export type DefinePasswordParams = DefineEmailParams & {
 
 export type ConfirmCredentialsParams = DefinePasswordParams & {
   password: string;
-} 
+}
 
 export type RootSignupParamsList = {
   DefineFullName: undefined;
