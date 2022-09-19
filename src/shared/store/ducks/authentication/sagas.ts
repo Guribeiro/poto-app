@@ -1,6 +1,5 @@
 import { call, put } from 'redux-saga/effects';
 import { AxiosResponse, AxiosError } from 'axios';
-import { toast } from 'react-toastify';
 import api from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -15,7 +14,10 @@ import {
   loginRequestFailure,
   logoutRequestSuccess,
   logoutRequestFailure,
+  loadStorageAuthenticationSuccess,
+  loadStorageAuthenticationFailure,
 } from './actions';
+import { Alert } from 'react-native';
 
 export const STORAGE_AUTHENTICATION_KEY = '@test:authentication';
 
@@ -28,7 +30,7 @@ function apiRequestAuthentication({
   email,
   password,
 }: ApiRequestAuthenticationProps) {
-  return api.post(`/users`, {
+  return api.post(`/sessions`, {
     email,
     password,
   });
@@ -52,6 +54,16 @@ function apiPostRequestSignup({
   });
 }
 
+interface AsyncStorageGetRequestProps {
+  key: string;
+}
+
+type AsyncStorageGetRequestResponse = string | null;
+
+function asyncStorageGetRequest({ key }: AsyncStorageGetRequestProps) {
+  return AsyncStorage.getItem(key)
+}
+
 interface Action {
   type: string;
   payload: LoginRequestPayload;
@@ -73,7 +85,9 @@ export function* signup({ payload }: SignupAction) {
       { email, password },
     );
 
-    const { token, user } = response.data;
+    const { user, token, refresh_token } = response.data;
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     yield AsyncStorage.setItem(
       STORAGE_AUTHENTICATION_KEY,
@@ -82,14 +96,17 @@ export function* signup({ payload }: SignupAction) {
 
     yield put(
       loginRequestSuccess({
-        token,
         user,
+        token,
+        refresh_token
       }),
     );
 
   } catch (error) {
 
     const axiosError = error as AxiosError<{ error: string }>;
+
+    Alert.alert(axiosError.message);
 
     yield put(signupRequestFailure());
   }
@@ -104,7 +121,11 @@ export function* login({ payload }: Action) {
       { email, password },
     );
 
-    const { token, user } = response.data;
+    console.log(response);
+
+    const { user, token, refresh_token } = response.data;
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     yield AsyncStorage.setItem(
       STORAGE_AUTHENTICATION_KEY,
@@ -113,12 +134,14 @@ export function* login({ payload }: Action) {
 
     yield put(
       loginRequestSuccess({
-        token,
         user,
+        token,
+        refresh_token
       }),
     );
   } catch (error) {
     const axiosError = error as AxiosError<{ error: string }>;
+    Alert.alert(axiosError.message);
     yield put(loginRequestFailure());
 
   }
@@ -135,5 +158,29 @@ export function* logout() {
     const axiosError = error as AxiosError<{ error: string }>;
     yield put(loginRequestFailure());
 
+  }
+}
+
+export function* loadStorageAuth() {
+  try {
+
+    const storagedData: AsyncStorageGetRequestResponse = yield call(asyncStorageGetRequest, { key: STORAGE_AUTHENTICATION_KEY });
+
+    if (!storagedData) return;
+
+    const { token, user, refresh_token } = JSON.parse(storagedData);
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    const data: Authentication = {
+      token,
+      user,
+      refresh_token
+    };
+
+    yield put(loadStorageAuthenticationSuccess(data));
+  } catch (error) {
+    console.log('error', error)
+    yield put(loadStorageAuthenticationFailure());
   }
 }

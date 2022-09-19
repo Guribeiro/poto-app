@@ -16,6 +16,9 @@ const {
   LOGOUT_REQUEST,
   LOGOUT_REQUEST_FAILURE,
   LOGOUT_REQUEST_SUCCESS,
+  LOAD_STORAGED_AUTHENTICATION_REQUEST,
+  LOAD_STORAGED_AUTHENTICATION_REQUEST_FAILURE,
+  LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS
 } = AuthenticationTypes;
 
 const INITIAL_STATE: AuthenticationState = {
@@ -52,6 +55,17 @@ const reducer: Reducer<AuthenticationState, AuthenticationAction> = (
       return { ...state, loading: false, error: true };
     case LOGOUT_REQUEST_SUCCESS:
       return { loading: false, error: false, data: {} as Authentication };
+    case LOAD_STORAGED_AUTHENTICATION_REQUEST:
+      return { ...state, loading: true }
+    case LOAD_STORAGED_AUTHENTICATION_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true };
+    case LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        data: action.payload.data,
+      };
     default:
       return state;
   }

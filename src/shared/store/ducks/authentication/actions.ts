@@ -16,6 +16,9 @@ const {
   LOGOUT_REQUEST,
   LOGOUT_REQUEST_SUCCESS,
   LOGOUT_REQUEST_FAILURE,
+  LOAD_STORAGED_AUTHENTICATION_REQUEST,
+  LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS,
+  LOAD_STORAGED_AUTHENTICATION_REQUEST_FAILURE
 } = AuthenticationTypes;
 
 export const signupRequest = (data: SignupRequestPayload) => {
@@ -55,3 +58,17 @@ export const logoutRequestSuccess = () => {
 export const logoutRequestFailure = () => {
   return action(LOGOUT_REQUEST_FAILURE);
 };
+
+export const loadStorageAuthentication = () => {
+  return action(LOAD_STORAGED_AUTHENTICATION_REQUEST)
+}
+
+export const loadStorageAuthenticationSuccess = (data: Authentication) => {
+  return action(LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS, {
+    data,
+  });
+}
+
+export const loadStorageAuthenticationFailure = () => {
+  return action(LOAD_STORAGED_AUTHENTICATION_REQUEST_FAILURE)
+}
