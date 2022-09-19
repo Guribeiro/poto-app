@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useTheme } from '../../../shared/hooks/theme';
+import {useTheme} from '@shared/hooks/theme';
 import styled from 'styled-components/native';
 
 import SigninRoutes from './signin.routes';
