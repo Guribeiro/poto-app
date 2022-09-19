@@ -1,21 +1,28 @@
-import {configureStore, Store, applyMiddleware} from '@reduxjs/toolkit';
+import { configureStore, Store, applyMiddleware, ConfigureStoreOptions, CombinedState } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from './ducks/rootReducer';
-import {AuthenticationState} from './ducks/authentication/types';
 import preloadedAuthenticationState from './ducks/authentication/preloadedAuthenticationState';
+
+import { AuthenticationState } from './ducks/authentication/types';
+import { PostsState } from './ducks/posts/types';
+
 import rootSaga from './ducks/rootSagas';
+import { CurriedGetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export interface ApplicationState {
-  authentication: AuthenticationState
+  authentication: AuthenticationState;
+  posts: PostsState;
 }
+
 
 const store: Store<ApplicationState> = configureStore({
   reducer: rootReducer,
-  middleware(getDefaultMiddlewares){
+  middleware(getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(sagaMiddleware);
   },
+
 })
 
 sagaMiddleware.run(rootSaga);
