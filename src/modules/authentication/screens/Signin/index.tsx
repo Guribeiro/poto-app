@@ -3,14 +3,22 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootAuthenticationParamsList } from '../../routes';
 
-import KeyboardView from '../../../../shared/common/components/KeyboardView';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import Logo from '../../../../shared/common/components/Logo';
-import Button from '../../../../shared/common/components/Button';
-import { Text } from '../../../../shared/common/components/Text';
-import Spacer from '../../../../shared/common/components/Spacer';
+import KeyboardView from '@shared/common/components/KeyboardView';
+
+import Logo from '@shared/common/components/Logo';
+import Button from '@shared/common/components/Button';
+import { Text } from '@shared/common/components/Text';
+import Spacer from '@shared/common/components/Spacer';
 
 import InputText from '../../components/InputText';
+import InputTextPassword from '@modules/authentication/components/InputTextPassword';
+import { AuthenticationState, LoginRequestPayload } from '@shared/store/ducks/authentication/types';
+
+import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
 import backgroundImage from '../../assets/signin-background-photographer.png';
 
@@ -27,11 +35,49 @@ import {
   Footer,
   CreateNewAccountContainer
 } from './styles';
+import { useCallback } from 'react';
+import { ApplicationState } from '@shared/store';
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
 type SigninScreenProps = NativeStackNavigationProp<RootAuthenticationParamsList, 'SigninRoutes'>;
 
-const Signin = (): JSX.Element => {
-  const { navigate, goBack } = useNavigation<SigninScreenProps>()
+const schema = yup.object().shape({
+  email: yup.string().email(),
+  password: yup.string()
+})
+
+interface FormData {
+  email: string;
+  password: string;
+}
+
+
+type DispatchProps = {
+  loginRequest(data: LoginRequestPayload): void;
+}
+
+type StateProps = {
+  authentication: AuthenticationState;
+}
+
+type SigninProps = StateProps & DispatchProps;
+
+const Signin = ({ authentication, loginRequest }: SigninProps): JSX.Element => {
+  const { loading } = authentication;
+  const { navigate, goBack } = useNavigation<SigninScreenProps>();
+
+  const { control, handleSubmit } = useForm<FormData>({
+    resolver: yupResolver(schema)
+  });
+
+  const onSubmit = useCallback(({ email, password }: FormData) => {
+    loginRequest({
+      email,
+      password
+    });
+  }, [loginRequest])
+
   return (
     <KeyboardView>
       <Container>
@@ -54,11 +100,42 @@ const Signin = (): JSX.Element => {
             </Header>
 
             <FormContainer>
-              <InputText label='Email' />
+              <Controller
+                name='email'
+                control={control}
+                render={({
+                  field: { name, onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <InputText
+                    label='Email'
+                    keyboardType='email-address'
+                    autoCapitalize='none'
+                    value={value}
+                    onChangeText={onChange}
+                    error={error && error.message}
+                  />
+                )}
+              />
               <Spacer size={16} />
-              <InputText label='Password' />
+              <Controller
+                name='password'
+                control={control}
+                render={({
+                  field: { name, onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <InputTextPassword
+                    label='Password'
+                    autoCapitalize='none'
+                    value={value}
+                    onChangeText={onChange}
+                    error={error && error.message}
+                  />
+                )}
+              />
               <ButtonContainer>
-                <Button>
+                <Button loading={loading} onPress={handleSubmit(onSubmit)}>
                   login
                 </Button>
               </ButtonContainer>
@@ -81,4 +158,10 @@ const Signin = (): JSX.Element => {
   )
 }
 
-export default Signin;
+const mapStateToProps = ({ authentication }: ApplicationState) => ({
+  authentication
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(AuthenticationActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signin)
