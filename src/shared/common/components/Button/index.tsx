@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
-import {TouchableOpacityProps, TouchableOpacity} from 'react-native';
+import {TouchableOpacityProps, TouchableOpacity, ActivityIndicator} from 'react-native';
 
-import { RectButton, RectButtonProps } from 'react-native-gesture-handler'
+
 import { Text } from '../Text';
 
 const Container = styled.View`
@@ -24,7 +24,7 @@ const Button = ({ children, loading, ...rest }: ButtonProps): JSX.Element => {
   return (
     <Container>
       <Touchable {...rest}>
-        <Text>{children}</Text>
+        {loading ? <ActivityIndicator /> : <Text>{children}</Text>}
       </Touchable>
     </Container>
   )
