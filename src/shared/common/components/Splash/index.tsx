@@ -14,8 +14,6 @@ import { Text } from '../Text';
 import { RootSplashParamsList } from '@shared/routes/splash.routes';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import BrandSvg from '../../assets/brand.svg';
-import LogoSvg from '../../assets/currency.svg';
 import { Container } from './styles';
 
 type SplashScreenProps = NativeStackNavigationProp<
@@ -61,7 +59,7 @@ const Splash = (): JSX.Element => {
 
   const startApp = useCallback(() => {
     // navigation.dispatch(StackActions.replace('Home'));
-    navigate('Home');
+    navigate('AppRoutes');
   }, [navigate]);
 
   useEffect(() => {

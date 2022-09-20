@@ -23,7 +23,7 @@ type DispatchProps = {
 type RoutesProps = StateProps & DispatchProps;
 
 const Routes = ({ authentication, loadStorageAuthentication }: RoutesProps): JSX.Element => {
-  const { data, loading } = authentication;
+  const { loading } = authentication;
 
   useEffect(() => {
     loadStorageAuthentication()

@@ -13,7 +13,7 @@ import AppRoutes from '@modules/app/routes';
 
 export type RootSplashParamsList = {
   Splash: undefined;
-  Home: undefined;
+  AppRoutes: undefined;
 };
 
 const { Navigator, Screen } =
@@ -46,7 +46,7 @@ const SplashRoutes = ({ authentication }: SplashRoutesProps): JSX.Element => {
     >
       <Screen name="Splash" component={Splash} />
       <Screen
-        name="Home"
+        name="AppRoutes"
         component={data.token ? AppRoutes : AuthenticationRoutes}
       />
     </Navigator>
