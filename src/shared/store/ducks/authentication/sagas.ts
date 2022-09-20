@@ -121,15 +121,13 @@ export function* login({ payload }: Action) {
       { email, password },
     );
 
-    console.log(response);
-
     const { user, token, refresh_token } = response.data;
 
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     yield AsyncStorage.setItem(
       STORAGE_AUTHENTICATION_KEY,
-      JSON.stringify({ token, user }),
+      JSON.stringify({ token, user, refresh_token }),
     );
 
     yield put(
@@ -151,6 +149,8 @@ export function* logout() {
   try {
     yield AsyncStorage.removeItem(STORAGE_AUTHENTICATION_KEY);
 
+    delete api.defaults.headers.common['Authorization']
+
     yield put(logoutRequestSuccess());
 
   } catch (error) {
@@ -163,7 +163,6 @@ export function* logout() {
 
 export function* loadStorageAuth() {
   try {
-
     const storagedData: AsyncStorageGetRequestResponse = yield call(asyncStorageGetRequest, { key: STORAGE_AUTHENTICATION_KEY });
 
     if (!storagedData) return;
