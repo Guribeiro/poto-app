@@ -55,7 +55,6 @@ type FeedScreenProps = NativeStackNavigationProp<RootAppParamsList, 'Feed'>;
 
 type FeedProps = StateProps & DispatchProps;
 
-//rename to Feed
 const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
   const INITIAL_VALUE = -1000;
   const FINAL_VALUE = 0;
@@ -130,9 +129,9 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
 
       closeSelectImageModal();
 
-      navigate('PostForm', {
-        image: imagePickerResult
-      });
+      // navigate('PostForm', {
+      //   image: imagePickerResult
+      // });
 
     } catch (error) {
       console.log({ error })
@@ -156,9 +155,9 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
 
       closeSelectImageModal();
 
-      navigate('PostForm', {
-        image: imagePickerResult
-      });
+      // navigate('PostForm', {
+      //   image: imagePickerResult
+      // });
 
     } catch (error) {
       console.log({ error })
