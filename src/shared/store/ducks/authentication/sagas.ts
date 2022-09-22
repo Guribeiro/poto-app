@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { call, put } from 'redux-saga/effects';
 import { AxiosResponse, AxiosError } from 'axios';
 import api from '../../../services/api';
@@ -17,7 +18,6 @@ import {
   loadStorageAuthenticationSuccess,
   loadStorageAuthenticationFailure,
 } from './actions';
-import { Alert } from 'react-native';
 
 export const STORAGE_AUTHENTICATION_KEY = '@test:authentication';
 
@@ -95,14 +95,13 @@ export function* signup({ payload }: SignupAction) {
       { email, password },
     );
 
-    console.log(response);
     const { user, token, refresh_token } = response.data;
 
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     yield AsyncStorage.setItem(
       STORAGE_AUTHENTICATION_KEY,
-      JSON.stringify({ token, user }),
+      JSON.stringify({ token, user, refresh_token }),
     );
 
     yield put(
@@ -174,9 +173,12 @@ export function* logout() {
 
 export function* loadStorageAuth() {
   try {
-    const storagedData: AsyncStorageGetRequestResponse = yield call(asyncStorageGetRequest, { key: STORAGE_AUTHENTICATION_KEY });
+    const storagedData: AsyncStorageGetRequestResponse = yield call(
+      asyncStorageGetRequest,
+      { key: STORAGE_AUTHENTICATION_KEY }
+    );
 
-    if (!storagedData) return;
+    if (!storagedData) throw new Error('storagedAuth could not be found');
 
     const { token, user, refresh_token } = JSON.parse(storagedData);
 
