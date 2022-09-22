@@ -8,6 +8,6 @@ const mapStateToProps = ({authentication}:ApplicationState) => ({
   authentication,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(AuthenticationActions, dispatch) 
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(AuthenticationActions, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfirmCredentials);

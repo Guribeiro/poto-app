@@ -65,7 +65,7 @@ type SigninProps = StateProps & DispatchProps;
 
 const Signin = ({ authentication, loginRequest }: SigninProps): JSX.Element => {
   const { loading } = authentication;
-  const { navigate, goBack } = useNavigation<SigninScreenProps>();
+    const { navigate, goBack } = useNavigation<SigninScreenProps>();
 
   const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(schema)

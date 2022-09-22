@@ -4,9 +4,8 @@ import styled from 'styled-components/native';
 
 import TabBar from '../components/Tabbar';
 
-import Home from '../../../containers/Home';
+import Feed from '../../../containers/Feed';
 import ProfileRoutes from '../routes/profile.routes';
-// import PostForm from '../../../containers/Home/components/PostForm';
 
 const Container = styled.View`
   flex: 1;
@@ -19,7 +18,6 @@ export type PostFormParams = {
 
 export type RootAppParamsList = {
   Feed: undefined;
-  PostForm: PostFormParams;
   ProfileRoutes: undefined;
 }
 
@@ -35,7 +33,7 @@ const AppRoutes = (): JSX.Element => {
         }}
         tabBar={props => <TabBar {...props} />}
       >
-        <Screen name="Feed" component={Home} />
+        <Screen name="Feed" component={Feed} />
         <Screen name='ProfileRoutes' component={ProfileRoutes} />
       </Navigator>
     </Container>

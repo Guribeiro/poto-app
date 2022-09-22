@@ -2,12 +2,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {useTheme} from '@shared/hooks/theme';
 import styled from 'styled-components/native';
 
+
+import Settings from '../../../containers/Settings';
 import Profile from '../../../containers/Profile';
 import UpdateProfile from '../../../containers/Profile/screens/UpdateProfile';
 
 export type RootProfileRoutesParamsList = {
   Profile: undefined;
   UpdateProfile: undefined;
+  Settings: undefined;
 }
 
 const { Navigator, Screen } = createNativeStackNavigator<RootProfileRoutesParamsList>();
@@ -32,6 +35,8 @@ const AuthenticationRoutes = (): JSX.Element => {
       >
         <Screen name="Profile" component={Profile} />
         <Screen name="UpdateProfile" component={UpdateProfile} />
+        <Screen name='Settings' component={Settings} />
+
       </Navigator>
     </Container>
   );

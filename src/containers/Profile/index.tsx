@@ -24,7 +24,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from '
 
 import Touchable from '@shared/common/components/Touchable';
 import Spacer from '@shared/common/components/Spacer';
-import SelectMediaModal from '../../containers/Home/components/SelectMediaModal';
+import SelectMediaModal from '../Feed/components/SelectMediaModal';
 
 import TouchableAvatar from '../../shared/common/components/TouchableAvatar';
 
@@ -204,8 +204,8 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
       <Header>
         <Row>
           <UsernameText>gustavhrd</UsernameText>
-          <Touchable onPress={handleOpenSettings}>
-            <Icon name='edit-2' />
+          <Touchable onPress={() => navigate('Settings')}>
+            <Icon name='settings' />
           </Touchable>
         </Row>
 
