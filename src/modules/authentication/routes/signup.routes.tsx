@@ -7,6 +7,7 @@ import DefineFullName from '../screens/DefineFullName';
 import DefineEmail from '../screens/DefineEmail';
 import DefinePassword from '../screens/DefinePassword';
 import ConfirmCredentials from '../screens/ConfirmCredentials';
+import DefineProfileAvatar from '../screens/DefineProfileAvatar';
 import Authentication from '../../../containers/Authentication';
 
 export const Container = styled.View`
@@ -18,8 +19,12 @@ export type DefineEmailParams = {
   fullName: string;
 }
 
-export type DefinePasswordParams = DefineEmailParams & {
+export type DefineProfileAvatarParams = DefineEmailParams & {
   email: string;
+}
+
+export type DefinePasswordParams = DefineProfileAvatarParams & {
+  avatar: string;
 }
 
 export type ConfirmCredentialsParams = DefinePasswordParams & {
@@ -31,6 +36,7 @@ export type RootSignupParamsList = {
   DefineEmail: DefineEmailParams;
   DefinePassword: DefinePasswordParams;
   ConfirmCredentials: ConfirmCredentialsParams;
+  DefineProfileAvatar: DefineProfileAvatarParams;
 }
 
 const {Navigator, Screen} = createNativeStackNavigator<RootSignupParamsList>()
@@ -52,6 +58,7 @@ const SignupRoutes = ():JSX.Element => {
       <Screen name="DefineEmail" component={DefineEmail} />
       <Screen name="DefinePassword" component={DefinePassword} />
       <Screen name="ConfirmCredentials" component={Authentication} />
+      <Screen name="DefineProfileAvatar" component={DefineProfileAvatar} />
     </Navigator>
   )
 }

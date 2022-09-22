@@ -1,10 +1,12 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '../../../containers/Home';
-import PostForm from '../../../containers/Home/components/PostForm';
-import styled from 'styled-components/native';
-import { useTheme } from '@shared/hooks/theme';
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ImageInfo } from 'expo-image-picker';
+import styled from 'styled-components/native';
+
+import TabBar from '../components/Tabbar';
+
+import Home from '../../../containers/Home';
+import ProfileRoutes from '../routes/profile.routes';
+// import PostForm from '../../../containers/Home/components/PostForm';
 
 const Container = styled.View`
   flex: 1;
@@ -18,25 +20,23 @@ export type PostFormParams = {
 export type RootAppParamsList = {
   Feed: undefined;
   PostForm: PostFormParams;
+  ProfileRoutes: undefined;
 }
 
-const { Screen, Navigator } = createNativeStackNavigator<RootAppParamsList>();
+const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
 
 const AppRoutes = (): JSX.Element => {
-  const { theme } = useTheme();
   return (
     <Container>
       <Navigator
         initialRouteName="Feed"
         screenOptions={{
           headerShown: false,
-          contentStyle: {
-            backgroundColor: theme.palette.colors.primary,
-          },
         }}
+        tabBar={props => <TabBar {...props} />}
       >
         <Screen name="Feed" component={Home} />
-        <Screen name='PostForm' component={PostForm} />
+        <Screen name='ProfileRoutes' component={ProfileRoutes} />
       </Navigator>
     </Container>
   )
