@@ -1,4 +1,4 @@
-import {User} from '@shared/store/ducks/authentication/types';
+import { User } from '@shared/store/ducks/authentication/types';
 import { ImageInfo } from 'expo-image-picker';
 
 export enum PostsTypes {
@@ -11,7 +11,7 @@ export enum PostsTypes {
   ADD_POSTS_REQUEST_FAILURE = 'ADD_POSTS_REQUEST_FAILURE',
 }
 
-export interface LoadPostsRequestPayload {};
+export interface LoadPostsRequestPayload { };
 
 export interface Post {
   id: string;
@@ -25,7 +25,7 @@ export interface Post {
 
 export interface AddPostPayload {
   image: ImageInfo;
-  subtitle?:string;
+  subtitle?: string;
 }
 
 export interface PostAction {

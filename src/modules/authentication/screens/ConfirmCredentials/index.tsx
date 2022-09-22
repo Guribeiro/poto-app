@@ -11,8 +11,9 @@ import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '
 
 import Container from '../../../../shared/common/components/Container';
 import Spacer from '../../../../shared/common/components/Spacer';
-import InputText from '../../components/InputText';
 import InputTextPassword from '../../components/InputTextPassword';
+import InputText from '../../components/InputText';
+import TouchableAvatar from '@shared/common/components/TouchableAvatar';
 
 import {
   Header,
@@ -24,7 +25,8 @@ import {
   Form,
   Footer,
   FooterText,
-  FooterTextEmphasized
+  FooterTextEmphasized,
+  TouchableAvatarContainer
 } from './styles';
 import { useCallback } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -64,13 +66,13 @@ interface DispatchProps {
 
 type ConfirmCredentialsProps = StateProps & DispatchProps;
 
-const ConfirmCredentials = ({ authentication, signupRequest, loginRequest }: ConfirmCredentialsProps): JSX.Element => {
+const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredentialsProps): JSX.Element => {
   const { loading } = authentication;
 
   const { params } = useRoute();
   const { navigate, goBack } = useNavigation<DefinePasswordScreenProps>();
 
-  const { fullName, email, password } = params as ConfirmCredentialsParams;
+  const { fullName, email, password, avatar } = params as ConfirmCredentialsParams;
 
   const [firstName,] = fullName.split(' ');
 
@@ -88,14 +90,10 @@ const ConfirmCredentials = ({ authentication, signupRequest, loginRequest }: Con
     signupRequest({
       name: fullName,
       email,
-      password
+      password,
+      avatar,
     });
-
-    loginRequest({
-      email,
-      password
-    })
-  }, [signupRequest])
+  }, [signupRequest, avatar])
 
   return (
     <Container>
@@ -111,7 +109,13 @@ const ConfirmCredentials = ({ authentication, signupRequest, loginRequest }: Con
             please, confirm your details
           </SubTitle>
         </TextContainer>
-        {loading && <SubTitle>Loading...</SubTitle>}
+        <TouchableAvatarContainer>
+          <TouchableAvatar
+            onPress={() => { }}
+            source={{ uri: avatar }}
+            icon='plus'
+          />
+        </TouchableAvatarContainer>
         <Form>
           <Controller
             name='fullName'

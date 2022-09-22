@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import Constants from 'expo-constants';
 import { Feather } from '@expo/vector-icons';
 
@@ -22,48 +21,32 @@ export const Header = styled.View`
   width: 100%;
 `;
 
+export const Icon = styled(Feather)`
+  color: ${({ theme }) => theme.palette.colors.secondary};
+  font-size: ${({ theme }) => theme.screen.rem(1.8, true)}px;
+`;
+
 export const Title = styled(Text)`
-    font-size: ${({ theme }) => theme.screen.rem(2, true)}px;
+  font-size: ${({ theme }) => theme.screen.rem(2, true)}px;
+  text-align: center;
 `;
 
 export const SubTitle = styled(Text)`
   text-align: center;
 `;
 
-export const TextContainer = styled(View)`
+export const TextContainer = styled.View`
   margin-top: ${({ theme }) => theme.screen.rem(2.9375)}px;
 `;
 
-export const Icon = styled(Feather)`
-  color: ${({ theme }) => theme.palette.colors.secondary};
-  font-size: ${({ theme }) => theme.screen.rem(1.8, true)}px;
-`;
+
 
 export const Form = styled.View`
   width: 100%;
-  margin-top: ${({ theme }) => theme.screen.rem(2)}px;
+  margin-top: ${({ theme }) => theme.screen.rem(8)}px;
 `;
 
 export const NextButtonContainer = styled.View`
-  align-self: flex-end;
   margin-top: ${({ theme }) => theme.screen.rem(4.75)}px;
-`;
-
-export const Footer = styled.View`
   width: 100%;
-  margin-top: ${({theme}) => theme.screen.rem(4)}px;
-`;
-
-export const FooterText = styled(Text)`
-  font-size: ${({ theme }) => theme.screen.rem(1, true)}px;
-  text-align: center;
-`
-
-export const FooterTextEmphasized = styled(Text)`
-  font-size: ${({ theme }) => theme.screen.rem(1, true)}px;
-  color: ${({ theme }) => theme.palette.colors.secondary};
-`
-
-export const TouchableAvatarContainer = styled(View)`
-  margin-top: ${({theme}) => theme.screen.rem(2)}px;
 `;

@@ -9,7 +9,7 @@ const { statusBarHeight } = Constants;
 
 export const Content = styled.View`
   flex: 1;
-  padding: ${({ theme }) => theme.screen.rem(2)}px;
+  padding: ${({ theme }) => theme.screen.rem(.8)}px;
   align-items: center;
   width: 100%;
 `;

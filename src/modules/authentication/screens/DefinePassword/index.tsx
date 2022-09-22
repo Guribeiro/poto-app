@@ -40,7 +40,7 @@ const DefinePassword = (): JSX.Element => {
   const { params } = useRoute();
   const { navigate, goBack } = useNavigation<DefinePasswordScreenProps>();
 
-  const { fullName, email } = params as DefinePasswordParams;
+  const { fullName, email, avatar } = params as DefinePasswordParams;
 
   const [firstName,] = fullName.split(' ');
 
@@ -52,6 +52,7 @@ const DefinePassword = (): JSX.Element => {
     navigate('ConfirmCredentials', {
       fullName,
       email,
+      avatar,
       password
     });
   }, [])

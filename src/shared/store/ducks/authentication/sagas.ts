@@ -40,17 +40,27 @@ interface ApiPostRequestSignupProps {
   name: string;
   email: string;
   password: string;
+  avatar: string;
 }
 
 function apiPostRequestSignup({
   name,
   email,
   password,
+  avatar
 }: ApiPostRequestSignupProps) {
-  return api.post('/users', {
-    full_name: name,
-    email,
-    password,
+  const form = new FormData();
+
+  form.append('photo', { uri: avatar, name: avatar });
+  form.append('email', email);
+  form.append('full_name', name);
+  form.append('password', password);
+
+  return api.post('/users', form, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    }
   });
 }
 
@@ -76,15 +86,16 @@ interface SignupAction {
 
 export function* signup({ payload }: SignupAction) {
   try {
-    const { name, email, password } = payload;
+    const { name, email, password, avatar } = payload;
 
-    yield call(apiPostRequestSignup, { name, email, password });
+    yield call(apiPostRequestSignup, { name, email, password, avatar });
 
     const response: AxiosResponse<Authentication> = yield call(
       apiRequestAuthentication,
       { email, password },
     );
 
+    console.log(response);
     const { user, token, refresh_token } = response.data;
 
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
