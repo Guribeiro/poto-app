@@ -24,6 +24,7 @@ const ThemeContext = createContext({} as ThemeContextData);
 
 interface ThemeContextData {
   changeTheme(theme_name: ChangeThemeProps): void;
+  changeMainColor(color: ChangeMainColorProps): void;
   theme: {
     palette: Theme;
     screen: Screen;
@@ -34,6 +35,10 @@ type Theme = LightThemeType | DarkThemeType;
 
 interface ChangeThemeProps {
   theme_name: 'light' | 'dark';
+}
+
+interface ChangeMainColorProps {
+  color: string;
 }
 
 type Query = Omit<MediaQuery, 'currentBreakpoint'>;
@@ -116,8 +121,18 @@ const ThemeProvider = ({ children }: Props): JSX.Element => {
     [theme],
   );
 
+  const changeMainColor = useCallback(async ({ color }: ChangeMainColorProps) => {
+    const currentTheme = { ...theme };
+
+    currentTheme.colors.secondary = color;
+
+    setTheme(currentTheme);
+
+    await AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
+  }, [theme])
+
   return (
-    <ThemeContext.Provider value={{ changeTheme, theme: customTheme }}>
+    <ThemeContext.Provider value={{ changeTheme, theme: customTheme, changeMainColor }}>
       <StyledThemeProvider theme={customTheme}>{children}</StyledThemeProvider>
     </ThemeContext.Provider>
   );
