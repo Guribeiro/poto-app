@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useRoute } from '@react-navigation/native';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -28,6 +29,7 @@ import {
   NextButtonContainer
 } from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
 
 interface FormData {
@@ -40,10 +42,16 @@ const schema = yup.object().shape({
 
 type DefineEmailScreenProps = NativeStackNavigationProp<RootSignupParamsList, 'DefineEmail'>;
 
+
+type ErrorResponse = {
+  error: string;
+}
+
 const DefineEmail = (): JSX.Element => {
+  const [loading, setLoading] = useState(false);
+
   const { params } = useRoute();
   const { navigate, goBack } = useNavigation<DefineEmailScreenProps>();
-  const [isDisabled, setIsDisabled] = useState(true);
 
   const { control, handleSubmit, getValues, setError } = useForm<FormData>({
     resolver: yupResolver(schema)
@@ -54,29 +62,38 @@ const DefineEmail = (): JSX.Element => {
   const [firstName,] = fullName.split(' ');
 
   const checkEmailAvailable = useCallback(async () => {
-    try {
-      
-      const email = getValues('email')
 
-      // const response = await api.post('/sessions/valid_email', {
-      //   email,
-      // });
+    const email = getValues('email')
 
-    } catch (error) {
-      setError('email', {message: 'Email is already been used'})
-    } finally {
-      setIsDisabled(false)
+    const { data } = await api.post('/sessions/valid_email', {
+      email,
+    });
+
+    if (data instanceof AxiosError) {
+
+      console.log(data);
+
+      throw new Error('error')
     }
-  }, [getValues])
+  }, [])
 
   const onSubmit = useCallback(async ({ email }: FormData) => {
-    await checkEmailAvailable();
+    try {
+      setLoading(true);
 
-    navigate('DefinePassword', {
-      fullName,
-      email
-    })
-  }, []);
+      await checkEmailAvailable();
+
+      navigate('DefineProfileAvatar', {
+        fullName,
+        email,
+      })
+    } catch (error) {
+      console.log({ error });
+      setError('email', { message: 'Este email já está em uso' })
+    } finally {
+      setLoading(false)
+    }
+  }, [navigate, fullName, setError]);
 
 
 
@@ -116,6 +133,7 @@ const DefineEmail = (): JSX.Element => {
           />
         </NextButtonContainer>
       </Content>
+      {loading && <FullScreenLoading />}
       <Spacer size={32} />
     </Container>
   )
