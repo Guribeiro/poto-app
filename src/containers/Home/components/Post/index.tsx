@@ -30,14 +30,18 @@ interface PostProps {
 const Post = ({ post }: PostProps): JSX.Element => {
   const { photo, subtitle, user } = post;
 
-  const { full_name } = user;
+  const { full_name, avatar } = user;
 
   const uri = `http://10.0.0.175:3333/files/posts/${photo}`;
+
+  const avatarUri = user.avatar ?
+  `http://10.0.0.175:3333/files/avatars/${avatar}` :
+  `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   return (
     <Container>
       <UserProfile>
-        <UserAvatar source={{ uri: 'https://avatars.githubusercontent.com/u/50778163?v=4' }} />
+        <UserAvatar source={{ uri: avatarUri }} />
         <UserName>{full_name}</UserName>
       </UserProfile>
 
