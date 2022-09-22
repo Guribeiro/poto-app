@@ -16,6 +16,7 @@ const Label = styled(Text)`
 
 const InputText = styled(TextInput)`
   color: ${({theme}) => theme.palette.colors.white};
+  padding: ${({theme}) => theme.screen.rem(.5)}px 0;
 `;
 
 const InputTextContainer = styled(View) <FocusedProps>`
