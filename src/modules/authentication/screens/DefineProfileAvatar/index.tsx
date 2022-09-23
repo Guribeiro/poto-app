@@ -58,7 +58,7 @@ const DefineProfileAvatar = (): JSX.Element => {
   const { navigate, goBack } = useNavigation<DefineProfileAvatarScreenProps>();
   const { params } = useRoute();
 
-  const { fullName, email } = params as DefineProfileAvatarParams;
+  const { fullName, email, username } = params as DefineProfileAvatarParams;
 
   const requestMediaLibraryPermissions = useCallback(async () => {
     if (Platform.OS !== 'web') {
@@ -103,6 +103,7 @@ const DefineProfileAvatar = (): JSX.Element => {
     navigate('DefinePassword', {
       fullName,
       email,
+      username,
       avatar
     })
 

@@ -3,10 +3,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { dimension } from '../../../shared/utils/dimensions';
 import { useTheme } from '../../../shared/hooks/theme';
 
-import DefineFullName from '../screens/DefineFullName';
 import DefineEmail from '../screens/DefineEmail';
+import DefineUsername from '../screens/DefineUsername';
+import DefineFullName from '../screens/DefineFullName';
 import DefinePassword from '../screens/DefinePassword';
-import ConfirmCredentials from '../screens/ConfirmCredentials';
 import DefineProfileAvatar from '../screens/DefineProfileAvatar';
 import Authentication from '../../../containers/Authentication';
 
@@ -19,8 +19,12 @@ export type DefineEmailParams = {
   fullName: string;
 }
 
-export type DefineProfileAvatarParams = DefineEmailParams & {
+export type DefineUsernameParams = DefineEmailParams & {
   email: string;
+}
+
+export type DefineProfileAvatarParams = DefineUsernameParams & {
+  username: string;
 }
 
 export type DefinePasswordParams = DefineProfileAvatarParams & {
@@ -34,6 +38,7 @@ export type ConfirmCredentialsParams = DefinePasswordParams & {
 export type RootSignupParamsList = {
   DefineFullName: undefined;
   DefineEmail: DefineEmailParams;
+  DefineUsername: DefineUsernameParams;
   DefinePassword: DefinePasswordParams;
   ConfirmCredentials: ConfirmCredentialsParams;
   DefineProfileAvatar: DefineProfileAvatarParams;
@@ -56,6 +61,7 @@ const SignupRoutes = ():JSX.Element => {
     >
       <Screen name="DefineFullName" component={DefineFullName} />
       <Screen name="DefineEmail" component={DefineEmail} />
+      <Screen name="DefineUsername" component={DefineUsername} />
       <Screen name="DefinePassword" component={DefinePassword} />
       <Screen name="ConfirmCredentials" component={Authentication} />
       <Screen name="DefineProfileAvatar" component={DefineProfileAvatar} />

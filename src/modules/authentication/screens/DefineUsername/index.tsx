@@ -16,7 +16,7 @@ import NextButton from '../../components/NextButton';
 import Spacer from '../../../../shared/common/components/Spacer';
 import Container from '../../../../shared/common/components/Container';
 
-import { DefineEmailParams, RootSignupParamsList } from '../../routes/signup.routes';
+import { DefineUsernameParams, RootSignupParamsList } from '../../routes/signup.routes';
 
 import {
   Header,
@@ -28,72 +28,74 @@ import {
   Form,
   NextButtonContainer
 } from './styles';
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
-
 interface FormData {
-  email: string;
+  username: string;
 }
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
+  username: yup.string().required().min(5, 'Mínimo 05 caracteres'),
 });
 
-type DefineEmailScreenProps = NativeStackNavigationProp<RootSignupParamsList, 'DefineEmail'>;
+type DefineUsernameScreenProps = NativeStackNavigationProp<RootSignupParamsList, 'DefineUsername'>;
 
 
 type ErrorResponse = {
   error: string;
 }
 
-const DefineEmail = (): JSX.Element => {
+const DefineUsername = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
 
   const { params } = useRoute();
-  const { navigate, goBack } = useNavigation<DefineEmailScreenProps>();
+  const { navigate, goBack } = useNavigation<DefineUsernameScreenProps>();
 
   const { control, handleSubmit, getValues, setError } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
 
-  const { fullName } = params as DefineEmailParams;
+  const { fullName, email } = params as DefineUsernameParams;
 
   const [firstName,] = fullName.split(' ');
 
-  const checkEmailAvailable = useCallback(async () => {
+  const checkUsernameAvailable = useCallback(async () => {
 
-    const email = getValues('email')
+    const username = getValues('username');
 
-    const { data } = await api.post('/sessions/valid_email', {
-      email,
+    const { data } = await api.post('/sessions/valid_username', {
+      username,
     });
 
     if (data instanceof AxiosError) {
 
-      console.log(data);
-
-      throw new Error('error')
+      throw new Error('error');
     }
   }, [])
 
-  const onSubmit = useCallback(async ({ email }: FormData) => {
+  const onSubmit = useCallback(async ({ username }: FormData) => {
     try {
       setLoading(true);
 
-      await checkEmailAvailable();
+      await checkUsernameAvailable();
 
-      navigate('DefineUsername', {
+      console.log({username});
+
+      navigate('DefineProfileAvatar', {
         fullName,
-        email,
-      })
+        username,
+        email
+      });
+
     } catch (error) {
       console.log({ error });
-      setError('email', { message: 'Este email já está em uso' })
+      setError('username', { message: 'Este username já está em uso' })
     } finally {
       setLoading(false)
     }
-  }, [navigate, fullName, setError]);
+  }, [navigate, fullName, email, setError]);
 
 
 
@@ -113,11 +115,11 @@ const DefineEmail = (): JSX.Element => {
         </TextContainer>
         <Form>
           <Controller
-            name='email'
+            name='username'
             control={control}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <InputText
-                label='Your email'
+                label='Your username'
                 value={value}
                 onChangeText={onChange}
                 error={error && error.message}
@@ -139,4 +141,4 @@ const DefineEmail = (): JSX.Element => {
   )
 }
 
-export default DefineEmail;
+export default DefineUsername;

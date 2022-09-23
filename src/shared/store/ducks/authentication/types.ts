@@ -21,6 +21,7 @@ export interface SignupRequestPayload {
   email: string;
   password: string;
   avatar: string;
+  username: string;
 }
 
 export interface LoginRequestPayload {
@@ -33,6 +34,7 @@ export interface User {
   full_name: string;
   email: string;
   avatar?: string;
+  username: string;
 }
 
 export interface Authentication {

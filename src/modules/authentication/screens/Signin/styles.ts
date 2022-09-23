@@ -17,7 +17,8 @@ export const Container = styled.View`
 export const Content = styled.View`
   flex: 1;
   width: 100%;
-  padding: ${({ theme }) => theme.screen.rem(2)}px;
+  padding: ${({ theme }) => theme.screen.rem(2)}px
+    ${({ theme }) => theme.screen.rem(.8)}px;
   align-items: center;
   justify-content: space-between;
 

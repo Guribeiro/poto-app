@@ -9,11 +9,11 @@ import { useNavigation } from '@react-navigation/native';
 import { ConfirmCredentialsParams, RootSignupParamsList } from '../../routes/signup.routes';
 import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '../../../../shared/store/ducks/authentication/types';
 
-import Container from '../../../../shared/common/components/Container';
-import Spacer from '../../../../shared/common/components/Spacer';
-import InputTextPassword from '../../components/InputTextPassword';
-import InputText from '../../components/InputText';
 import TouchableAvatar from '@shared/common/components/TouchableAvatar';
+import Container from '../../../../shared/common/components/Container';
+import InputTextPassword from '../../components/InputTextPassword';
+import Spacer from '../../../../shared/common/components/Spacer';
+import InputText from '../../components/InputText';
 
 import {
   Header,
@@ -28,12 +28,14 @@ import {
   FooterTextEmphasized,
   TouchableAvatarContainer
 } from './styles';
+
 import { useCallback } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface FormData {
   fullName: string;
   email: string;
+  username: string;
   password: string;
   password_confirmation: string;
 }
@@ -48,6 +50,7 @@ const DefaultValuesMocked = {
 const schema = yup.object().shape({
   fullName: yup.string().required('required field'),
   email: yup.string().email().required(),
+  username: yup.string().email().required(),
   password: yup.string().required().min(8, 'password must have at least 8 caracteres'),
   password_confirmation: yup.string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
@@ -72,7 +75,7 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
   const { params } = useRoute();
   const { navigate, goBack } = useNavigation<DefinePasswordScreenProps>();
 
-  const { fullName, email, password, avatar } = params as ConfirmCredentialsParams;
+  const { fullName, email, username, password, avatar } = params as ConfirmCredentialsParams;
 
   const [firstName,] = fullName.split(' ');
 
@@ -80,6 +83,7 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
     defaultValues: {
       fullName,
       email,
+      username,
       password
     },
     resolver: yupResolver(schema)
@@ -90,8 +94,9 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
     signupRequest({
       name: fullName,
       email,
+      username,
       password,
-      avatar,
+      avatar
     });
   }, [signupRequest, avatar])
 
@@ -143,6 +148,22 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
                 error={error && error.message}
                 autoCapitalize='none'
                 keyboardType='email-address'
+              />
+            )}
+          />
+
+          <Spacer size={16} />
+
+          <Controller
+            name='username'
+            control={control}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <InputText
+                label='Your username'
+                value={value}
+                onChangeText={onChange}
+                error={error && error.message}
+                autoCapitalize='none'
               />
             )}
           />
