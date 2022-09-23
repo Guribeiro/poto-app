@@ -1,7 +1,5 @@
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
-import { Image, TouchableOpacity } from 'react-native';
-import { lighten } from 'polished';
 import { Text } from '@shared/common/components/Text';
 
 export const Container = styled.View`

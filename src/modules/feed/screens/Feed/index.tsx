@@ -28,8 +28,8 @@ import { RootAppParamsList } from '@modules/app/routes';
 
 import { ApplicationState } from '@shared/store';
 
-import SelectMediaModal from './components/SelectMediaModal';
-import Post from './components/Post';
+import SelectMediaModal from '../../components/SelectMediaModal';
+import Post from '../../components/Post';
 
 import {
   Container,

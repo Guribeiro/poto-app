@@ -3,6 +3,11 @@ import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { ApplicationState } from '@shared/store';
+import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,9 +15,9 @@ import { ConfirmCredentialsParams, RootSignupParamsList } from '../../routes/sig
 import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '../../../../shared/store/ducks/authentication/types';
 
 import TouchableAvatar from '@shared/common/components/TouchableAvatar';
-import Container from '../../../../shared/common/components/Container';
+import Container from '@shared/common/components/Container';
 import InputTextPassword from '../../components/InputTextPassword';
-import Spacer from '../../../../shared/common/components/Spacer';
+import Spacer from '@shared/common/components/Spacer';
 import InputText from '../../components/InputText';
 
 import {
@@ -212,4 +217,11 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
   )
 }
 
-export default ConfirmCredentials;
+const mapStateToProps = ({authentication}:ApplicationState) => ({
+  authentication,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(AuthenticationActions, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConfirmCredentials);
+

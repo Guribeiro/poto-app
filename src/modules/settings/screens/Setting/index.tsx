@@ -3,12 +3,13 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
+import { RootProfileRoutesParamsList } from '@modules/profile/routes';
+
+import { ApplicationState } from '@shared/store';
 import Button from '@shared/common/components/Button';
-
 import Touchable from '@shared/common/components/Touchable';
-
-import { RootProfileRoutesParamsList } from '@modules/app/routes/profile.routes';
+import { AuthenticationState } from '@shared/store/ducks/authentication/types';
+import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
 import {
   Icon,
@@ -21,8 +22,6 @@ import {
 } from './styles';
 
 
-import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '@shared/store/ducks/authentication/types';
-import { ApplicationState } from '@shared/store';
 
 type SettingsScreenProps = NativeStackNavigationProp<RootProfileRoutesParamsList, 'Settings'>
 

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Platform } from 'react-native';
 import { Text } from '@shared/common/components/Text';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -7,26 +7,31 @@ import {
   requestMediaLibraryPermissionsAsync,
   launchImageLibraryAsync,
   MediaTypeOptions,
-  ImageInfo,
   requestCameraPermissionsAsync,
   launchCameraAsync
 } from 'expo-image-picker';
-import { Platform } from 'react-native';
 
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing
+} from 'react-native-reanimated';
+
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { RootProfileRoutesParamsList } from '@modules/profile/routes';
+
+import { ApplicationState } from '@shared/store';
+
+import Spacer from '@shared/common/components/Spacer';
+import Touchable from '@shared/common/components/Touchable';
+import TouchableAvatar from '@shared/common/components/TouchableAvatar';
 import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
-import { RootProfileRoutesParamsList } from '@modules/app/routes/profile.routes';
-
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
-
-import Touchable from '@shared/common/components/Touchable';
-import Spacer from '@shared/common/components/Spacer';
-import SelectMediaModal from '../Feed/components/SelectMediaModal';
-
-import TouchableAvatar from '../../shared/common/components/TouchableAvatar';
+import SettingsModal from '../../components/SettingsModal';
+import SelectMediaModal from '../../../feed/components/SelectMediaModal';
 
 import {
   Container,
@@ -38,9 +43,7 @@ import {
   UpdateProfileButton,
 } from './styles';
 
-import SettingsModal from './components/SettingsModal';
 import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '@shared/store/ducks/authentication/types';
-import { ApplicationState } from '@shared/store';
 
 type ProfileScreenProps = NativeStackNavigationProp<RootProfileRoutesParamsList, 'Profile'>
 
@@ -111,14 +114,14 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
 
   const openSelectImageModal = useCallback(() => {
     updateImageOffset.value = withTiming(SELECT_MEDIA_FINAL_VALUE, {
-      duration: 400,
+      duration: 200,
       easing: Easing.ease,
     });
   }, [updateImageOffset]);
 
   const closeSelectImageModal = useCallback(() => {
     updateImageOffset.value = withTiming(SELECT_MEDIA_INITIAL_VALUE, {
-      duration: 400,
+      duration: 200,
       easing: Easing.ease,
     });
   }, [updateImageOffset, INITIAL_VALUE]);

@@ -7,8 +7,8 @@ import DefineEmail from '../screens/DefineEmail';
 import DefineUsername from '../screens/DefineUsername';
 import DefineFullName from '../screens/DefineFullName';
 import DefinePassword from '../screens/DefinePassword';
+import ConfirmCredentials from '../screens/ConfirmCredentials';
 import DefineProfileAvatar from '../screens/DefineProfileAvatar';
-import Authentication from '../../../containers/Authentication';
 
 export const Container = styled.View`
   flex: 1;
@@ -63,7 +63,7 @@ const SignupRoutes = ():JSX.Element => {
       <Screen name="DefineEmail" component={DefineEmail} />
       <Screen name="DefineUsername" component={DefineUsername} />
       <Screen name="DefinePassword" component={DefinePassword} />
-      <Screen name="ConfirmCredentials" component={Authentication} />
+      <Screen name="ConfirmCredentials" component={ConfirmCredentials} />
       <Screen name="DefineProfileAvatar" component={DefineProfileAvatar} />
     </Navigator>
   )

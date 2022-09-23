@@ -3,9 +3,9 @@ import {useTheme} from '@shared/hooks/theme';
 import styled from 'styled-components/native';
 
 
-import Settings from '../../../containers/Settings';
-import Profile from '../../../containers/Profile';
-import UpdateProfile from '../../../containers/Profile/screens/UpdateProfile';
+import Profile from '../screens/Profile';
+import Settings from '@modules/settings/screens/Setting';
+import UpdateProfile from '../screens/UpdateProfile';
 
 export type RootProfileRoutesParamsList = {
   Profile: undefined;
@@ -20,7 +20,7 @@ const Container = styled.View`
   background-color: ${({ theme }) => theme.palette.colors.primary};
 `;
 
-const AuthenticationRoutes = (): JSX.Element => {
+const ProfileRoutes = (): JSX.Element => {
   const { theme } = useTheme();
   return (
     <Container>
@@ -42,4 +42,4 @@ const AuthenticationRoutes = (): JSX.Element => {
   );
 }
 
-export default AuthenticationRoutes;
+export default ProfileRoutes;

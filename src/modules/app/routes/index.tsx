@@ -4,8 +4,8 @@ import styled from 'styled-components/native';
 
 import TabBar from '../components/Tabbar';
 
-import Feed from '../../../containers/Feed';
-import ProfileRoutes from '../routes/profile.routes';
+import Feed from '@modules/feed/screens/Feed';
+import ProfileRoutes from '@modules/profile/routes';
 
 const Container = styled.View`
   flex: 1;
@@ -24,14 +24,21 @@ export type RootAppParamsList = {
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
 
 const AppRoutes = (): JSX.Element => {
+
   return (
     <Container>
       <Navigator
         initialRouteName="Feed"
         screenOptions={{
           headerShown: false,
+          unmountOnBlur: true
         }}
         tabBar={props => <TabBar {...props} />}
+        screenListeners={{
+          blur: ({data}) => {
+            console.log('blur', data)
+          }
+        }}
       >
         <Screen name="Feed" component={Feed} />
         <Screen name='ProfileRoutes' component={ProfileRoutes} />
