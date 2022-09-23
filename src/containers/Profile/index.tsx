@@ -203,7 +203,7 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
     <Container>
       <Header>
         <Row>
-          <UsernameText>gustavhrd</UsernameText>
+          <UsernameText>{user.username}</UsernameText>
           <Touchable onPress={() => navigate('Settings')}>
             <Icon name='settings' />
           </Touchable>
