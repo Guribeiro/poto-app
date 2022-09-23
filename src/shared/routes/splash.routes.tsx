@@ -44,7 +44,10 @@ const SplashRoutes = ({ authentication }: SplashRoutesProps): JSX.Element => {
         },
       }}
     >
-      <Screen name="Splash" component={Splash} />
+      {!data.token && (
+        <Screen name="Splash" component={Splash} />
+      )}
+
       <Screen
         name="AppRoutes"
         component={data.token ? AppRoutes : AuthenticationRoutes}
