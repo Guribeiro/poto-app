@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { Text } from '@shared/common/components/Text';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -67,13 +67,13 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
     `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
-
-  const SELECT_MEDIA_INITIAL_VALUE = 1000;
-  const SELECT_MEDIA_FINAL_VALUE = 0;
-
   const [mediaLoading, setMediaLoading] = useState(false);
 
   const { navigate } = useNavigation<ProfileScreenProps>()
+
+
+  const SELECT_MEDIA_INITIAL_VALUE = 1000;
+  const SELECT_MEDIA_FINAL_VALUE = 0;
 
   const positionY = useSharedValue(SELECT_MEDIA_INITIAL_VALUE);
 
@@ -82,7 +82,6 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
       transform: [{ translateY: positionY.value }],
     };
   });
-
 
   const openSelectImageModal = useCallback(() => {
     positionY.value = withTiming(SELECT_MEDIA_FINAL_VALUE, {
@@ -168,7 +167,8 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
       closeSelectImageModal();
 
     } catch (error) {
-      console.log({ error })
+      const err = new Error(error as string);
+      Alert.alert(err.message)
     } finally {
       setMediaLoading(false);
     }
@@ -214,7 +214,7 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
           onLaunchCamera={launchCamera}
         />
       </Animated.View>
-      {loading && <FullScreenLoading />}
+      {loading || mediaLoading && <FullScreenLoading />}
     </Container>
   )
 }

@@ -1,5 +1,6 @@
 import { TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import styled from 'styled-components/native';
+
 import { lighten } from 'polished';
 import { Feather } from '@expo/vector-icons'
 
@@ -10,6 +11,7 @@ export const UserAvatarPlusIconContainer = styled.View`
   background: #3498db;
   border-radius: ${({ theme }) => theme.screen.rem(1)}px;
   padding: ${({ theme }) => theme.screen.rem(.4)}px;
+
 `;
 
 export const UserAvatarPlusIcon = styled(Feather)`
@@ -21,6 +23,9 @@ export const UserAvatar = styled(Image)`
   width: ${({ theme }) => theme.screen.rem(7)}px;
   height: ${({ theme }) => theme.screen.rem(7)}px;
   border-radius: ${({ theme }) => theme.screen.rem(4.5)}px;
+
+  border: 2px solid ${({ theme }) => lighten(.4, theme.palette.colors.secondary)};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 export const UpdateProfileButton = styled(TouchableOpacity)`
@@ -37,7 +42,7 @@ export const UpdateProfileButton = styled(TouchableOpacity)`
 interface TouchableAvatarProps {
   onPress(): void;
   source: ImageSourcePropType;
-  icon:  keyof typeof Feather.glyphMap;
+  icon: keyof typeof Feather.glyphMap;
 }
 const TouchableAvatar = ({ onPress, source, icon }: TouchableAvatarProps): JSX.Element => {
   return (

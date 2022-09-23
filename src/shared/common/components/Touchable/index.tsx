@@ -1,4 +1,4 @@
-import { ReactNode, cloneElement, createElement } from 'react';
+import { ReactNode } from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';

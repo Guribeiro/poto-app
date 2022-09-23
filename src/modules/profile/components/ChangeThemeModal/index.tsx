@@ -8,7 +8,7 @@ interface SettingsModalProps {
   onRequestClose(): void;
 }
 
-const SettingsModal = ({ onRequestClose }: SettingsModalProps): JSX.Element => {
+const ChangeThemeModal = ({ onRequestClose }: SettingsModalProps): JSX.Element => {
 
   const { theme, changeMainColor } = useTheme();
 
@@ -31,4 +31,4 @@ const SettingsModal = ({ onRequestClose }: SettingsModalProps): JSX.Element => {
   )
 }
 
-export default SettingsModal;
+export default ChangeThemeModal;

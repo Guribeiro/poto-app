@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {useTheme} from '@shared/hooks/theme';
+import { useTheme } from '@shared/hooks/theme';
 import styled from 'styled-components/native';
 
 
@@ -36,7 +36,6 @@ const ProfileRoutes = (): JSX.Element => {
         <Screen name="Profile" component={Profile} />
         <Screen name="UpdateProfile" component={UpdateProfile} />
         <Screen name='Settings' component={Settings} />
-
       </Navigator>
     </Container>
   );
