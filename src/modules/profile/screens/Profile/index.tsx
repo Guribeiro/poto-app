@@ -15,7 +15,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  Easing
+  Easing,
 } from 'react-native-reanimated';
 
 import { useNavigation } from '@react-navigation/native';
@@ -30,7 +30,6 @@ import Touchable from '@shared/common/components/Touchable';
 import TouchableAvatar from '@shared/common/components/TouchableAvatar';
 import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
-import SettingsModal from '../../components/SettingsModal';
 import SelectMediaModal from '../../../feed/components/SelectMediaModal';
 
 import {
@@ -43,7 +42,8 @@ import {
   UpdateProfileButton,
 } from './styles';
 
-import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '@shared/store/ducks/authentication/types';
+import { AuthenticationState, SignupRequestPayload, LoginRequestPayload, UpdateAvatarRequestPayload } from '@shared/store/ducks/authentication/types';
+import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
 type ProfileScreenProps = NativeStackNavigationProp<RootProfileRoutesParamsList, 'Profile'>
 
@@ -52,15 +52,14 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  signupRequest(data: SignupRequestPayload): void;
-  loginRequest(data: LoginRequestPayload): void;
+  updateAvatarRequest(data: UpdateAvatarRequestPayload): void;
 }
 
 type ProfileProps = StateProps & DispatchProps;
 
-const Profile = ({ authentication }: ProfileProps): JSX.Element => {
+const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Element => {
 
-  const { data } = authentication;
+  const { data, loading } = authentication;
 
   const { user } = data;
 
@@ -68,63 +67,36 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
     `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
-  const INITIAL_VALUE = -600;
-  const FINAL_VALUE = 0;
 
-  const SELECT_MEDIA_INITIAL_VALUE = -1000;
+  const SELECT_MEDIA_INITIAL_VALUE = 1000;
   const SELECT_MEDIA_FINAL_VALUE = 0;
 
   const [mediaLoading, setMediaLoading] = useState(false);
 
   const { navigate } = useNavigation<ProfileScreenProps>()
 
-  const settingsModalOffset = useSharedValue(INITIAL_VALUE);
-
-  const handleOpenSettings = useCallback(() => {
-    settingsModalOffset.value = withTiming(FINAL_VALUE, {
-      duration: 400,
-      easing: Easing.ease,
-    })
-  }, [settingsModalOffset]);
-
-  const handleCloseSettings = useCallback(() => {
-    settingsModalOffset.value = withTiming(INITIAL_VALUE, {
-      duration: 400,
-      easing: Easing.ease,
-    })
-  }, [settingsModalOffset])
-
-  const settingsModalStyle = useAnimatedStyle(() => {
-    return {
-      left: 0,
-      bottom: settingsModalOffset.value,
-      position: 'absolute',
-      width: '100%',
-      height: '100%'
-    }
-  });
-
-  const updateImageOffset = useSharedValue(INITIAL_VALUE);
+  const positionY = useSharedValue(SELECT_MEDIA_INITIAL_VALUE);
 
   const updateImageStyle = useAnimatedStyle(() => {
     return {
-      bottom: updateImageOffset.value,
+      transform: [{ translateY: positionY.value }],
     };
   });
 
+
   const openSelectImageModal = useCallback(() => {
-    updateImageOffset.value = withTiming(SELECT_MEDIA_FINAL_VALUE, {
+    positionY.value = withTiming(SELECT_MEDIA_FINAL_VALUE, {
       duration: 200,
       easing: Easing.ease,
     });
-  }, [updateImageOffset]);
+  }, [positionY]);
 
   const closeSelectImageModal = useCallback(() => {
-    updateImageOffset.value = withTiming(SELECT_MEDIA_INITIAL_VALUE, {
+    positionY.value = withTiming(SELECT_MEDIA_INITIAL_VALUE, {
       duration: 200,
       easing: Easing.ease,
     });
-  }, [updateImageOffset, INITIAL_VALUE]);
+  }, [positionY, SELECT_MEDIA_INITIAL_VALUE]);
 
 
   const requestCameraPermissions = useCallback(async () => {
@@ -158,8 +130,6 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
 
       closeSelectImageModal();
 
-
-
     } catch (error) {
       console.log({ error })
     } finally {
@@ -191,16 +161,18 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
 
       if (imagePickerResult.cancelled) return;
 
-      closeSelectImageModal();
+      updateAvatarRequest({
+        image: imagePickerResult.uri
+      });
 
-      //update profile avatar here
+      closeSelectImageModal();
 
     } catch (error) {
       console.log({ error })
     } finally {
       setMediaLoading(false);
     }
-  }, [requestMediaLibraryPermissions]);
+  }, [requestMediaLibraryPermissions, updateAvatarRequest]);
 
   return (
     <Container>
@@ -242,9 +214,7 @@ const Profile = ({ authentication }: ProfileProps): JSX.Element => {
           onLaunchCamera={launchCamera}
         />
       </Animated.View>
-      <Animated.View style={settingsModalStyle}>
-        <SettingsModal onRequestClose={handleCloseSettings} />
-      </Animated.View>
+      {loading && <FullScreenLoading />}
     </Container>
   )
 }
@@ -256,4 +226,7 @@ const mapStateToProps = ({ authentication }: ApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(AuthenticationActions, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps)
+  (Profile);

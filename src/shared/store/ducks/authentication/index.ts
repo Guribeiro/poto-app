@@ -10,15 +10,22 @@ const {
   SIGNUP_REQUEST,
   SIGNUP_REQUEST_FAILURE,
   SIGNUP_REQUEST_SUCCESS,
+
   LOAD_AUTHENTICATION_REQUEST,
   LOAD_AUTHENTICATION_REQUEST_FAILURE,
   LOAD_AUTHENTICATION_REQUEST_SUCCESS,
+
   LOGOUT_REQUEST,
   LOGOUT_REQUEST_FAILURE,
   LOGOUT_REQUEST_SUCCESS,
+
   LOAD_STORAGED_AUTHENTICATION_REQUEST,
   LOAD_STORAGED_AUTHENTICATION_REQUEST_FAILURE,
-  LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS
+  LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS,
+
+  UPDATE_AVATAR_REQUEST,
+  UPDATE_AVATAR_REQUEST_FAILURE,
+  UPDATE_AVATAR_REQUEST_SUCCESS
 } = AuthenticationTypes;
 
 const INITIAL_STATE: AuthenticationState = {
@@ -66,6 +73,12 @@ const reducer: Reducer<AuthenticationState, AuthenticationAction> = (
         error: false,
         data: action.payload.data,
       };
+    case UPDATE_AVATAR_REQUEST:
+      return { ...state, loading: true }
+    case UPDATE_AVATAR_REQUEST_SUCCESS:
+      return { loading: false, error: false, data: { ...state.data, user: action.payload.data } }
+    case UPDATE_AVATAR_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true };
     default:
       return state;
   }

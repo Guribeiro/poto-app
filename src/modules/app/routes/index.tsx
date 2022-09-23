@@ -34,11 +34,6 @@ const AppRoutes = (): JSX.Element => {
           unmountOnBlur: true
         }}
         tabBar={props => <TabBar {...props} />}
-        screenListeners={{
-          blur: ({data}) => {
-            console.log('blur', data)
-          }
-        }}
       >
         <Screen name="Feed" component={Feed} />
         <Screen name='ProfileRoutes' component={ProfileRoutes} />

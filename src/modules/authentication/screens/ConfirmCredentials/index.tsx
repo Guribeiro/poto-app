@@ -12,7 +12,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 import { ConfirmCredentialsParams, RootSignupParamsList } from '../../routes/signup.routes';
-import { AuthenticationState, SignupRequestPayload, LoginRequestPayload } from '../../../../shared/store/ducks/authentication/types';
+import {
+  AuthenticationState,
+  SignupRequestPayload,
+  LoginRequestPayload
+} from '@shared/store/ducks/authentication/types';
 
 import TouchableAvatar from '@shared/common/components/TouchableAvatar';
 import Container from '@shared/common/components/Container';
@@ -43,13 +47,6 @@ interface FormData {
   username: string;
   password: string;
   password_confirmation: string;
-}
-
-const DefaultValuesMocked = {
-  fullName: 'Gustavo Henrique',
-  email: 'gugahribeiro@hotmail.com',
-  password: '12345678',
-  password_confirmation: ''
 }
 
 const schema = yup.object().shape({
@@ -217,7 +214,7 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
   )
 }
 
-const mapStateToProps = ({authentication}:ApplicationState) => ({
+const mapStateToProps = ({ authentication }: ApplicationState) => ({
   authentication,
 });
 

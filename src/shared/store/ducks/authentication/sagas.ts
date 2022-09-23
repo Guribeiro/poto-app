@@ -4,9 +4,11 @@ import { AxiosResponse, AxiosError } from 'axios';
 import api from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  LoginRequestPayload,
   Authentication,
+  LoginRequestPayload,
   SignupRequestPayload,
+  UpdateAvatarRequestPayload,
+  User,
 } from './types';
 
 import {
@@ -17,6 +19,8 @@ import {
   logoutRequestFailure,
   loadStorageAuthenticationSuccess,
   loadStorageAuthenticationFailure,
+  updateAvatarRequestSuccess,
+  updateAvatarRequestFailure
 } from './actions';
 
 export const STORAGE_AUTHENTICATION_KEY = '@test:authentication';
@@ -24,6 +28,36 @@ export const STORAGE_AUTHENTICATION_KEY = '@test:authentication';
 interface ApiRequestAuthenticationProps {
   email: string;
   password: string;
+}
+
+interface ApiPostRequestSignupProps {
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+  username: string;
+}
+
+type AsyncStorageGetRequestResponse = string | null;
+
+
+interface AsyncStorageGetRequestProps {
+  key: string;
+}
+
+interface Action {
+  type: string;
+  payload: LoginRequestPayload;
+}
+
+interface UpdateAvatarAction {
+  type: string;
+  payload: UpdateAvatarRequestPayload
+}
+
+interface SignupAction {
+  type: string;
+  payload: SignupRequestPayload;
 }
 
 function apiRequestAuthentication({
@@ -34,14 +68,6 @@ function apiRequestAuthentication({
     email,
     password,
   });
-}
-
-interface ApiPostRequestSignupProps {
-  name: string;
-  email: string;
-  password: string;
-  avatar: string;
-  username: string;
 }
 
 function apiPostRequestSignup({
@@ -67,25 +93,17 @@ function apiPostRequestSignup({
   });
 }
 
-interface AsyncStorageGetRequestProps {
-  key: string;
-}
-
-type AsyncStorageGetRequestResponse = string | null;
-
 function asyncStorageGetRequest({ key }: AsyncStorageGetRequestProps) {
   return AsyncStorage.getItem(key)
 }
 
-interface Action {
-  type: string;
-  payload: LoginRequestPayload;
+function apiPutRequestUpdateAvatar({ image }: UpdateAvatarRequestPayload) {
+  const form = new FormData();
+  form.append('photo', { uri: image, name: image });
+
+  return api.put('/profile/avatar', form)
 }
 
-interface SignupAction {
-  type: string;
-  payload: SignupRequestPayload;
-}
 
 export function* signup({ payload }: SignupAction) {
   try {
@@ -203,5 +221,42 @@ export function* loadStorageAuth() {
   } catch (error) {
     console.log('error', error)
     yield put(loadStorageAuthenticationFailure());
+  }
+}
+
+export function* updateAvatar({ payload }: UpdateAvatarAction) {
+  try {
+    const { image } = payload;
+
+    const response: AxiosResponse<User> = yield call(apiPutRequestUpdateAvatar,
+      { image }
+    );
+
+    const { data } = response;
+
+    const storagedData: AsyncStorageGetRequestResponse = yield call(
+      asyncStorageGetRequest,
+      { key: STORAGE_AUTHENTICATION_KEY }
+    );
+
+    if (!storagedData) throw new Error('storagedAuth could not be found');
+
+    const { token, refresh_token } = JSON.parse(storagedData);
+
+
+    const authentication: Authentication = {
+      token,
+      user: data,
+      refresh_token
+    };
+
+    yield AsyncStorage.setItem(
+      STORAGE_AUTHENTICATION_KEY,
+      JSON.stringify(authentication),
+    );
+
+    yield put(updateAvatarRequestSuccess(data));
+  } catch (error) {
+    yield put(updateAvatarRequestFailure());
   }
 }

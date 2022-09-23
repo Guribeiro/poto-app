@@ -7,7 +7,6 @@ import { AuthenticationState } from './ducks/authentication/types';
 import { PostsState } from './ducks/posts/types';
 
 import rootSaga from './ducks/rootSagas';
-import { CurriedGetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
