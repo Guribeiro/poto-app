@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 export const Container = styled.View`
   justify-content: center;
-  padding-bottom: ${({theme}) => theme.screen.rem(.5)}px;
+  padding-bottom: ${({ theme }) => theme.screen.rem(.5)}px;
 `;
 
 export const UserProfile = styled.View`
@@ -51,4 +51,13 @@ export const PostOwnerName = styled(Text)`
 
 export const PostSubtitleText = styled(Text)`
    font-family: ${({ theme }) => theme.palette.fonts.light};
+`;
+
+export const CreatedAtContainer = styled.View`
+  padding: ${({ theme }) => theme.screen.rem(.1)}px ${({ theme }) => theme.screen.rem(.8)}px;
+`;
+
+export const CreatedAtText = styled(Text)`
+  font-size: ${({theme}) => theme.screen.rem(.7)}px;
+  font-family: ${({theme}) => theme.palette.fonts.light};
 `;

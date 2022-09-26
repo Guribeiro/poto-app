@@ -37,7 +37,7 @@ const reducer: Reducer<PostsState, PostAction> = (
     case ADD_POSTS_REQUEST:
       return { ...state, loading: true }
     case ADD_POSTS_REQUEST_SUCCESS:
-      return { ...state, loading: false, error: false, data: [...state.data, action.payload.data]}
+      return { ...state, loading: false, error: false, data: [action.payload.data, ...state.data, ]}
     case ADD_POSTS_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     default:

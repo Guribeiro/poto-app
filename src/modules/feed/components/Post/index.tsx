@@ -11,7 +11,9 @@ import {
   Icon,
   PostSubtitleContainer,
   PostSubtitleText,
-  PostOwnerName
+  PostOwnerName,
+  CreatedAtContainer,
+  CreatedAtText
 } from './styles';
 
 
@@ -28,15 +30,15 @@ interface PostProps {
 }
 
 const Post = ({ post }: PostProps): JSX.Element => {
-  const { photo, subtitle, user } = post;
+  const { photo, subtitle, user, created_at } = post;
 
   const { full_name, avatar } = user;
 
   const uri = `http://10.0.0.175:3333/files/posts/${photo}`;
 
   const avatarUri = user.avatar ?
-  `http://10.0.0.175:3333/files/avatars/${avatar}` :
-  `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
+    `http://10.0.0.175:3333/files/avatars/${avatar}` :
+    `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   return (
     <Container>
@@ -64,6 +66,9 @@ const Post = ({ post }: PostProps): JSX.Element => {
           {subtitle}
         </PostSubtitleText>
       </PostSubtitleContainer>
+      <CreatedAtContainer>
+        <CreatedAtText>Há 2 dias</CreatedAtText>
+      </CreatedAtContainer>
     </Container>
   )
 }
