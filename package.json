@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "axios": "^0.27.2",
     "babel-plugin-module-resolver": "^4.1.0",
+    "date-fns": "^2.29.3",
     "expo": "~46.0.9",
     "expo-constants": "~13.2.3",
     "expo-font": "~10.2.0",

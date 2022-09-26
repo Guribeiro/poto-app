@@ -1,5 +1,8 @@
 import Touchable from '@shared/common/components/Touchable';
 import { User } from '@shared/store/ducks/authentication/types';
+import { formatDistance, subDays, addDays } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { useCallback } from 'react';
 
 import {
   Container,
@@ -30,6 +33,7 @@ interface PostProps {
 }
 
 const Post = ({ post }: PostProps): JSX.Element => {
+
   const { photo, subtitle, user, created_at } = post;
 
   const { full_name, avatar } = user;
@@ -39,6 +43,13 @@ const Post = ({ post }: PostProps): JSX.Element => {
   const avatarUri = user.avatar ?
     `http://10.0.0.175:3333/files/avatars/${avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
+
+  const createdAtPostFormatDistance = useCallback(() => {
+    const todayDate = new Date();
+    return formatDistance(new Date(created_at),
+    todayDate, { addSuffix: true, locale: ptBR })
+  },[])
+
 
   return (
     <Container>
@@ -67,7 +78,7 @@ const Post = ({ post }: PostProps): JSX.Element => {
         </PostSubtitleText>
       </PostSubtitleContainer>
       <CreatedAtContainer>
-        <CreatedAtText>Há 2 dias</CreatedAtText>
+        <CreatedAtText>{createdAtPostFormatDistance()}</CreatedAtText>
       </CreatedAtContainer>
     </Container>
   )
