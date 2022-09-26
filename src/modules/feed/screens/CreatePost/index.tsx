@@ -10,19 +10,16 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 
-import { RootAppParamsList } from '@modules/app/routes';
+import { RootFeedParamsList, CreatePostParams } from '@modules/feed/routes';
 import Spacer from '@shared/common/components/Spacer';
 import Button from '@shared/common/components/Button';
 import Scroll from '@shared/common/components/Scroll';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { AddPostPayload, PostsState } from '@shared/store/ducks/posts/types';
 
-
-import { PostFormParams } from '@modules/app/routes';
-
 import { Container, PostImage, Content, TouchableContainer, Touchable, Icon } from './styles';
 
-type PostFormScreenProps = NativeStackNavigationProp<RootAppParamsList, 'PostForm'>
+type CreatePostScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'CreatePost'>
 
 interface FormData {
   subtitle: string;
@@ -36,16 +33,16 @@ interface DispatchProps {
   addPost(payload: AddPostPayload): void;
 }
 
-type PostFormProps = StateProps & DispatchProps;
+type CreatePostProps = StateProps & DispatchProps;
 
-const PostForm = ({ addPost }: PostFormProps): JSX.Element => {
-  const INITIAL_MEDIA_HEIGHT = 480
+const CreatePost = ({ addPost }: CreatePostProps): JSX.Element => {
+  const INITIAL_MEDIA_HEIGHT = 440
   const FINAL_MEDIA_HEIGHT = 240;
 
   const { params } = useRoute();
-  const { goBack } = useNavigation<PostFormScreenProps>()
+  const { goBack } = useNavigation<CreatePostScreenProps>()
 
-  const { image } = params as PostFormParams;
+  const { image } = params as CreatePostParams;
 
   const { control, handleSubmit } = useForm<FormData>();
 
@@ -137,5 +134,5 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActio
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PostForm);
+)(CreatePost);
 

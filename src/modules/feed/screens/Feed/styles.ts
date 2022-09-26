@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
 import { TouchableOpacity, FlatList, FlatListProps } from 'react-native';
+
+import Animated from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import { Text } from '@shared/common/components/Text';
 
@@ -45,7 +47,7 @@ export const Icon = styled(Feather)`
 `;
 
 export const PostsList = styled(
-  FlatList as new (props: FlatListProps<Post>) => FlatList<Post>,
+  Animated.FlatList as new (props: FlatListProps<Post>) => Animated.FlatList<Post>,
 ).attrs(({ theme }) => ({
   showsVerticalScrollIndicator: false,
 

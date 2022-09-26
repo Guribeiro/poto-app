@@ -4,7 +4,6 @@ import {
   requestMediaLibraryPermissionsAsync,
   launchImageLibraryAsync,
   MediaTypeOptions,
-  ImageInfo,
   requestCameraPermissionsAsync,
   launchCameraAsync
 } from 'expo-image-picker';
@@ -14,6 +13,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   Easing,
+  useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -24,7 +24,7 @@ import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { PostsState } from '@shared/store/ducks/posts/types';
 
-import { RootAppParamsList } from '@modules/app/routes';
+import { RootFeedParamsList } from '@modules/feed/routes';
 
 import { ApplicationState } from '@shared/store';
 
@@ -51,7 +51,7 @@ interface DispatchProps {
   loadPosts(): void;
 }
 
-type FeedScreenProps = NativeStackNavigationProp<RootAppParamsList, 'Feed'>;
+type FeedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
 type FeedProps = StateProps & DispatchProps;
 
@@ -155,9 +155,9 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
 
       closeSelectImageModal();
 
-      // navigate('PostForm', {
-      //   image: imagePickerResult
-      // });
+      navigate('CreatePost', {
+        image: imagePickerResult
+      });
 
     } catch (error) {
       console.log({ error })
@@ -189,6 +189,7 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
           </Touchable>
         </ButtonsContainer>
       </Header>
+
       <PostsList
         onRefresh={loadPosts}
         refreshing={loading}

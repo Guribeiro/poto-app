@@ -73,7 +73,7 @@ const Settings = ({ authentication, logoutRequest }: SettingsProps): JSX.Element
               <Icon name='x' />
             </Touchable>
           </TouchableContainer>
-          <UsernameText>Configurações</UsernameText>
+          <UsernameText>Perfil</UsernameText>
         </HeaderContent>
       </Header>
 

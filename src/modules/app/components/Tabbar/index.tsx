@@ -21,8 +21,8 @@ type RoutesNameVariations = {
 };
 
 const routesNameVariations: RoutesNameVariations = {
-  Feed: {
-    name: 'Loja',
+  FeedRoutes: {
+    name: 'Feed',
     icon: 'home',
   },
   ProfileRoutes: {
