@@ -1,6 +1,7 @@
 import { call, put } from 'redux-saga/effects'
-import { Alert } from 'react-native';
 import { AxiosResponse, AxiosError } from 'axios';
+import Toast from 'react-native-toast-message';
+
 import api from '@shared/services/api'
 import { Post, AddPostPayload } from './types';
 
@@ -49,7 +50,10 @@ export function* fetchPosts() {
 
   } catch (error) {
     const err = error as AxiosError<{ error: string }>;
-    Alert.alert(err.message);
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
     yield put(loadPostsFailure());
   }
 }
@@ -59,8 +63,19 @@ export function* addPost({ payload }: CreatePostAction) {
     const { data }: AxiosResponse<Post> = yield call(apiPostRequestPost, payload);
 
     yield put(addPostSuccess(data));
+
+    Toast.show({
+      type: 'success',
+      text1: 'Seu post foi publicado com sucesso!',
+      position: 'bottom',
+    });
+
   } catch (error) {
-    console.log({error});
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
     yield put(addPostFailure());
   }
 }

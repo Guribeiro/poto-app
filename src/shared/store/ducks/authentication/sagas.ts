@@ -1,8 +1,10 @@
 import { Alert } from 'react-native';
 import { call, put } from 'redux-saga/effects';
 import { AxiosResponse, AxiosError } from 'axios';
-import api from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+
+import api from '../../../services/api';
 import {
   Authentication,
   LoginRequestPayload,
@@ -256,7 +258,19 @@ export function* updateAvatar({ payload }: UpdateAvatarAction) {
     );
 
     yield put(updateAvatarRequestSuccess(data));
+
+    Toast.show({
+      type: 'success',
+      text1: 'Seu avatar foi atualizado com sucesso',
+      position: 'bottom',
+    });
+
   } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
     yield put(updateAvatarRequestFailure());
   }
 }

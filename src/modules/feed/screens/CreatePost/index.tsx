@@ -75,15 +75,12 @@ const CreatePost = ({ addPost }: CreatePostProps): JSX.Element => {
   }, []);
 
   const onSubmit = useCallback(async ({ subtitle }: FormData) => {
-
     addPost({
       image,
       subtitle
     });
-
     goBack()
-
-  }, [image])
+  }, [image]);
 
   return (
     <Container>

@@ -12,6 +12,8 @@ import {
   InriaSerif_700Bold
 } from '@expo-google-fonts/inria-serif';
 
+import Toast from 'react-native-toast-message'
+
 import Routes from './src/shared/routes';
 
 export default function App() {
@@ -52,9 +54,10 @@ export default function App() {
       <SafeAreaProvider onLayout={onLayoutRootView}>
         <ScreenProvider baseFontSize={16}>
           <ThemeProvider>
-            <Routes />
+              <Routes />
           </ThemeProvider>
         </ScreenProvider>
+        <Toast />
       </SafeAreaProvider>
     </Provider>
   );
