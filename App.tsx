@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, { useCallback, useEffect, useState } from 'react';
 import { loadAsync } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';

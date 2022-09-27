@@ -22,10 +22,9 @@ import { useNavigation } from '@react-navigation/native';
 import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
 import * as PostsActions from '@shared/store/ducks/posts/actions';
-import { PostsState } from '@shared/store/ducks/posts/types';
+import { PostsState, LikePostPayload } from '@shared/store/ducks/posts/types';
 
 import { RootFeedParamsList } from '@modules/feed/routes';
-
 import { ApplicationState } from '@shared/store';
 
 import SelectMediaModal from '../../components/SelectMediaModal';
@@ -129,9 +128,9 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
 
       closeSelectImageModal();
 
-      // navigate('PostForm', {
-      //   image: imagePickerResult
-      // });
+      navigate('CreatePost', {
+        image: imagePickerResult
+      });
 
     } catch (error) {
       console.log({ error })

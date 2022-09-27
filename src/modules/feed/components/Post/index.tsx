@@ -1,8 +1,23 @@
+import { useCallback, useMemo } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { Like } from '@shared/store/ducks/posts/types';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  runOnJS
+} from 'react-native-reanimated';
 import Touchable from '@shared/common/components/Touchable';
-import { User } from '@shared/store/ducks/authentication/types';
-import { formatDistance, subDays, addDays } from 'date-fns';
+import { User, AuthenticationState } from '@shared/store/ducks/authentication/types';
+import { formatDistance } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
-import { useCallback } from 'react';
+import { ApplicationState } from '@shared/store';
+import * as PostsActions from '@shared/store/ducks/posts/actions';
+import { LikePostPayload } from '@shared/store/ducks/posts/types';
+
+import heartImage from '@shared/common/assets/heart/heart-like.png';
 
 import {
   Container,
@@ -16,8 +31,10 @@ import {
   PostSubtitleText,
   PostOwnerName,
   CreatedAtContainer,
-  CreatedAtText
+  CreatedAtText,
+  HeartLikeImage
 } from './styles';
+
 
 
 export interface Post {
@@ -26,42 +43,119 @@ export interface Post {
   photo: string;
   created_at: Date;
   user: User;
+  likes: Array<Like>
+  _count_likes: number;
 }
 
-interface PostProps {
+interface OwnProps {
   post: Post;
 }
 
-const Post = ({ post }: PostProps): JSX.Element => {
+interface StateProps {
+  authentication: AuthenticationState
+}
 
-  const { photo, subtitle, user, created_at } = post;
+interface DispatchProps {
+  likePost(data: LikePostPayload): void;
+}
 
-  const { full_name, avatar } = user;
+type PostProps = OwnProps & StateProps & DispatchProps;
+
+const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
+
+  const { data } = authentication;
+  const { photo, subtitle, user, created_at, likes } = post;
 
   const uri = `http://10.0.0.175:3333/files/posts/${photo}`;
 
   const avatarUri = user.avatar ?
-    `http://10.0.0.175:3333/files/avatars/${avatar}` :
+    `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
+
+  const isPostLiked = useMemo(() => {
+    const isLiked = likes.find(like => like.user_id === data.user.id);
+    return !!isLiked
+  }, [likes]);
+
+  const iconLikeOpacity = useSharedValue(0);
+  const iconLikeScale = useSharedValue(1);
+
+  const iconLikeStyle = useAnimatedStyle(() => {
+    return {
+      opacity: iconLikeOpacity.value,
+      transform: [{ scale: iconLikeScale.value }],
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      display: 'flex',
+      position: 'absolute'
+    }
+  })
 
   const createdAtPostFormatDistance = useCallback(() => {
     const todayDate = new Date();
     return formatDistance(new Date(created_at),
-    todayDate, { addSuffix: true, locale: ptBR })
-  },[])
+      todayDate, { addSuffix: true, locale: ptBR })
+  }, []);
+
+  const handleShowLikeIndicator = useCallback(() => {
+
+    iconLikeOpacity.value = withTiming(
+      1,
+      {
+        duration: 200,
+        easing: Easing.ease
+      }, () => {
+        'worklet'
+        runOnJS(likePost)({post_id: post.id });
+        iconLikeScale.value = withTiming(
+          1.25,
+          {
+            duration: 200,
+            easing: Easing.ease
+          }, () => {
+            iconLikeScale.value = withTiming(
+              1,
+              {
+                duration: 200,
+                easing: Easing.ease
+              },
+              () => {
+                iconLikeOpacity.value = withTiming(
+                  0,
+                  {
+                    duration: 300,
+                    easing: Easing.ease
+                  }
+                )
+              }
+            )
+          }
+        )
+      }
+    )
+  }, [post]);
+
 
 
   return (
     <Container>
+
       <UserProfile>
         <UserAvatar source={{ uri: avatarUri }} />
-        <UserName>{full_name}</UserName>
+
+        <UserName>{user.full_name}</UserName>
       </UserProfile>
 
       <PostImage source={{ uri }} />
+
+      <Animated.View style={iconLikeStyle}>
+        <HeartLikeImage source={heartImage} />
+      </Animated.View>
+
       <InteractionContainer>
-        <Touchable>
-          <Icon name='heart' />
+        <Touchable onPress={() => handleShowLikeIndicator()}>
+          <Icon isLiked={isPostLiked} name='heart' />
         </Touchable>
         <Touchable>
           <Icon name='message-circle' />
@@ -73,7 +167,7 @@ const Post = ({ post }: PostProps): JSX.Element => {
 
       <PostSubtitleContainer>
         <PostSubtitleText>
-          <PostOwnerName>{full_name}{' '}</PostOwnerName>
+          <PostOwnerName>{user.full_name}{' '}</PostOwnerName>
           {subtitle}
         </PostSubtitleText>
       </PostSubtitleContainer>
@@ -84,4 +178,14 @@ const Post = ({ post }: PostProps): JSX.Element => {
   )
 }
 
-export default Post;
+const mapStateToProps = ({ authentication }: ApplicationState) => ({
+  authentication
+})
+
+
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Post)

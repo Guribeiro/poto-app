@@ -1,7 +1,11 @@
 import { Image } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { Text } from '@shared/common/components/Text';
 import { Feather } from '@expo/vector-icons';
+
+interface IconProps {
+  isLiked?: boolean;
+}
 
 export const Container = styled.View`
   justify-content: center;
@@ -29,9 +33,18 @@ export const PostImage = styled(Image)`
   height: ${({ theme }) => theme.screen.rem(17.0625)}px;
 `;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather)<IconProps>`
   color: ${({ theme }) => theme.palette.colors.white};
   font-size: ${({ theme }) => theme.screen.rem(1.4, true)}px;
+
+  ${({ isLiked, theme }) => isLiked && css`
+    color: ${theme.palette.colors.red};
+  `}
+`;
+
+export const HeartLikeImage = styled(Image)`
+  width: ${({ theme }) => theme.screen.rem(6)}px;
+  height: ${({ theme }) => theme.screen.rem(6)}px;
 `;
 
 
@@ -58,6 +71,6 @@ export const CreatedAtContainer = styled.View`
 `;
 
 export const CreatedAtText = styled(Text)`
-  font-size: ${({theme}) => theme.screen.rem(.7)}px;
-  font-family: ${({theme}) => theme.palette.fonts.light};
+  font-size: ${({ theme }) => theme.screen.rem(.7)}px;
+  font-family: ${({ theme }) => theme.palette.fonts.light};
 `;

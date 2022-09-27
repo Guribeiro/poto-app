@@ -9,9 +9,21 @@ export enum PostsTypes {
   ADD_POSTS_REQUEST = 'ADD_POSTS_REQUEST',
   ADD_POSTS_REQUEST_SUCCESS = 'ADD_POSTS_REQUEST_SUCCESS',
   ADD_POSTS_REQUEST_FAILURE = 'ADD_POSTS_REQUEST_FAILURE',
+
+  LIKE_POST_REQUEST = 'LIKE_POST_REQUEST',
+  LIKE_POST_REQUEST_SUCCESS = 'LIKE_POST_REQUEST_SUCCESS',
+  LIKE_POST_REQUEST_FAILURE = 'LIKE_POST_REQUEST_FAILURE',
 }
 
 export interface LoadPostsRequestPayload { };
+
+export interface Like {
+  id: string;
+  user_id: string;
+  post_id: string;
+  created_at: Date;
+  updated_at: Date;
+}
 
 export interface Post {
   id: string;
@@ -21,11 +33,17 @@ export interface Post {
   created_at: Date;
   updated_at: Date;
   user: User;
+  likes: Array<Like>
+  _count_likes: number;
 }
 
 export interface AddPostPayload {
   image: ImageInfo;
   subtitle?: string;
+}
+
+export interface LikePostPayload {
+  post_id: string;
 }
 
 export interface PostAction {

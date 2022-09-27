@@ -1,13 +1,20 @@
 import { call, put } from 'redux-saga/effects'
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosResponse, AxiosError, Axios } from 'axios';
 import Toast from 'react-native-toast-message';
 
 import api from '@shared/services/api'
-import { Post, AddPostPayload } from './types';
+import { Post, AddPostPayload, LikePostPayload } from './types';
 
 import { ImageInfo } from 'expo-image-picker';
 
-import { loadPostsFailure, loadPostsSuccess, addPostSuccess, addPostFailure } from './actions';
+import {
+    loadPostsFailure,
+    loadPostsSuccess,
+    addPostSuccess,
+    addPostFailure,
+    likePostSuccess,
+    likePostFailure,
+  } from './actions';
 
 function apiGetRequestPosts() {
   return api.get('/posts');
@@ -21,6 +28,15 @@ interface ApiPostRequestPost {
 interface CreatePostAction {
   type: string;
   payload: AddPostPayload;
+}
+
+interface LikePostAction {
+  type: string;
+  payload: LikePostPayload
+}
+
+interface ApiPostLikePostRequest {
+  post_id: string;
 }
 
 function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
@@ -40,6 +56,10 @@ function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
       'Content-Type': 'multipart/form-data',
     }
   });
+}
+
+function apiPostLikePostRequest({ post_id }: ApiPostLikePostRequest) {
+  return api.post(`/likes/posts/${post_id}`);
 }
 
 export function* fetchPosts() {
@@ -77,5 +97,21 @@ export function* addPost({ payload }: CreatePostAction) {
       text1: `${err.message} 😥`,
     });
     yield put(addPostFailure());
+  }
+}
+
+export function* likePost({ payload }: LikePostAction) {
+  try {
+    const { data }: AxiosResponse<Post> = yield call(apiPostLikePostRequest, payload);
+
+    yield put(likePostSuccess(data));
+
+  } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
+    yield put(likePostFailure());
   }
 }
