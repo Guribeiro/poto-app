@@ -1,20 +1,22 @@
 import { call, put } from 'redux-saga/effects'
-import { AxiosResponse, AxiosError, Axios } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import Toast from 'react-native-toast-message';
 
 import api from '@shared/services/api'
-import { Post, AddPostPayload, LikePostPayload } from './types';
+import { Post, AddPostPayload, LikePostPayload, AddPostCommentPayload } from './types';
 
 import { ImageInfo } from 'expo-image-picker';
 
 import {
-    loadPostsFailure,
-    loadPostsSuccess,
-    addPostSuccess,
-    addPostFailure,
-    likePostSuccess,
-    likePostFailure,
-  } from './actions';
+  loadPostsFailure,
+  loadPostsSuccess,
+  addPostSuccess,
+  addPostFailure,
+  likePostSuccess,
+  likePostFailure,
+  addPostCommentSuccess,
+  addPostCommentFailure
+} from './actions';
 
 function apiGetRequestPosts() {
   return api.get('/posts');
@@ -25,6 +27,11 @@ interface ApiPostRequestPost {
   subtitle?: string;
 }
 
+interface ApiPostCommentRequest {
+  post_id: string;
+  content: string;
+}
+
 interface CreatePostAction {
   type: string;
   payload: AddPostPayload;
@@ -33,6 +40,11 @@ interface CreatePostAction {
 interface LikePostAction {
   type: string;
   payload: LikePostPayload
+}
+
+interface AddPostCommentAction {
+  type: string;
+  payload: AddPostCommentPayload
 }
 
 interface ApiPostLikePostRequest {
@@ -60,6 +72,12 @@ function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
 
 function apiPostLikePostRequest({ post_id }: ApiPostLikePostRequest) {
   return api.post(`/likes/posts/${post_id}`);
+}
+
+function apiPostCommentRequest({ post_id, content }: ApiPostCommentRequest) {
+  return api.post(`/posts/${post_id}/comment`, {
+    content,
+  });
 }
 
 export function* fetchPosts() {
@@ -113,5 +131,21 @@ export function* likePost({ payload }: LikePostAction) {
       text1: `${err.message} 😥`,
     });
     yield put(likePostFailure());
+  }
+}
+
+export function* addPostComment({ payload }: AddPostCommentAction) {
+  try {
+    const { data }: AxiosResponse<Post> = yield call(apiPostCommentRequest, payload);
+
+    yield put(addPostCommentSuccess(data))
+
+  } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
+    yield put(addPostCommentFailure());
   }
 }

@@ -10,7 +10,13 @@ import {
 } from './authentication/sagas';
 
 import { PostsTypes } from './posts/types';
-import { fetchPosts, addPost, likePost } from './posts/sagas';
+
+import {
+  fetchPosts,
+  addPost,
+  likePost,
+  addPostComment
+} from './posts/sagas';
 
 const {
   LOAD_STORAGED_AUTHENTICATION_REQUEST,
@@ -20,7 +26,12 @@ const {
   UPDATE_AVATAR_REQUEST,
 } = AuthenticationTypes;
 
-const { LOAD_POSTS_REQUEST, ADD_POSTS_REQUEST, LIKE_POST_REQUEST } = PostsTypes;
+const {
+  LOAD_POSTS_REQUEST,
+  ADD_POSTS_REQUEST,
+  LIKE_POST_REQUEST,
+  ADD_POST_COMMENT_REQUEST
+} = PostsTypes;
 
 export default function* rootSaga() {
   yield all([
@@ -31,6 +42,7 @@ export default function* rootSaga() {
     takeLatest(LOAD_STORAGED_AUTHENTICATION_REQUEST, loadStorageAuth),
     takeLatest(ADD_POSTS_REQUEST, addPost),
     takeLatest(LOAD_POSTS_REQUEST, fetchPosts),
-    takeLatest(LIKE_POST_REQUEST, likePost)
+    takeLatest(LIKE_POST_REQUEST, likePost),
+    takeLatest(ADD_POST_COMMENT_REQUEST, addPostComment)
   ]);
 }

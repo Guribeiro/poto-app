@@ -13,7 +13,6 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   Easing,
-  useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -68,6 +67,9 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
 
   const updateImageStyle = useAnimatedStyle(() => {
     return {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
       bottom: updateImageOffset.value,
     };
   });
@@ -165,6 +167,8 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
     }
   }, [requestMediaLibraryPermissions]);
 
+
+
   useEffect(() => {
     loadPosts()
   }, [])
@@ -198,10 +202,7 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
       />
 
       <Animated.View
-        style={[
-          updateImageStyle,
-          { width: '100%', height: '100%', position: 'absolute' },
-        ]}
+        style={updateImageStyle}
       >
         <SelectMediaModal
           loading={false}

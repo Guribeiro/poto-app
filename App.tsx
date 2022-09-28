@@ -4,7 +4,7 @@ import { loadAsync } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { ScreenProvider } from 'responsive-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ThemeProvider } from './src/shared/hooks/theme';
+import AppProvider from '@shared/hooks';
 import { Provider } from 'react-redux';
 import store from './src/shared/store';
 import {
@@ -54,9 +54,9 @@ export default function App() {
     <Provider store={store}>
       <SafeAreaProvider onLayout={onLayoutRootView}>
         <ScreenProvider baseFontSize={16}>
-          <ThemeProvider>
+          <AppProvider>
               <Routes />
-          </ThemeProvider>
+          </AppProvider>
         </ScreenProvider>
         <Toast />
       </SafeAreaProvider>
