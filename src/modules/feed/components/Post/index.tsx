@@ -1,7 +1,11 @@
 import { useCallback, useMemo } from 'react';
+
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Like } from '@shared/store/ducks/posts/types';
+import { formatDistance } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,13 +13,19 @@ import Animated, {
   Easing,
   runOnJS
 } from 'react-native-reanimated';
+
+import { RootFeedParamsList } from '@modules/feed/routes'
+
 import Touchable from '@shared/common/components/Touchable';
 import { User, AuthenticationState } from '@shared/store/ducks/authentication/types';
-import { formatDistance } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
+
+import { Comment, Like } from '@shared/store/ducks/posts/types';
+
 import { ApplicationState } from '@shared/store';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { LikePostPayload } from '@shared/store/ducks/posts/types';
+
+import { usePostComment } from '@modules/feed/hooks/postComment';
 
 import heartImage from '@shared/common/assets/heart/heart-like.png';
 
@@ -32,9 +42,12 @@ import {
   PostOwnerName,
   CreatedAtContainer,
   CreatedAtText,
-  HeartLikeImage
+  HeartLikeImage,
+  PostCommentTouchableContainer,
+  PostCommentTouchable,
+  PostCommentTouchableText,
+  PostCommentUserAvatar
 } from './styles';
-
 
 
 export interface Post {
@@ -44,7 +57,9 @@ export interface Post {
   created_at: Date;
   user: User;
   likes: Array<Like>
-  _count_likes: number;
+  comments: Array<Comment>
+  _likesCount: number;
+  _commentsCount: number;
 }
 
 interface OwnProps {
@@ -61,16 +76,23 @@ interface DispatchProps {
 
 type PostProps = OwnProps & StateProps & DispatchProps;
 
+type PostScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
+
 const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
 
   const { data } = authentication;
   const { photo, subtitle, user, created_at, likes } = post;
+
+  const { navigate } = useNavigation<PostScreenProps>()
+
+  const { openPostCommentModal } = usePostComment();
 
   const uri = `http://10.0.0.175:3333/files/posts/${photo}`;
 
   const avatarUri = user.avatar ?
     `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
+
 
   const isPostLiked = useMemo(() => {
     const isLiked = likes.find(like => like.user_id === data.user.id);
@@ -92,7 +114,7 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
     }
   })
 
-  const createdAtPostFormatDistance = useCallback(() => {
+  const createdAtPostFormatDistance = useMemo(() => {
     const todayDate = new Date();
     return formatDistance(new Date(created_at),
       todayDate, { addSuffix: true, locale: ptBR })
@@ -107,7 +129,7 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         easing: Easing.ease
       }, () => {
         'worklet'
-        runOnJS(likePost)({post_id: post.id });
+        runOnJS(likePost)({ post_id: post.id });
         iconLikeScale.value = withTiming(
           1.25,
           {
@@ -137,7 +159,6 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
   }, [post]);
 
 
-
   return (
     <Container>
 
@@ -154,10 +175,10 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
       </Animated.View>
 
       <InteractionContainer>
-        <Touchable onPress={() => handleShowLikeIndicator()}>
+        <Touchable onPress={handleShowLikeIndicator}>
           <Icon isLiked={isPostLiked} name='heart' />
         </Touchable>
-        <Touchable>
+        <Touchable onPress={() => openPostCommentModal(post)}>
           <Icon name='message-circle' />
         </Touchable>
         <Touchable>
@@ -171,9 +192,24 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
           {subtitle}
         </PostSubtitleText>
       </PostSubtitleContainer>
+
+      {!!post.comments.length && (
+        <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
+          <PostCommentTouchableText>Ver todos os {post._commentsCount} comentários</PostCommentTouchableText>
+        </Touchable>
+      )}
+
+      <PostCommentTouchableContainer>
+        <PostCommentUserAvatar source={{ uri: avatarUri }} />
+        <PostCommentTouchable onPress={() => openPostCommentModal(post)}>
+          <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
+        </PostCommentTouchable>
+      </PostCommentTouchableContainer>
+
       <CreatedAtContainer>
-        <CreatedAtText>{createdAtPostFormatDistance()}</CreatedAtText>
+        <CreatedAtText>{createdAtPostFormatDistance}</CreatedAtText>
       </CreatedAtContainer>
+
     </Container>
   )
 }
