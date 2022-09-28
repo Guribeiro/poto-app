@@ -48,9 +48,11 @@ const PostCommentModal = ({ onRequestClose, post, addPostComment, posts }: PostC
 
   const { loading } = posts;
 
-  const { control, handleSubmit, reset } = useForm<FormData>({
+  const { control, handleSubmit, reset, watch } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
+
+  const content = watch('content');
 
   const onSubmitPostComment = useCallback(({ content }: FormData) => {
     if (!post) return;
@@ -63,7 +65,10 @@ const PostCommentModal = ({ onRequestClose, post, addPostComment, posts }: PostC
     onRequestClose();
 
     reset();
-  }, [post])
+  }, [post]);
+
+  console.log(content);
+
 
   return (
     <TouchableWithoutFeedback onPress={onRequestClose}>
@@ -80,11 +85,13 @@ const PostCommentModal = ({ onRequestClose, post, addPostComment, posts }: PostC
               />
             )}
           />
-          <SendPostCommentTouchable onPress={handleSubmit(onSubmitPostComment)}>
+          <SendPostCommentTouchable
+            onPress={handleSubmit(onSubmitPostComment)}
+          >
             {loading ? (
               <ActivityIndicator />
             ) : (
-              <Icon name='send' />
+              <Icon name='send' disabled={!content} />
             )}
           </SendPostCommentTouchable>
         </Content>

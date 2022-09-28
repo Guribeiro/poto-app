@@ -1,9 +1,13 @@
 import { View, TextInput } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { lighten } from 'polished';
 import Touchable from '@shared/common/components/Touchable';
 import { Feather } from '@expo/vector-icons';
 
+
+interface IconProps {
+  disabled: boolean;
+}
 
 export const Container = styled(View)`
   flex: 1;
@@ -24,13 +28,17 @@ export const Content = styled(View)`
 export const PostCommentTextInput = styled(TextInput)`
   flex: 1;
   padding: ${({ theme }) => theme.screen.rem(.8)}px;
-  color: ${({theme}) => theme.palette.colors.texts.medium};
+  color: ${({ theme }) => theme.palette.colors.texts.medium};
   border: 1px solid ${({ theme }) => lighten(.05, theme.palette.colors.primary)};
 `;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather) <IconProps>`
   color: ${({ theme }) => theme.palette.colors.white};
   font-size: ${({ theme }) => theme.screen.rem(1.4, true)}px;
+
+  ${({ disabled }) => disabled && css`
+    opacity: .2;
+  `}
 `;
 
 export const SendPostCommentTouchable = styled(Touchable)`
