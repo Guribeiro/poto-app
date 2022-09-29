@@ -67,9 +67,6 @@ const PostCommentModal = ({ onRequestClose, post, addPostComment, posts }: PostC
     reset();
   }, [post]);
 
-  console.log(content);
-
-
   return (
     <TouchableWithoutFeedback onPress={onRequestClose}>
       <Container>

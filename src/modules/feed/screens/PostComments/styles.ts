@@ -1,10 +1,16 @@
-import { FlatListProps, View } from 'react-native';
-import styled from 'styled-components/native';
+import { FlatListProps, View, TextInput } from 'react-native';
+import styled, { css } from 'styled-components/native';
 import Animated from 'react-native-reanimated';
 
+import { lighten } from 'polished'
 import { Feather } from '@expo/vector-icons';
 import { Text } from '@shared/common/components/Text';
 import { Comment } from '@shared/store/ducks/posts/types';
+import Touchable from '@shared/common/components/Touchable';
+
+interface IconProps {
+  disabled: boolean;
+}
 
 export const Container = styled(View)`
 flex: 1;
@@ -16,8 +22,7 @@ ${({ theme }) => theme.screen.rem(.8)}px
 ${({ theme }) => theme.screen.rem(1.6)}px;
 
 background-color: ${({ theme }) => theme.palette.colors.secondary};
-border-bottom-left-radius: ${({ theme }) => theme.screen.rem(1.6)}px;
-border-bottom-right-radius: ${({ theme }) => theme.screen.rem(1.6)}px;
+
 flex-direction: row;
 justify-content: center;
 align-items: center;
@@ -45,12 +50,50 @@ font-family: ${({ theme }) => theme.palette.fonts.bold};
 font-size: ${({ theme }) => theme.screen.rem(1.8, true)}px;
 `;
 
+
+export const AddPostCommentForm = styled(View)`
+  bottom: 0;
+  flex-direction: row;
+  border-top-width: .5px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.15);
+  background: ${({ theme }) => theme.palette.colors.primary};
+  border-top-color: ${({theme}) => theme.palette.colors.texts.strong};
+  padding: ${({ theme }) => theme.screen.rem(2)}px ${({ theme }) => theme.screen.rem(.8)}px;
+`
+
+export const PostCommentTextInput = styled(TextInput)`
+  flex: 1;
+  padding: ${({ theme }) => theme.screen.rem(.8)}px;
+  color: ${({ theme }) => theme.palette.colors.texts.medium};
+  border: 1px solid ${({ theme }) => lighten(.05, theme.palette.colors.primary)};
+`;
+
+export const SendPostCommentTouchableIcon = styled(Feather) <IconProps>`
+  color: ${({ theme }) => theme.palette.colors.white};
+  font-size: ${({ theme }) => theme.screen.rem(1.4, true)}px;
+
+  ${({ disabled }) => disabled && css`
+    opacity: .2;
+  `}
+`;
+
+export const SendPostCommentTouchable = styled(Touchable)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: ${({ theme }) => theme.screen.rem(.8)}px;
+
+  border: 1px solid ${({ theme }) => lighten(.05, theme.palette.colors.primary)};
+`
+
 export const PostCommentsList = styled(
-Animated.FlatList as new (props: FlatListProps<Comment>) => Animated.FlatList<Comment>,
+  Animated.FlatList as new (props: FlatListProps<Comment>) => Animated.FlatList<Comment>,
 ).attrs(({ theme }) => ({
   showsVerticalScrollIndicator: false,
   contentContainerStyle: {
     padding: theme.screen.rem(.8)
   }
 }))``;
+
 
