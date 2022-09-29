@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
 import TabBar from '../components/Tabbar';
@@ -18,6 +19,8 @@ export type RootAppParamsList = {
   ProfileRoutes: undefined;
 }
 
+const hiddenRoutesTabBar = ['PostComments', 'UpdateProfile', 'Settings'];
+
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
 
 const AppRoutes = (): JSX.Element => {
@@ -32,8 +35,40 @@ const AppRoutes = (): JSX.Element => {
         }}
         tabBar={props => <TabBar {...props} />}
       >
-        <Screen name="FeedRoutes" component={FeedRoutes} />
-        <Screen name='ProfileRoutes' component={ProfileRoutes} />
+        <Screen
+          name="FeedRoutes"
+          component={FeedRoutes}
+          options={({ route }) => {
+            const focusedRouteName =
+              getFocusedRouteNameFromRoute(route) || 'Feed';
+            if (hiddenRoutesTabBar.includes(focusedRouteName)) {
+              return {
+                tabBarStyle: { display: 'none' },
+              };
+            }
+
+            return {
+              tabBarStyle: { display: 'flex' },
+            };
+          }}
+        />
+        <Screen
+          name='ProfileRoutes'
+          component={ProfileRoutes}
+          options={({ route }) => {
+            const focusedRouteName =
+              getFocusedRouteNameFromRoute(route) || 'Profile';
+            if (hiddenRoutesTabBar.includes(focusedRouteName)) {
+              return {
+                tabBarStyle: { display: 'none' },
+              };
+            }
+
+            return {
+              tabBarStyle: { display: 'flex' },
+            };
+          }}
+        />
       </Navigator>
     </Container>
   )

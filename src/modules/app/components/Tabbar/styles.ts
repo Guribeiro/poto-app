@@ -9,9 +9,11 @@ type SelectedProps = {
   selected: boolean;
 };
 
+type ContainerProps = {
+  visible: boolean;
+};
 
-
-export const Container = styled(View)`
+export const Container = styled(View)<ContainerProps>`
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
@@ -19,6 +21,12 @@ export const Container = styled(View)`
   background: ${({ theme }) => theme.palette.colors.secondary};
   border-top-width: 0.5px;
   border-top-color: ${({ theme }) => theme.palette.colors.texts.strong};
+
+  ${({ visible }) =>
+    !visible &&
+    css`
+      display: none;
+  `}
 
 `;
 
