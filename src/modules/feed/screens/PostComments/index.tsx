@@ -20,7 +20,7 @@ import { RootFeedParamsList, PostCommentsParams } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import Touchable from '@shared/common/components/Touchable';
-import { AddPostCommentPayload, Comment, PostsState, Post } from '@shared/store/ducks/posts/types';
+import { AddPostCommentPayload, RemovePostCommentPayload, Comment, PostsState, Post } from '@shared/store/ducks/posts/types';
 
 import api from '@shared/services/api';
 
@@ -51,6 +51,7 @@ interface StateProps {
 
 interface DispatchProps {
   addPostComment(data: AddPostCommentPayload): void;
+  removePostComment(data: RemovePostCommentPayload): void;
 }
 
 type PostCommentsProps = DispatchProps & StateProps;
@@ -61,9 +62,7 @@ const schema = yup.object().shape({
   content: yup.string().required(),
 })
 
-
-
-const PostComments = ({ addPostComment, posts }: PostCommentsProps): JSX.Element => {
+const PostComments = ({ addPostComment, posts, removePostComment }: PostCommentsProps): JSX.Element => {
   const { goBack } = useNavigation<PostCommentsScreenProps>();
 
   const [comments, setComments] = useState<Array<Comment>>(() => {
@@ -83,9 +82,8 @@ const PostComments = ({ addPostComment, posts }: PostCommentsProps): JSX.Element
 
   const inputCommentStyle = useAnimatedStyle(() => {
     return {
-      position: 'absolute',
       bottom: inputCommentPositionX.value,
-      right:0,
+      right: 0,
       left: 0,
     }
   });
@@ -103,11 +101,22 @@ const PostComments = ({ addPostComment, posts }: PostCommentsProps): JSX.Element
     reset();
   }, [post_id]);
 
+  const onDeletePostComment = useCallback(async (comment_id: string) => {
+
+    setComments(prev => prev.filter(comment => comment.id !== comment_id));
+
+    removePostComment({
+      post_id,
+      comment_id,
+    });
+
+  },[removePostComment])
+
   useEffect(() => {
     const post = posts.data.find((post) => post.id === post_id);
 
     setComments(post ? post.comments : [])
-  }, [posts])
+  }, [posts]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', (event) => {
@@ -146,7 +155,7 @@ const PostComments = ({ addPostComment, posts }: PostCommentsProps): JSX.Element
       <PostCommentsList
         refreshing={posts.loading}
         data={comments}
-        renderItem={({ item }) => <PostComment comment={item} />}
+        renderItem={({ item }) => <PostComment comment={item} onDelete={() => onDeletePostComment(item.id)} />}
         keyExtractor={item => item.id}
       />
 
@@ -176,10 +185,7 @@ const PostComments = ({ addPostComment, posts }: PostCommentsProps): JSX.Element
           </SendPostCommentTouchable>
         </AddPostCommentForm>
       </Animated.View>
-
-
     </Container>
-
   )
 }
 

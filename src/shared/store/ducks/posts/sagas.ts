@@ -3,7 +3,7 @@ import { AxiosResponse, AxiosError } from 'axios';
 import Toast from 'react-native-toast-message';
 
 import api from '@shared/services/api'
-import { Post, AddPostPayload, LikePostPayload, AddPostCommentPayload } from './types';
+import { Post, AddPostPayload, LikePostPayload, AddPostCommentPayload, RemovePostCommentPayload, Comment } from './types';
 
 import { ImageInfo } from 'expo-image-picker';
 
@@ -15,7 +15,9 @@ import {
   likePostSuccess,
   likePostFailure,
   addPostCommentSuccess,
-  addPostCommentFailure
+  addPostCommentFailure,
+  removePostCommentFailure,
+  removePostCommentSuccess
 } from './actions';
 
 function apiGetRequestPosts() {
@@ -47,14 +49,21 @@ interface AddPostCommentAction {
   payload: AddPostCommentPayload
 }
 
+interface RemovePostCommentAction {
+  type: string;
+  payload: RemovePostCommentPayload;
+}
+
 interface ApiPostLikePostRequest {
   post_id: string;
 }
+interface ApiDeletePostCommentRequest {
+  post_id: string,
+  comment_id: string;
+}
 
 function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
-
   const form = new FormData();
-
   const filename = image.uri.split('/').pop();
   const match = /\.(\w+)$/.exec(filename!!);
   const type = match ? `image/${match[1]}` : `image`;
@@ -75,9 +84,13 @@ function apiPostLikePostRequest({ post_id }: ApiPostLikePostRequest) {
 }
 
 function apiPostCommentRequest({ post_id, content }: ApiPostCommentRequest) {
-  return api.post(`/posts/${post_id}/comment`, {
+  return api.post(`/posts/${post_id}/comments`, {
     content,
   });
+}
+
+function apiDeletePostCommentRequest({ post_id, comment_id }: ApiDeletePostCommentRequest) {
+  return api.delete(`/posts/${post_id}/comments/${comment_id}`);
 }
 
 export function* fetchPosts() {
@@ -147,5 +160,22 @@ export function* addPostComment({ payload }: AddPostCommentAction) {
       text1: `${err.message} 😥`,
     });
     yield put(addPostCommentFailure());
+  }
+}
+
+export function* removePostComment({ payload }: RemovePostCommentAction) {
+  try {
+
+    const { data }: AxiosResponse<Post> = yield call(apiDeletePostCommentRequest, payload);
+
+    yield put(removePostCommentSuccess(data))
+
+  } catch (error) {
+    yield put(removePostCommentFailure());
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
   }
 }

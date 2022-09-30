@@ -22,7 +22,11 @@ const {
 
   ADD_POST_COMMENT_REQUEST,
   ADD_POST_COMMENT_REQUEST_FAILURE,
-  ADD_POST_COMMENT_REQUEST_SUCCESS
+  ADD_POST_COMMENT_REQUEST_SUCCESS,
+
+  REMOVE_POST_COMMENT_REQUEST,
+  REMOVE_POST_COMMENT_REQUEST_FAILURE,
+  REMOVE_POST_COMMENT_REQUEST_SUCCESS
 } = PostsTypes;
 
 const INITIAL_STATE: PostsState = {
@@ -71,6 +75,18 @@ const reducer: Reducer<PostsState, PostAction> = (
 
       return { loading: false, error: false, data: postsCommentsData }
     case ADD_POST_COMMENT_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true }
+    case REMOVE_POST_COMMENT_REQUEST:
+      return { ...state, loading: true }
+    case REMOVE_POST_COMMENT_REQUEST_SUCCESS:
+      const removePostsData = [...state.data];
+
+      const findUpdatedPostIndex = removePostsData.findIndex(post => post.id === action.payload.data.id);
+
+      removePostsData[findUpdatedPostIndex] = action.payload.data;
+
+      return { ...state, loading: false, error: false, data: removePostsData }
+    case REMOVE_POST_COMMENT_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     default:
       return state

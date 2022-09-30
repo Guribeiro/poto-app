@@ -18,6 +18,9 @@ export enum PostsTypes {
   ADD_POST_COMMENT_REQUEST_SUCCESS = 'ADD_POST_COMMENT_REQUEST_SUCCESS',
   ADD_POST_COMMENT_REQUEST_FAILURE = 'ADD_POST_COMMENT_REQUEST_FAILURE',
 
+  REMOVE_POST_COMMENT_REQUEST = 'REMOVE_POST_COMMENT_REQUEST',
+  REMOVE_POST_COMMENT_REQUEST_SUCCESS = 'REMOVE_POST_COMMENT_REQUEST_SUCCESS',
+  REMOVE_POST_COMMENT_REQUEST_FAILURE = 'REMOVE_POST_COMMENT_REQUEST_FAILURE',
 }
 
 export interface LoadPostsRequestPayload { };
@@ -59,6 +62,7 @@ export interface AddPostPayload {
   subtitle?: string;
 }
 
+
 export interface LikePostPayload {
   post_id: string;
 }
@@ -66,6 +70,11 @@ export interface LikePostPayload {
 export interface AddPostCommentPayload {
   post_id: string;
   content: string;
+}
+
+export interface RemovePostCommentPayload {
+  post_id: string;
+  comment_id: string;
 }
 
 export interface PostAction {
