@@ -80,7 +80,7 @@ function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
 }
 
 function apiPostLikePostRequest({ post_id }: ApiPostLikePostRequest) {
-  return api.post(`/likes/posts/${post_id}`);
+  return api.post(`/posts/${post_id}/likes`);
 }
 
 function apiPostCommentRequest({ post_id, content }: ApiPostCommentRequest) {
