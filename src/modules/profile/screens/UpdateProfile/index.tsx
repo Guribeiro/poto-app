@@ -14,7 +14,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-import { RootProfileRoutesParamsList } from '@modules/profile/routes';
+import { RootEditProfileRouteParams } from '@modules/profile/screens/UpdateProfile/routes';
 
 import { ApplicationState } from '@shared/store';
 import Touchable from '@shared/common/components/Touchable';
@@ -22,7 +22,6 @@ import { AuthenticationState } from '@shared/store/ducks/authentication/types';
 import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
 import EditProfileButton from '@modules/settings/components/EditProfileButton';
-import UpdateName from '@modules/profile/components/UpdateName';
 
 import {
   Icon,
@@ -36,7 +35,7 @@ import {
   EditProfileButtonContainer
 } from './styles';
 
-type SettingsScreenProps = NativeStackNavigationProp<RootProfileRoutesParamsList, 'Settings'>
+type UpdateProfileScreenProps = NativeStackNavigationProp<RootEditProfileRouteParams, 'UpdateProfile'>
 
 interface StateProps {
   authentication: AuthenticationState;
@@ -52,11 +51,11 @@ type Field = 'name' | 'email' | 'username'
 
 
 
-const Settings = ({ authentication, logoutRequest }: SettingsProps): JSX.Element => {
+const UpdateProfile = ({ authentication, logoutRequest }: SettingsProps): JSX.Element => {
   const INITIAL_VALUE = 0;
   const FINAL_VALUE = 1000;
 
-  const { goBack } = useNavigation<SettingsScreenProps>()
+  const { goBack, navigate } = useNavigation<UpdateProfileScreenProps>()
 
   const [field, setField] = useState<Field>('name')
 
@@ -77,14 +76,15 @@ const Settings = ({ authentication, logoutRequest }: SettingsProps): JSX.Element
         </HeaderContent>
       </Header>
 
-
       <Content>
         <EditProfileButtonsContainer>
           <EditProfileButtonContainer>
             <EditProfileButton
               label='name'
               type='common'
-              onPress={() => { }}
+              onPress={() => navigate('UpdateName', {
+                name: user.full_name
+              })}
             >
               {user.full_name}
             </EditProfileButton>
@@ -94,7 +94,9 @@ const Settings = ({ authentication, logoutRequest }: SettingsProps): JSX.Element
             <EditProfileButton
               label='email'
               type='common'
-              onPress={() => { }}
+              onPress={() => navigate('UpdateEmail', {
+                email: user.email
+              })}
             >
               {user.email}
             </EditProfileButton>
@@ -103,7 +105,9 @@ const Settings = ({ authentication, logoutRequest }: SettingsProps): JSX.Element
             <EditProfileButton
               label='username'
               type='username'
-              onPress={() => { }}
+              onPress={() => navigate('UpdateUsername', {
+                username: user.username
+              })}
             >
               {user.username}
             </EditProfileButton>
@@ -121,4 +125,4 @@ const mapStateToProps = ({ authentication }: ApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(AuthenticationActions, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateProfile);

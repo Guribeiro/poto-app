@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { AuthenticationTypes, UpdateAvatarRequestPayload, User } from '../../types';
+import { AuthenticationTypes, UpdateAvatarRequestPayload, User } from '../types';
 
 const {
   UPDATE_AVATAR_REQUEST,

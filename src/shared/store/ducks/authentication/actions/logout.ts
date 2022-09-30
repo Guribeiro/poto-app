@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { AuthenticationTypes } from '../../types';
+import { AuthenticationTypes } from '../types';
 
 const {
   LOGOUT_REQUEST,

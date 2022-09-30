@@ -71,7 +71,6 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
 
   const { navigate } = useNavigation<ProfileScreenProps>()
 
-
   const SELECT_MEDIA_INITIAL_VALUE = 1000;
   const SELECT_MEDIA_FINAL_VALUE = 0;
 
@@ -194,10 +193,10 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
         </UserProfileDetails>
         <Spacer size={16} />
         <UserProfileDetails>
-          <Text>Gustavo Henrique Ribeiro Dias</Text>
+          <Text>{user.full_name}</Text>
         </UserProfileDetails>
         <Spacer size={32} />
-        <UpdateProfileButton onPress={() => navigate('UpdateProfile')}>
+        <UpdateProfileButton onPress={() => navigate('UpdateProfileRoutes')}>
           <Text>Editar Perfil</Text>
         </UpdateProfileButton>
       </Header>

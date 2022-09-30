@@ -18,6 +18,18 @@ export enum AuthenticationTypes {
   UPDATE_AVATAR_REQUEST = 'UPDATE_AVATAR_REQUEST',
   UPDATE_AVATAR_REQUEST_SUCCESS = 'UPDATE_AVATAR_REQUEST_SUCCESS',
   UPDATE_AVATAR_REQUEST_FAILURE = 'UPDATE_AVATAR_REQUEST_FAILURE',
+
+  UPDATE_NAME_REQUEST = 'UPDATE_NAME_REQUEST',
+  UPDATE_NAME_REQUEST_SUCCESS = 'UPDATE_NAME_REQUEST_SUCCESS',
+  UPDATE_NAME_REQUEST_FAILURE = 'UPDATE_NAME_REQUEST_FAILURE',
+
+  UPDATE_EMAIL_REQUEST = 'UPDATE_EMAIL_REQUEST',
+  UPDATE_EMAIL_REQUEST_SUCCESS = 'UPDATE_EMAIL_REQUEST_SUCCESS',
+  UPDATE_EMAIL_REQUEST_FAILURE = 'UPDATE_EMAIL_REQUEST_FAILURE',
+
+  UPDATE_USERNAME_REQUEST = 'UPDATE_USERNAME_REQUEST',
+  UPDATE_USERNAME_REQUEST_SUCCESS = 'UPDATE_USERNAME_REQUEST_SUCCESS',
+  UPDATE_USERNAME_REQUEST_FAILURE = 'UPDATE_USERNAME_REQUEST_FAILURE',
 }
 
 export interface SignupRequestPayload {
@@ -35,6 +47,18 @@ export interface LoginRequestPayload {
 
 export interface UpdateAvatarRequestPayload {
   image: string;
+}
+
+export interface UpdateNameRequestPayload {
+  name: string;
+}
+
+export interface UpdateUsernameRequestPayload {
+  username: string;
+}
+
+export interface UpdateEmailRequestPayload {
+  email: string;
 }
 
 export interface User {

@@ -1,5 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects';
 import { AuthenticationTypes } from './authentication/types';
+import { PostsTypes } from './posts/types';
+
 
 import {
   login,
@@ -7,9 +9,10 @@ import {
   signup,
   loadStorageAuth,
   updateAvatar,
+  updateName,
+  updateEmail,
+  updateUsername
 } from './authentication/sagas';
-
-import { PostsTypes } from './posts/types';
 
 import {
   fetchPosts,
@@ -23,6 +26,9 @@ const {
   LOAD_STORAGED_AUTHENTICATION_REQUEST,
   LOAD_AUTHENTICATION_REQUEST,
   UPDATE_AVATAR_REQUEST,
+  UPDATE_NAME_REQUEST,
+  UPDATE_EMAIL_REQUEST,
+  UPDATE_USERNAME_REQUEST,
   SIGNUP_REQUEST,
   LOGOUT_REQUEST,
 } = AuthenticationTypes;
@@ -47,5 +53,8 @@ export default function* rootSaga() {
     takeLatest(LIKE_POST_REQUEST, likePost),
     takeLatest(ADD_POST_COMMENT_REQUEST, addPostComment),
     takeLatest(REMOVE_POST_COMMENT_REQUEST, removePostComment),
+    takeLatest(UPDATE_NAME_REQUEST, updateName),
+    takeLatest(UPDATE_EMAIL_REQUEST, updateEmail),
+    takeLatest(UPDATE_USERNAME_REQUEST, updateUsername),
   ]);
 }

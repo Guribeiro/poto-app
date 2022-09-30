@@ -25,7 +25,19 @@ const {
 
   UPDATE_AVATAR_REQUEST,
   UPDATE_AVATAR_REQUEST_FAILURE,
-  UPDATE_AVATAR_REQUEST_SUCCESS
+  UPDATE_AVATAR_REQUEST_SUCCESS,
+
+  UPDATE_NAME_REQUEST,
+  UPDATE_NAME_REQUEST_FAILURE,
+  UPDATE_NAME_REQUEST_SUCCESS,
+
+  UPDATE_EMAIL_REQUEST,
+  UPDATE_EMAIL_REQUEST_FAILURE,
+  UPDATE_EMAIL_REQUEST_SUCCESS,
+
+  UPDATE_USERNAME_REQUEST,
+  UPDATE_USERNAME_REQUEST_FAILURE,
+  UPDATE_USERNAME_REQUEST_SUCCESS
 } = AuthenticationTypes;
 
 const INITIAL_STATE: AuthenticationState = {
@@ -78,6 +90,24 @@ const reducer: Reducer<AuthenticationState, AuthenticationAction> = (
     case UPDATE_AVATAR_REQUEST_SUCCESS:
       return { loading: false, error: false, data: { ...state.data, user: action.payload.data } }
     case UPDATE_AVATAR_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true };
+    case UPDATE_NAME_REQUEST:
+      return { ...state, loading: true }
+    case UPDATE_NAME_REQUEST_SUCCESS:
+      return { loading: false, error: false, data: { ...state.data, user: action.payload.data } }
+    case UPDATE_NAME_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true };
+    case UPDATE_EMAIL_REQUEST:
+      return { ...state, loading: true }
+    case UPDATE_EMAIL_REQUEST_SUCCESS:
+      return { loading: false, error: false, data: { ...state.data, user: action.payload.data } }
+    case UPDATE_EMAIL_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true };
+    case UPDATE_USERNAME_REQUEST:
+      return { ...state, loading: true }
+    case UPDATE_USERNAME_REQUEST_SUCCESS:
+      return { loading: false, error: false, data: { ...state.data, user: action.payload.data } }
+    case UPDATE_USERNAME_REQUEST_FAILURE:
       return { ...state, loading: false, error: true };
     default:
       return state;

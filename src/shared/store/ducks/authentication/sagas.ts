@@ -10,6 +10,9 @@ import {
   LoginRequestPayload,
   SignupRequestPayload,
   UpdateAvatarRequestPayload,
+  UpdateNameRequestPayload,
+  UpdateEmailRequestPayload,
+  UpdateUsernameRequestPayload,
   User,
 } from './types';
 
@@ -22,7 +25,13 @@ import {
   loadStorageAuthenticationSuccess,
   loadStorageAuthenticationFailure,
   updateAvatarRequestSuccess,
-  updateAvatarRequestFailure
+  updateAvatarRequestFailure,
+  updateNameRequestSuccess,
+  updateNameRequestFailure,
+  updateEmailRequestSuccess,
+  updateEmailRequestFailure,
+  updateUsernameRequestSuccess,
+  updateUsernameRequestFailure
 } from './actions';
 
 export const STORAGE_AUTHENTICATION_KEY = '@test:authentication';
@@ -55,6 +64,21 @@ interface Action {
 interface UpdateAvatarAction {
   type: string;
   payload: UpdateAvatarRequestPayload
+}
+
+interface UpdateNameAction {
+  type: string;
+  payload: UpdateNameRequestPayload
+}
+
+interface UpdateEmailAction {
+  type: string;
+  payload: UpdateEmailRequestPayload
+}
+
+interface UpdateUsernameAction {
+  type: string;
+  payload: UpdateUsernameRequestPayload
 }
 
 interface SignupAction {
@@ -104,6 +128,24 @@ function apiPutRequestUpdateAvatar({ image }: UpdateAvatarRequestPayload) {
   form.append('photo', { uri: image, name: image });
 
   return api.put('/profile/avatar', form)
+}
+
+function apiPutRequestUpdateName({ name }: UpdateNameRequestPayload) {
+  return api.put('/profile/name', {
+    name
+  })
+}
+
+function apiPutRequestUpdateEmail({ email }: UpdateEmailRequestPayload) {
+  return api.put('/profile/email', {
+    email
+  })
+}
+
+function apiPutRequestUpdateUsername({ username }: UpdateUsernameRequestPayload) {
+  return api.put('/profile/username', {
+    username
+  })
 }
 
 
@@ -245,7 +287,6 @@ export function* updateAvatar({ payload }: UpdateAvatarAction) {
 
     const { token, refresh_token } = JSON.parse(storagedData);
 
-
     const authentication: Authentication = {
       token,
       user: data,
@@ -272,5 +313,139 @@ export function* updateAvatar({ payload }: UpdateAvatarAction) {
       text1: `${err.message} 😥`,
     });
     yield put(updateAvatarRequestFailure());
+  }
+}
+
+export function* updateName({ payload }: UpdateNameAction) {
+  try {
+    const response: AxiosResponse<User> = yield call(apiPutRequestUpdateName, payload);
+
+    const { data } = response;
+
+    const storagedData: AsyncStorageGetRequestResponse = yield call(
+      asyncStorageGetRequest,
+      { key: STORAGE_AUTHENTICATION_KEY }
+    );
+
+    if (!storagedData) throw new Error('storagedAuth could not be found');
+
+    const { token, refresh_token } = JSON.parse(storagedData);
+
+    const authentication: Authentication = {
+      token,
+      user: data,
+      refresh_token
+    };
+
+    yield AsyncStorage.setItem(
+      STORAGE_AUTHENTICATION_KEY,
+      JSON.stringify(authentication),
+    );
+
+    yield put(updateNameRequestSuccess(data));
+
+    Toast.show({
+      type: 'success',
+      text1: 'Seu nome foi atualizado com sucesso',
+      position: 'bottom',
+    });
+
+  } catch (error) {
+    console.log(error);
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
+    yield put(updateNameRequestFailure());
+  }
+}
+
+export function* updateEmail({ payload }: UpdateEmailAction) {
+  try {
+    const response: AxiosResponse<User> = yield call(apiPutRequestUpdateEmail, payload);
+
+    const { data } = response;
+
+    const storagedData: AsyncStorageGetRequestResponse = yield call(
+      asyncStorageGetRequest,
+      { key: STORAGE_AUTHENTICATION_KEY }
+    );
+
+    if (!storagedData) throw new Error('storagedAuth could not be found');
+
+    const { token, refresh_token } = JSON.parse(storagedData);
+
+    const authentication: Authentication = {
+      token,
+      user: data,
+      refresh_token
+    };
+
+    yield AsyncStorage.setItem(
+      STORAGE_AUTHENTICATION_KEY,
+      JSON.stringify(authentication),
+    );
+
+    yield put(updateEmailRequestSuccess(data));
+
+    Toast.show({
+      type: 'success',
+      text1: 'Seu email foi atualizado com sucesso',
+      position: 'bottom',
+    });
+
+  } catch (error) {
+    console.log(error);
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
+    yield put(updateEmailRequestFailure());
+  }
+}
+
+export function* updateUsername({ payload }: UpdateUsernameAction) {
+  try {
+    const response: AxiosResponse<User> = yield call(apiPutRequestUpdateUsername, payload);
+
+    const { data } = response;
+
+    const storagedData: AsyncStorageGetRequestResponse = yield call(
+      asyncStorageGetRequest,
+      { key: STORAGE_AUTHENTICATION_KEY }
+    );
+
+    if (!storagedData) throw new Error('storagedAuth could not be found');
+
+    const { token, refresh_token } = JSON.parse(storagedData);
+
+    const authentication: Authentication = {
+      token,
+      user: data,
+      refresh_token
+    };
+
+    yield AsyncStorage.setItem(
+      STORAGE_AUTHENTICATION_KEY,
+      JSON.stringify(authentication),
+    );
+
+    yield put(updateUsernameRequestSuccess(data));
+
+    Toast.show({
+      type: 'success',
+      text1: 'Seu username foi atualizado com sucesso',
+      position: 'bottom',
+    });
+
+  } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    Toast.show({
+      type: 'error',
+      text1: `${err.message} 😥`,
+    });
+    yield put(updateUsernameRequestFailure());
   }
 }

@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { AuthenticationTypes, Authentication } from '../../types';
+import { AuthenticationTypes, Authentication } from '../types';
 
 const {
   LOAD_STORAGED_AUTHENTICATION_REQUEST,

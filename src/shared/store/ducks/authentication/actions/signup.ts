@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { AuthenticationTypes, SignupRequestPayload, } from '../../types';
+import { AuthenticationTypes, SignupRequestPayload, } from '../types';
 
 const {
   SIGNUP_REQUEST,

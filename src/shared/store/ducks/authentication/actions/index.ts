@@ -2,29 +2,46 @@ export {
   signupRequest,
   signupRequestFailure,
   signupRequestSuccess
-} from '../actions/functions/signup';
+} from '../actions/signup';
 
 export {
   logoutRequest,
   logoutRequestFailure,
   logoutRequestSuccess
-} from '../actions/functions/logout';
+} from '../actions/logout';
 
 export {
   loginRequest,
   loginRequestFailure,
   loginRequestSuccess
-} from '../actions/functions/login';
+} from './login';
 
 export {
   loadStorageAuthentication,
   loadStorageAuthenticationFailure,
   loadStorageAuthenticationSuccess
-} from '../actions/functions/storage';
+} from '../actions/storage';
 
 export {
   updateAvatarRequest,
   updateAvatarRequestFailure,
   updateAvatarRequestSuccess
-} from '../actions/functions/updateAvatar';
+} from '../actions/updateAvatar';
 
+export {
+  updateNameRequest,
+  updateNameRequestFailure,
+  updateNameRequestSuccess
+} from '../actions/updateName';
+
+export {
+  updateEmailRequest,
+  updateEmailRequestFailure,
+  updateEmailRequestSuccess
+} from '../actions/updateEmail';
+
+export {
+  updateUsernameRequest,
+  updateUsernameRequestFailure,
+  updateUsernameRequestSuccess
+} from '../actions/updateUsername';
