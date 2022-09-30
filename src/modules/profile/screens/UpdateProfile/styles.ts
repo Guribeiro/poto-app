@@ -15,8 +15,6 @@ export const Header = styled(View)`
   ${({ theme }) => theme.screen.rem(1.6)}px;
 
   background-color: ${({ theme }) => theme.palette.colors.secondary};
-  border-bottom-left-radius: ${({ theme }) => theme.screen.rem(1.6)}px;
-  border-bottom-right-radius: ${({ theme }) => theme.screen.rem(1.6)}px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -48,7 +46,7 @@ export const Icon = styled(Feather)`
 export const EditProfileButtonsContainer = styled(View)``;
 
 export const EditProfileButtonContainer = styled(View)`
-  margin: ${({theme}) => theme.screen.rem(.5)}px;
+  margin: ${({theme}) => theme.screen.rem(.5)}px 0;
 `;
 
 
