@@ -19,7 +19,7 @@ export type RootAppParamsList = {
   ProfileRoutes: undefined;
 }
 
-const hiddenRoutesTabBar = ['PostComments', 'UpdateProfile', 'Settings'];
+const hiddenRoutesTabBar = ['UpdateProfile', 'Settings', 'CreatePost', 'PostComments'];
 
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
 
@@ -40,7 +40,7 @@ const AppRoutes = (): JSX.Element => {
           component={FeedRoutes}
           options={({ route }) => {
             const focusedRouteName =
-              getFocusedRouteNameFromRoute(route) || 'Feed';
+              getFocusedRouteNameFromRoute(route) || 'FeedRoutes';
             if (hiddenRoutesTabBar.includes(focusedRouteName)) {
               return {
                 tabBarStyle: { display: 'none' },

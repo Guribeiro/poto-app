@@ -10,7 +10,7 @@ type SelectedProps = {
 };
 
 type ContainerProps = {
-  visible: boolean;
+  display: string;
 };
 
 export const Container = styled(View)<ContainerProps>`
@@ -22,12 +22,10 @@ export const Container = styled(View)<ContainerProps>`
   border-top-width: 0.5px;
   border-top-color: ${({ theme }) => theme.palette.colors.texts.strong};
 
-  ${({ visible }) =>
-    !visible &&
+  ${({ display }) =>
     css`
-      display: none;
+      display: ${display};
   `}
-
 `;
 
 export const Touchable = styled(TouchableOpacity) <SelectedProps>`
