@@ -15,6 +15,8 @@ import {
 
 import Toast from 'react-native-toast-message'
 
+import { config } from '@shared/config/toastConfig';
+
 import Routes from './src/shared/routes';
 
 export default function App() {
@@ -55,10 +57,10 @@ export default function App() {
       <SafeAreaProvider onLayout={onLayoutRootView}>
         <ScreenProvider baseFontSize={16}>
           <AppProvider>
-              <Routes />
+            <Routes />
           </AppProvider>
         </ScreenProvider>
-        <Toast />
+        <Toast config={config} />
       </SafeAreaProvider>
     </Provider>
   );
