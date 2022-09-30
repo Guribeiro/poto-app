@@ -19,7 +19,7 @@ export type RootAppParamsList = {
   ProfileRoutes: undefined;
 }
 
-const hiddenRoutesTabBar = ['UpdateProfile', 'Settings', 'CreatePost', 'PostComments'];
+const hiddenRoutesTabBar = ['UpdateProfileRoutes', 'Settings', 'CreatePost', 'PostComments'];
 
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
 
