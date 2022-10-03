@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { ActivityIndicator, Keyboard } from 'react-native';
+import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { connect } from 'react-redux';
 import Animated, {
   useSharedValue,
@@ -22,8 +22,6 @@ import * as PostsActions from '@shared/store/ducks/posts/actions';
 import Touchable from '@shared/common/components/Touchable';
 import { AddPostCommentPayload, RemovePostCommentPayload, Comment, PostsState, Post } from '@shared/store/ducks/posts/types';
 
-import api from '@shared/services/api';
-
 import PostComment from './components/PostComment';
 
 import {
@@ -37,9 +35,12 @@ import {
   AddPostCommentForm,
   SendPostCommentTouchableIcon,
   PostCommentTextInput,
-  SendPostCommentTouchable
+  SendPostCommentTouchable,
+  PostSubtitleContainer,
+  PostOwnerName,
+  PostSubtitleText,
+  UserAvatar
 } from './styles';
-import { Text } from '@shared/common/components/Text';
 
 interface FormData {
   content: string;
@@ -63,20 +64,20 @@ const schema = yup.object().shape({
 })
 
 const PostComments = ({ addPostComment, posts, removePostComment }: PostCommentsProps): JSX.Element => {
+  const { params } = useRoute();
+
+  const { post_id } = params as PostCommentsParams;
+
   const { goBack } = useNavigation<PostCommentsScreenProps>();
 
-  const [comments, setComments] = useState<Array<Comment>>(() => {
+  const [post, setPost] = useState<Post>(() => {
     const post = posts.data.find((post) => post.id === post_id)
-    return post ? post.comments : []
+    return post || {} as Post
   });
 
   const { handleSubmit, control, watch, reset } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
-
-  const { params } = useRoute();
-
-  const { post_id } = params as PostCommentsParams;
 
   const inputCommentPositionX = useSharedValue(0);
 
@@ -89,6 +90,10 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
   });
 
   const content = watch('content');
+
+  const avatarUri = post.user.avatar ?
+    `http://10.0.0.175:3333/files/avatars/${post.user.avatar}` :
+    `https://ui-avatars.com/api/?name=${post.user.full_name}&length=1`;
 
   const onSubmitPostComment = useCallback(({ content }: FormData) => {
     if (!post_id) return;
@@ -103,19 +108,22 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
 
   const onDeletePostComment = useCallback(async (comment_id: string) => {
 
-    setComments(prev => prev.filter(comment => comment.id !== comment_id));
+    setPost(prev => ({
+      ...prev,
+      comments: prev.comments.filter((comment) => comment.id !== comment_id)
+    }))
 
     removePostComment({
       post_id,
       comment_id,
     });
 
-  },[removePostComment])
+  }, [removePostComment]);
 
   useEffect(() => {
     const post = posts.data.find((post) => post.id === post_id);
 
-    setComments(post ? post.comments : [])
+    setPost(post || {} as Post)
   }, [posts]);
 
   useEffect(() => {
@@ -152,11 +160,22 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
         </HeaderContent>
       </Header>
 
+
+
       <PostCommentsList
         refreshing={posts.loading}
-        data={comments}
+        data={post.comments}
         renderItem={({ item }) => <PostComment comment={item} onDelete={() => onDeletePostComment(item.id)} />}
         keyExtractor={item => item.id}
+        ListHeaderComponent={() => (
+          <PostSubtitleContainer>
+            <UserAvatar source={{ uri: avatarUri }} />
+            <View style={{ marginHorizontal: 16, }}>
+              <PostOwnerName>{post.user.full_name}</PostOwnerName>
+              <PostSubtitleText>{post.subtitle}</PostSubtitleText>
+            </View>
+          </PostSubtitleContainer>
+        )}
       />
 
       {posts.loading && <ActivityIndicator />}
