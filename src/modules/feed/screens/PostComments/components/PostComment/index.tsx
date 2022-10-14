@@ -53,7 +53,7 @@ const PostComment = ({ comment, authentication, onDelete }: PostCommentProps): J
   }, []);
 
   const avatarUri = user.avatar ?
-    `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
+    `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   return (

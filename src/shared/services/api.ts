@@ -8,11 +8,11 @@ interface RefreshTokenResponse {
 }
 
 const api = axios.create({
-  baseURL: 'http://10.0.0.175:3333',
+  baseURL: 'http://10.0.0.154:3333',
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 3000
+  timeout: 3000,
 });
 
 
@@ -32,7 +32,7 @@ api.interceptors.response.use((response) => {
         token: refresh_token
       });
 
-      const { refresh_token: refreshed_token, updated_token} = data;
+      const { refresh_token: refreshed_token, updated_token } = data;
 
       api.defaults.headers.common['Authorization'] = `Bearer ${updated_token}`;
 

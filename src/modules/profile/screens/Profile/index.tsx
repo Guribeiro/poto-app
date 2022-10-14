@@ -64,7 +64,7 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
   const { user } = data;
 
   const uri = user.avatar ?
-    `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
+    `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   const [mediaLoading, setMediaLoading] = useState(false);

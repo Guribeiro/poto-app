@@ -33,6 +33,8 @@ import {
   Container,
   UserProfile,
   UserAvatar,
+  Header,
+  MoreHorizontalTouchable,
   UserName,
   PostImage,
   InteractionContainer,
@@ -85,13 +87,13 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
 
   const { navigate } = useNavigation<PostScreenProps>()
 
-  const { openPostCommentModal } = usePostComment();
+  const uri = `http://10.0.0.154:3333/files/posts/${photo}`;
 
-  const uri = `http://10.0.0.175:3333/files/posts/${photo}`;
-
-  const avatarUri = user.avatar ?
-    `http://10.0.0.175:3333/files/avatars/${user.avatar}` :
-    `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
+  const avatarUri = useMemo(() => {
+    return user.avatar ?
+      `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
+      `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
+  }, [user])
 
 
   const isPostLiked = useMemo(() => {
@@ -161,12 +163,17 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
 
   return (
     <Container>
+      <Header>
+        <UserProfile>
+          <UserAvatar source={{ uri: avatarUri }} />
 
-      <UserProfile>
-        <UserAvatar source={{ uri: avatarUri }} />
+          <UserName>{user.full_name}</UserName>
+        </UserProfile>
 
-        <UserName>{user.full_name}</UserName>
-      </UserProfile>
+        <MoreHorizontalTouchable>
+          <Icon name='more-horizontal' />
+        </MoreHorizontalTouchable>
+      </Header>
 
       <PostImage source={{ uri }} />
 
@@ -178,7 +185,7 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         <Touchable onPress={handleShowLikeIndicator}>
           <Icon isLiked={isPostLiked} name='heart' />
         </Touchable>
-        <Touchable onPress={() => openPostCommentModal(post)}>
+        <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <Icon name='message-circle' />
         </Touchable>
         <Touchable>
@@ -201,7 +208,7 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
 
       <PostCommentTouchableContainer>
         <PostCommentUserAvatar source={{ uri: avatarUri }} />
-        <PostCommentTouchable onPress={() => openPostCommentModal(post)}>
+        <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
         </PostCommentTouchable>
       </PostCommentTouchableContainer>

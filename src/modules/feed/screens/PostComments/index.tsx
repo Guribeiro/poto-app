@@ -92,7 +92,7 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
   const content = watch('content');
 
   const avatarUri = post.user.avatar ?
-    `http://10.0.0.175:3333/files/avatars/${post.user.avatar}` :
+    `http://10.0.0.154:3333/files/avatars/${post.user.avatar}` :
     `https://ui-avatars.com/api/?name=${post.user.full_name}&length=1`;
 
   const onSubmitPostComment = useCallback(({ content }: FormData) => {
