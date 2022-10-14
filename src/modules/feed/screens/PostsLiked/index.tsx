@@ -12,9 +12,7 @@ import PostLiked, { Like } from './PostLiked'
 import FullScreenLoading from '@shared/common/components/FullScreenLoading'
 import Header from '@shared/common/components/Header';
 import api from '@shared/services/api';
-import Spacer from '@shared/common/components/Spacer';
 import { AxiosError } from 'axios';
-
 
 type PostsLikedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'PostsLiked'>;
 

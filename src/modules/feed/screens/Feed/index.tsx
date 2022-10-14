@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
 import * as PostsActions from '@shared/store/ducks/posts/actions';
-import { PostsState, LikePostPayload } from '@shared/store/ducks/posts/types';
+import { PostsState } from '@shared/store/ducks/posts/types';
 
 import { RootFeedParamsList } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
@@ -187,15 +187,13 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
           <Touchable>
             <Icon name='user' />
           </Touchable>
-          <Touchable>
+          <Touchable onPress={() => navigate('PostsLiked')}>
             <Icon name='heart' />
           </Touchable>
         </ButtonsContainer>
       </Header>
 
       <PostsList
-        onRefresh={loadPosts}
-        refreshing={loading}
         data={data}
         renderItem={({ item }) => <Post post={item} />}
         keyExtractor={item => item.id}

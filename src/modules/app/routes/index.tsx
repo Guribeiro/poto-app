@@ -4,7 +4,6 @@ import styled from 'styled-components/native';
 
 import TabBar from '../components/Tabbar';
 
-import Feed from '@modules/feed/screens/Feed';
 import ProfileRoutes from '@modules/profile/routes';
 
 import FeedRoutes from '@modules/feed/routes';
@@ -19,7 +18,13 @@ export type RootAppParamsList = {
   ProfileRoutes: undefined;
 }
 
-const hiddenRoutesTabBar = ['UpdateProfileRoutes', 'Settings', 'CreatePost', 'PostComments'];
+const hiddenRoutesTabBar = [
+  'UpdateProfileRoutes',
+  'Settings',
+  'CreatePost',
+  'PostComments',
+  'PostsLiked'
+];
 
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
 
