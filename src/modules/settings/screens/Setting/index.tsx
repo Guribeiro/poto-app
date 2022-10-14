@@ -16,20 +16,14 @@ import { RootProfileRoutesParamsList } from '@modules/profile/routes';
 
 import { ApplicationState } from '@shared/store';
 import Button from '@shared/common/components/Button';
-import Touchable from '@shared/common/components/Touchable';
 import { AuthenticationState } from '@shared/store/ducks/authentication/types';
 import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
 import ChangeThemeModal from '@modules/profile/components/ChangeThemeModal';
-
+import Header from '@shared/common/components/Header';
 
 import {
-  Icon,
-  Header,
   Container,
-  UsernameText,
-  TouchableContainer,
-  HeaderContent,
   Content,
   SettingButton,
   SettingButtonText,
@@ -37,6 +31,7 @@ import {
   EditProfileButtonContainer,
   SelectedThemeCircle
 } from './styles';
+
 
 type SettingsScreenProps = NativeStackNavigationProp<RootProfileRoutesParamsList, 'Settings'>
 
@@ -91,18 +86,9 @@ const Settings = ({ authentication, logoutRequest }: SettingsProps): JSX.Element
 
   return (
     <Container>
-      <Header>
-        <HeaderContent>
-          <TouchableContainer>
-            <Touchable onPress={goBack}>
-              <Icon name='x' />
-            </Touchable>
-          </TouchableContainer>
-          <UsernameText>Configurações</UsernameText>
-        </HeaderContent>
-      </Header>
-      <Content>
+      <Header onGoback={goBack} label='Configurações' />
 
+      <Content>
         <EditProfileButtonsContainer>
           <EditProfileButtonContainer>
             <SettingButton onPress={openSelectImageModal}>

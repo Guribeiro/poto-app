@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 
 import Button from '@shared/common/components/Button';
-import ScreenHeader from '@shared/common/components/ScreenHeader';
+import Header from '@shared/common/components/Header';
 import KeyboardView from '@shared/common/components/KeyboardView';
 
 import InputText from '@modules/authentication/components/InputText';
@@ -72,7 +72,7 @@ const UpdateEmail = ({ updateEmailRequest, authentication }: UpdateEmailProps): 
   return (
     <KeyboardView>
       <Container>
-        <ScreenHeader title='Atualizar email' onPress={goBack} />
+        <Header onGoback={goBack} label='Atualizar email'  />
         <Content>
           <View>
             <Controller
