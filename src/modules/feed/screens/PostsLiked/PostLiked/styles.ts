@@ -14,9 +14,9 @@ export const PostImage = styled(Image)`
 `
 
 export const Empty = styled(View)`
- width: 100%;
+  width: 100%;
   max-width: ${({ theme }) => theme.screen.rem(8)}px;
   height: ${({ theme }) => theme.screen.rem(8)}px;
   background: transparent;
-
 `;
+

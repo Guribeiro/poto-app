@@ -1,18 +1,25 @@
 import { useEffect, useState, useCallback } from 'react';
+import {
+  View,
+  FlatList,
+  FlatListProps,
+  SafeAreaView,
+} from 'react-native';
+import { AxiosError } from 'axios';
 
 import styled from 'styled-components/native';
-import { View, Image, FlatList, FlatListProps, SafeAreaView } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
-import { RootFeedParamsList } from '@modules/feed/routes';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import PostLiked, { Like } from './PostLiked'
+import PostLikedModal from './PostLikedModal';
+
+import { RootFeedParamsList } from '@modules/feed/routes';
 
 import FullScreenLoading from '@shared/common/components/FullScreenLoading'
 import Header from '@shared/common/components/Header';
 import api from '@shared/services/api';
-import { AxiosError } from 'axios';
 
 type PostsLikedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'PostsLiked'>;
 
@@ -24,12 +31,17 @@ export const LikesList = styled(
   FlatList as new (props: FlatListProps<Like>) => FlatList<Like>,
 ).attrs(({ theme }) => ({
   showsVerticalScrollIndicator: false,
-}))``;
-
+}))`
+  padding: ${({ theme }) => theme.screen.rem(1)}px;
+`;
 
 const PostsLiked = (): JSX.Element => {
   const [likes, setLikes] = useState<Like[]>([]);
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [selectedLike, setSelectedLike] = useState<Like>();
+
   const { goBack } = useNavigation<PostsLikedScreenProps>();
 
   const COLUMNS = 3;
@@ -64,7 +76,18 @@ const PostsLiked = (): JSX.Element => {
     } finally {
       setLoading(false)
     }
-  },[])
+  }, [])
+
+  const handleOpenPostFullScreen = useCallback((like: Like) => {
+    console.log(like);
+    setSelectedLike(like)
+    setModalVisible(true)
+  }, [])
+
+  const handleClosePostFullScreen = useCallback(() => {
+    setModalVisible(false)
+    setSelectedLike(undefined)
+  }, [])
 
   useEffect(() => {
     loadUserLikes();
@@ -80,10 +103,16 @@ const PostsLiked = (): JSX.Element => {
           contentOffset={{ y: loading ? -60 : 0, x: 0 }}
           data={createRows(likes, COLUMNS)}
           numColumns={COLUMNS}
-          renderItem={({ item }) => <PostLiked data={item} />}
+          renderItem={({ item }) => <PostLiked data={item} onPress={handleOpenPostFullScreen} />}
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
+
+      <PostLikedModal
+        like={selectedLike}
+        visible={modalVisible}
+        onRequestClose={handleClosePostFullScreen}
+      />
 
       {loading && <FullScreenLoading />}
     </Container>

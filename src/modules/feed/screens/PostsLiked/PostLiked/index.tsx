@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Container, PostImage, Empty } from './styles';
+import { useMemo, useState } from 'react';
+import { TouchableOpacity, Modal } from 'react-native';
 import { Post } from '@shared/store/ducks/posts/types';
 import { User } from '@shared/store/ducks/authentication/types'
+
+import { Container, PostImage, Empty } from './styles';
+
 
 export interface Like {
   id: string;
@@ -14,20 +16,21 @@ export interface Like {
 
 interface PostLikedProps {
   data: Like;
+  onPress: (like: Like) => void;
 }
 
-const PostLiked = ({ data }: PostLikedProps): JSX.Element => {
+const PostLiked = ({ data, onPress }: PostLikedProps): JSX.Element => {
   const { id, user, post, created_at, empty } = data;
 
   const postImageUri = useMemo(() => {
-    return post?.photo ? `http://10.0.0.154:3333/files/posts/${post.photo}` : ''
+    return post?.photo ? `http://10.0.0.76:3333/files/posts/${post.photo}` : ''
   }, [post]);
 
   if (empty) return <Empty />
 
   return (
     <Container>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onPress(data)} >
         <PostImage source={{ uri: postImageUri }} />
       </TouchableOpacity>
     </Container>
