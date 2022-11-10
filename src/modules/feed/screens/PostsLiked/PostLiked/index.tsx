@@ -3,7 +3,10 @@ import { TouchableOpacity, Modal } from 'react-native';
 import { Post } from '@shared/store/ducks/posts/types';
 import { User } from '@shared/store/ducks/authentication/types'
 
+import { ENDPOINT_URL } from '@env';
+
 import { Container, PostImage, Empty } from './styles';
+
 
 
 export interface Like {
@@ -23,7 +26,7 @@ const PostLiked = ({ data, onPress }: PostLikedProps): JSX.Element => {
   const { id, user, post, created_at, empty } = data;
 
   const postImageUri = useMemo(() => {
-    return post?.photo ? `http://10.0.0.76:3333/files/posts/${post.photo}` : ''
+    return post?.photo ? `${ENDPOINT_URL}/files/posts/${post.photo}` : ''
   }, [post]);
 
   if (empty) return <Empty />

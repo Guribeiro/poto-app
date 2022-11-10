@@ -18,6 +18,8 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
+import { ENDPOINT_URL } from '@env';
+
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -64,7 +66,7 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
   const { user } = data;
 
   const uri = user.avatar ?
-    `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
+    `${ENDPOINT_URL}/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   const [mediaLoading, setMediaLoading] = useState(false);

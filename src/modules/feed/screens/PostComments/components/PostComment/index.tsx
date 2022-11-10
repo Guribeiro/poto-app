@@ -2,13 +2,17 @@ import { useMemo } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
-
 import { formatDistance } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
-import * as PostsActions from '@shared/store/ducks/posts/actions';
+import { ENDPOINT_URL } from '@env';
 
-import { AddPostCommentPayload, Comment, PostsState } from '@shared/store/ducks/posts/types';
+import { ApplicationState } from '@shared/store';
 import Touchable from '@shared/common/components/Touchable';
+import * as PostsActions from '@shared/store/ducks/posts/actions';
+import { AuthenticationState } from '@shared/store/ducks/authentication/types';
+import { AddPostCommentPayload, Comment, PostsState } from '@shared/store/ducks/posts/types';
+
 import {
   Container,
   Content,
@@ -21,9 +25,7 @@ import {
   CreatedAtText,
   Icon
 } from './styles';
-import ptBR from 'date-fns/locale/pt-BR';
-import { ApplicationState } from '@shared/store';
-import { AuthenticationState } from '@shared/store/ducks/authentication/types';
+
 
 interface OwnProps {
   comment: Comment;
@@ -53,7 +55,7 @@ const PostComment = ({ comment, authentication, onDelete }: PostCommentProps): J
   }, []);
 
   const avatarUri = user.avatar ?
-    `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
+    `${ENDPOINT_URL}/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   return (

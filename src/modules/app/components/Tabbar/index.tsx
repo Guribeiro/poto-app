@@ -1,14 +1,15 @@
-import {useMemo} from 'react';
+import { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import {
   BottomTabBarProps,
   BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
-import { Container, Touchable, Icon, UserAvatar } from './styles';
+import { ENDPOINT_URL } from '@env';
 import { ApplicationState } from '@shared/store';
 import { AuthenticationState } from '@shared/store/ducks/authentication/types';
 
+import { Container, Touchable, Icon, UserAvatar } from './styles';
 
 type TabBarStyle = {
   display: 'none' | 'flex';
@@ -53,15 +54,15 @@ const TabBar = ({
   const { user } = data;
 
   const uri = user.avatar ?
-    `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
+    `${ENDPOINT_URL}/files/avatars/${user.avatar}` :
     `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
 
   const routes = Object.keys(descriptors).map(item => descriptors[item].route);
 
-  const {tabBarStyle} = useMemo(() => {
+  const { tabBarStyle } = useMemo(() => {
     return descriptors[state.routes[state.index].key]
-    .options as BottomTabNavigationOptions;
-  },[descriptors, state])
+      .options as BottomTabNavigationOptions;
+  }, [descriptors, state])
 
   const { display } = tabBarStyle as TabBarStyle;
 

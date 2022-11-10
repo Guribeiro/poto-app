@@ -81,8 +81,6 @@ const DefineUsername = (): JSX.Element => {
 
       await checkUsernameAvailable();
 
-      console.log({username});
-
       navigate('DefineProfileAvatar', {
         fullName,
         username,

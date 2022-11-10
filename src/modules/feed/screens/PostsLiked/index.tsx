@@ -79,7 +79,6 @@ const PostsLiked = (): JSX.Element => {
   }, [])
 
   const handleOpenPostFullScreen = useCallback((like: Like) => {
-    console.log(like);
     setSelectedLike(like)
     setModalVisible(true)
   }, [])

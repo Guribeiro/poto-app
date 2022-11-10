@@ -14,20 +14,20 @@ import Animated, {
   runOnJS
 } from 'react-native-reanimated';
 
+import {ENDPOINT_URL} from '@env';
+
 import { RootFeedParamsList } from '@modules/feed/routes'
+import { usePostComment } from '@modules/feed/hooks/postComment';
 
 import Touchable from '@shared/common/components/Touchable';
 import { User, AuthenticationState } from '@shared/store/ducks/authentication/types';
-
-import { Comment, Like } from '@shared/store/ducks/posts/types';
-
 import { ApplicationState } from '@shared/store';
+import { Comment, Like } from '@shared/store/ducks/posts/types';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { LikePostPayload } from '@shared/store/ducks/posts/types';
-
-import { usePostComment } from '@modules/feed/hooks/postComment';
-
 import heartImage from '@shared/common/assets/heart/heart-like.png';
+
+
 
 import {
   Container,
@@ -87,11 +87,11 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
 
   const { navigate } = useNavigation<PostScreenProps>()
 
-  const uri = `http://10.0.0.154:3333/files/posts/${photo}`;
+  const uri = `${ENDPOINT_URL}/files/posts/${photo}`;
 
   const avatarUri = useMemo(() => {
     return user.avatar ?
-      `http://10.0.0.154:3333/files/avatars/${user.avatar}` :
+      `${ENDPOINT_URL}/files/avatars/${user.avatar}` :
       `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
   }, [user])
 

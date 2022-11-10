@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError } from 'axios';
+import { ENDPOINT_URL } from '@env';
 import { StorageKeys } from '../constants/storageKeys';
 
 interface RefreshTokenResponse {
@@ -8,7 +9,7 @@ interface RefreshTokenResponse {
 }
 
 const api = axios.create({
-  baseURL: 'http://10.0.0.154:3333',
+  baseURL: ENDPOINT_URL,
   headers: {
     "Content-Type": "application/json",
   },
