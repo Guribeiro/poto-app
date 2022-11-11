@@ -9,7 +9,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Button from '@shared/common/components/Button';
-import ScreenHeader from '@shared/common/components/ScreenHeader';
+import Header from '@shared/common/components/Header';
 import KeyboardView from '@shared/common/components/KeyboardView';
 
 import InputText from '@modules/authentication/components/InputText';
@@ -80,7 +80,7 @@ const UpdateName = ({ updateNameRequest, authentication }: UpdateNameProps): JSX
   return (
     <KeyboardView>
       <Container>
-        <ScreenHeader title='Atualizar nome' onPress={goBack} />
+        <Header onGoback={goBack} label='Atualizar nome' />
         <Content>
           <View>
             <Controller

@@ -68,7 +68,9 @@ export const AddPostCommentForm = styled(View)`
   padding: ${({ theme }) => theme.screen.rem(2)}px ${({ theme }) => theme.screen.rem(.8)}px;
 `
 
-export const PostCommentTextInput = styled(TextInput)`
+export const PostCommentTextInput = styled(TextInput).attrs(({theme}) => ({
+  placeholderTextColor: theme.palette.colors.texts.medium
+}))`
   flex: 1;
   padding: ${({ theme }) => theme.screen.rem(.8)}px;
   color: ${({ theme }) => theme.palette.colors.texts.medium};

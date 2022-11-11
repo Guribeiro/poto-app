@@ -11,13 +11,26 @@ interface IconProps {
 export const Container = styled(View)`
   justify-content: center;
   padding-bottom: ${({ theme }) => theme.screen.rem(.5)}px;
+
+`;
+
+export const Header = styled(View)`
+  flex-direction: row;
 `;
 
 export const UserProfile = styled(View)`
+  flex: 1;
+
   flex-direction: row;
   align-items: center;
   padding: ${({ theme }) => theme.screen.rem(1)}px ${({ theme }) => theme.screen.rem(.8)}px;
 `;
+
+export const MoreHorizontalTouchable = styled(TouchableOpacity)`
+  padding: ${({theme}) => theme.screen.rem(1)}px;
+  align-items: center;
+  justify-content: center;
+`
 
 export const UserAvatar = styled(Image)`
   width: ${({ theme }) => theme.screen.rem(2.25)}px;

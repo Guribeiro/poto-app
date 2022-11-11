@@ -8,11 +8,12 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { bindActionCreators, Dispatch } from 'redux';
+import { ENDPOINT_URL } from '@env';
 
+import * as yup from 'yup';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { RootFeedParamsList, PostCommentsParams } from '@modules/feed/routes';
@@ -20,7 +21,13 @@ import { RootFeedParamsList, PostCommentsParams } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import Touchable from '@shared/common/components/Touchable';
-import { AddPostCommentPayload, RemovePostCommentPayload, Comment, PostsState, Post } from '@shared/store/ducks/posts/types';
+import {
+  AddPostCommentPayload,
+  RemovePostCommentPayload,
+  Comment,
+  PostsState,
+  Post
+} from '@shared/store/ducks/posts/types';
 
 import PostComment from './components/PostComment';
 
@@ -92,7 +99,7 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
   const content = watch('content');
 
   const avatarUri = post.user.avatar ?
-    `http://10.0.0.175:3333/files/avatars/${post.user.avatar}` :
+    `${ENDPOINT_URL}/files/avatars/${post.user.avatar}` :
     `https://ui-avatars.com/api/?name=${post.user.full_name}&length=1`;
 
   const onSubmitPostComment = useCallback(({ content }: FormData) => {

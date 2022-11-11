@@ -9,9 +9,7 @@ interface AppProviderProps {
 const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   return (
     <ThemeProvider>
-      <PostCommentProvider>
-        {children}
-      </PostCommentProvider>
+      {children}
     </ThemeProvider>
   )
 }

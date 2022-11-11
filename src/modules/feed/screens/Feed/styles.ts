@@ -52,6 +52,5 @@ export const PostsList = styled(
   Animated.FlatList as new (props: FlatListProps<Post>) => Animated.FlatList<Post>,
 ).attrs(({ theme }) => ({
   showsVerticalScrollIndicator: false,
-
 }))``;
 

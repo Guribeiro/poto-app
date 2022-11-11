@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useContext,
+  ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -54,7 +55,7 @@ export interface ResponsiveTheme {
 }
 
 interface Props {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 const ThemeProvider = ({ children }: Props): JSX.Element => {

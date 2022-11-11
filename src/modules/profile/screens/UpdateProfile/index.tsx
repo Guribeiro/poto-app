@@ -1,13 +1,4 @@
-import { useState, useCallback, createElement } from 'react';
-
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  Easing
-} from 'react-native-reanimated';
-
-import { TextInput } from 'react-native';
+import { useState } from 'react';
 
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -22,14 +13,11 @@ import { AuthenticationState } from '@shared/store/ducks/authentication/types';
 import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 
 import EditProfileButton from '@modules/settings/components/EditProfileButton';
+import Header from '@shared/common/components/Header';
 
 import {
-  Icon,
-  Header,
   Container,
-  UsernameText,
   TouchableContainer,
-  HeaderContent,
   Content,
   EditProfileButtonsContainer,
   EditProfileButtonContainer
@@ -47,17 +35,10 @@ interface DispatchProps {
 
 type SettingsProps = StateProps & DispatchProps;
 
-type Field = 'name' | 'email' | 'username'
-
-
 
 const UpdateProfile = ({ authentication, logoutRequest }: SettingsProps): JSX.Element => {
-  const INITIAL_VALUE = 0;
-  const FINAL_VALUE = 1000;
 
   const { goBack, navigate } = useNavigation<UpdateProfileScreenProps>()
-
-  const [field, setField] = useState<Field>('name')
 
   const { data } = authentication;
 
@@ -65,17 +46,7 @@ const UpdateProfile = ({ authentication, logoutRequest }: SettingsProps): JSX.El
 
   return (
     <Container>
-      <Header>
-        <HeaderContent>
-          <TouchableContainer>
-            <Touchable onPress={goBack}>
-              <Icon name='x' />
-            </Touchable>
-          </TouchableContainer>
-          <UsernameText>Perfil</UsernameText>
-        </HeaderContent>
-      </Header>
-
+      <Header onGoback={goBack} label='Perfil' />
       <Content>
         <EditProfileButtonsContainer>
           <EditProfileButtonContainer>
