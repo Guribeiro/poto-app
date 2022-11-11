@@ -200,14 +200,14 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         </PostSubtitleText>
       </PostSubtitleContainer>
 
-      {!!post.comments.length && (
+      {!!post.comments?.length && (
         <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <PostCommentTouchableText>Ver todos os {post._commentsCount} comentários</PostCommentTouchableText>
         </Touchable>
       )}
 
       <PostCommentTouchableContainer>
-        <PostCommentUserAvatar source={{ uri: avatarUri }} />
+        <PostCommentUserAvatar source={{ uri: avatarUri, cache: 'only-if-cached' }} />
         <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
         </PostCommentTouchable>
