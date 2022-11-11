@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { Image, Modal, View, ModalProps } from 'react-native';
 
 import { Like } from '../PostLiked';

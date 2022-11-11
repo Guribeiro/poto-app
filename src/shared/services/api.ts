@@ -21,7 +21,6 @@ api.interceptors.response.use((response) => {
   return response
 }, async (error: AxiosError) => {
   try {
-
     const storagedData = await AsyncStorage.getItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
 
     if (!storagedData) return Promise.reject(error);
@@ -45,9 +44,12 @@ api.interceptors.response.use((response) => {
       return;
     }
 
-    AsyncStorage.removeItem(StorageKeys.STORAGE_AUTHENTICATION_KEY)
+    AsyncStorage.removeItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
+
+    delete api.defaults.headers.common['Authorization'];
 
     console.log({ error1: error });
+
   } catch (error) {
     console.log({ error2: error });
   }

@@ -77,7 +77,7 @@ const reducer: Reducer<AuthenticationState, AuthenticationAction> = (
     case LOAD_STORAGED_AUTHENTICATION_REQUEST:
       return { ...state, loading: true }
     case LOAD_STORAGED_AUTHENTICATION_REQUEST_FAILURE:
-      return { ...state, loading: false, error: true };
+      return { data: {} as Authentication, state, loading: false, error: true };
     case LOAD_STORAGED_AUTHENTICATION_REQUEST_SUCCESS:
       return {
         ...state,

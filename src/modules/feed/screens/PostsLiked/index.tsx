@@ -1,13 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import {
-  View,
-  FlatList,
-  FlatListProps,
   SafeAreaView,
 } from 'react-native';
 import { AxiosError } from 'axios';
 
-import styled from 'styled-components/native';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,19 +17,9 @@ import FullScreenLoading from '@shared/common/components/FullScreenLoading'
 import Header from '@shared/common/components/Header';
 import api from '@shared/services/api';
 
+import { Container, LikesList } from './styles';
+
 type PostsLikedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'PostsLiked'>;
-
-export const Container = styled(View)`
-  flex: 1;
-`;
-
-export const LikesList = styled(
-  FlatList as new (props: FlatListProps<Like>) => FlatList<Like>,
-).attrs(({ theme }) => ({
-  showsVerticalScrollIndicator: false,
-}))`
-  padding: ${({ theme }) => theme.screen.rem(1)}px;
-`;
 
 const PostsLiked = (): JSX.Element => {
   const [likes, setLikes] = useState<Like[]>([]);
@@ -67,6 +53,7 @@ const PostsLiked = (): JSX.Element => {
 
       setLikes(data);
     } catch (error) {
+      console.log(error);
       const err = error as AxiosError<{ error: string }>;
 
       Toast.show({
