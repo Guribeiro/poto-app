@@ -44,7 +44,7 @@ authentication flow with redux-toolkit, saga and typescript
 ✔️ Comment posts;\
 ✔️ Update profile;\
 ✔️ Update avatar;\
-✔️ Switch Theme;\
+✔️ Switch Theme;
 
 ## [🌌 See the prototype made on figma](https://www.figma.com/file/Lx21ZJcaGlcUmNcdSroyao/Poto?node-id=0%3A1&t=W7SCalyStyrKcn6z-1)
 <h1 align="center">
