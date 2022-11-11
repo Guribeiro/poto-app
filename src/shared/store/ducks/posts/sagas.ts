@@ -1,9 +1,15 @@
 import { call, put } from 'redux-saga/effects'
 import { AxiosResponse, AxiosError } from 'axios';
 import Toast from 'react-native-toast-message';
-
 import api from '@shared/services/api'
-import { Post, AddPostPayload, LikePostPayload, AddPostCommentPayload, RemovePostCommentPayload, Comment } from './types';
+
+import {
+  Post,
+  AddPostPayload,
+  LikePostPayload,
+  AddPostCommentPayload,
+  RemovePostCommentPayload,
+} from './types';
 
 import { ImageInfo } from 'expo-image-picker';
 
@@ -20,9 +26,7 @@ import {
   removePostCommentSuccess
 } from './actions';
 
-function apiGetRequestPosts() {
-  return api.get('/posts');
-}
+
 
 interface ApiPostRequestPost {
   image: ImageInfo;
@@ -60,6 +64,10 @@ interface ApiPostLikePostRequest {
 interface ApiDeletePostCommentRequest {
   post_id: string,
   comment_id: string;
+}
+
+function apiGetRequestPosts() {
+  return api.get('/posts');
 }
 
 function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
