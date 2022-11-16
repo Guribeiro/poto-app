@@ -7,7 +7,7 @@ import {
   requestCameraPermissionsAsync,
   launchCameraAsync
 } from 'expo-image-picker';
-import { Platform } from 'react-native';
+import { Platform, RefreshControl, ActivityIndicator, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,11 +17,12 @@ import Animated, {
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { connect } from 'react-redux';
 
-import FullScreenLoading from '@shared/common/components/FullScreenLoading';
+import { useTheme } from '@shared/hooks/theme';
 
 import * as PostsActions from '@shared/store/ducks/posts/actions';
-import { PostsState } from '@shared/store/ducks/posts/types';
+import * as FeedActions from '@shared/store/ducks/feed/actions';
 
 import { RootFeedParamsList } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
@@ -39,54 +40,57 @@ import {
   Icon,
   PostsList
 } from './styles';
-import { connect } from 'react-redux';
+import { FeedState } from '@shared/store/ducks/feed/types';
 
 interface StateProps {
-  posts: PostsState;
+  feed: FeedState;
 }
 
 interface DispatchProps {
-  loadPosts(): void;
+  loadFeed(page: number): void;
 }
 
 type FeedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
 type FeedProps = StateProps & DispatchProps;
 
-const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
+const Feed = ({ feed, loadFeed }: FeedProps): JSX.Element => {
   const INITIAL_VALUE = -1000;
   const FINAL_VALUE = 0;
 
   const [mediaLoading, setMediaLoading] = useState(false);
+  const [page, setPage] = useState(0);
+
+  const { theme } = useTheme();
 
   const { navigate } = useNavigation<FeedScreenProps>()
 
-  const { loading, data } = posts;
+  const { data, loading } = feed;
 
-  const updateImageOffset = useSharedValue(INITIAL_VALUE);
+  const uploadImageOffset = useSharedValue(INITIAL_VALUE);
 
   const updateImageStyle = useAnimatedStyle(() => {
     return {
       position: 'absolute',
       width: '100%',
       height: '100%',
-      bottom: updateImageOffset.value,
+      bottom: uploadImageOffset.value,
     };
   });
 
   const openSelectImageModal = useCallback(() => {
-    updateImageOffset.value = withTiming(FINAL_VALUE, {
+    uploadImageOffset.value = withTiming(FINAL_VALUE, {
       duration: 400,
       easing: Easing.ease,
     });
-  }, [updateImageOffset]);
+  }, [uploadImageOffset]);
 
   const closeSelectImageModal = useCallback(() => {
-    updateImageOffset.value = withTiming(INITIAL_VALUE, {
+    uploadImageOffset.value = withTiming(INITIAL_VALUE, {
       duration: 400,
       easing: Easing.ease,
     });
-  }, [updateImageOffset, INITIAL_VALUE]);
+  }, [uploadImageOffset, INITIAL_VALUE]);
 
   const requestMediaLibraryPermissions = useCallback(async () => {
     if (Platform.OS !== 'web') {
@@ -168,10 +172,9 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
   }, [requestMediaLibraryPermissions]);
 
 
-
   useEffect(() => {
-    loadPosts()
-  }, [])
+    loadFeed(page)
+  }, [page])
 
   return (
     <Container>
@@ -197,6 +200,18 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
         data={data}
         renderItem={({ item }) => <Post post={item} />}
         keyExtractor={item => item.id}
+        onEndReached={() => setPage(prev => prev + 1)}
+        onEndReachedThreshold={1.6}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => setPage(0)}
+            tintColor={theme.palette.colors.secondary}
+            colors={[theme.palette.colors.primary]}
+          />
+        }
+        ListEmptyComponent={<ActivityIndicator />}
+        ListFooterComponent={loading ? <ActivityIndicator /> : <View style={{ height: theme.screen.rem(1) }} />}
       />
 
       <Animated.View
@@ -209,17 +224,15 @@ const Feed = ({ posts, loadPosts }: FeedProps): JSX.Element => {
           onLaunchCamera={launchCamera}
         />
       </Animated.View>
-      {(loading || mediaLoading) && <FullScreenLoading />}
-
     </Container>
   )
 }
 
-const mapStateToProps = ({ posts }: ApplicationState) => ({
-  posts,
+const mapStateToProps = ({ feed }: ApplicationState) => ({
+  feed,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActions, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({...PostsActions, ...FeedActions}, dispatch);
 
 export default connect(
   mapStateToProps,

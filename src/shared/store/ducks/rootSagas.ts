@@ -1,7 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects';
 import { AuthenticationTypes } from './authentication/types';
 import { PostsTypes } from './posts/types';
-
+import { FeedTypes } from './feed/types';
 
 import {
   login,
@@ -15,12 +15,13 @@ import {
 } from './authentication/sagas';
 
 import {
-  fetchPosts,
   addPost,
   likePost,
   addPostComment,
   removePostComment
 } from './posts/sagas';
+
+import { loadFeedCall } from './feed/sagas';
 
 const {
   LOAD_STORAGED_AUTHENTICATION_REQUEST,
@@ -34,12 +35,15 @@ const {
 } = AuthenticationTypes;
 
 const {
-  LOAD_POSTS_REQUEST,
   ADD_POSTS_REQUEST,
   LIKE_POST_REQUEST,
   ADD_POST_COMMENT_REQUEST,
   REMOVE_POST_COMMENT_REQUEST
 } = PostsTypes;
+
+const {
+  LOAD_FEED_REQUEST,
+} = FeedTypes;
 
 export default function* rootSaga() {
   yield all([
@@ -49,12 +53,12 @@ export default function* rootSaga() {
     takeLatest(UPDATE_AVATAR_REQUEST, updateAvatar),
     takeLatest(LOAD_STORAGED_AUTHENTICATION_REQUEST, loadStorageAuth),
     takeLatest(ADD_POSTS_REQUEST, addPost),
-    takeLatest(LOAD_POSTS_REQUEST, fetchPosts),
     takeLatest(LIKE_POST_REQUEST, likePost),
     takeLatest(ADD_POST_COMMENT_REQUEST, addPostComment),
     takeLatest(REMOVE_POST_COMMENT_REQUEST, removePostComment),
     takeLatest(UPDATE_NAME_REQUEST, updateName),
     takeLatest(UPDATE_EMAIL_REQUEST, updateEmail),
     takeLatest(UPDATE_USERNAME_REQUEST, updateUsername),
+    takeLatest(LOAD_FEED_REQUEST, loadFeedCall),
   ]);
 }

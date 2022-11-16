@@ -1,7 +1,11 @@
-import { User } from '@shared/store/ducks/authentication/types';
 import { ImageInfo } from 'expo-image-picker';
+import { User } from '@shared/store/ducks/authentication/types';
 
-export enum PostsTypes {
+export enum FeedTypes {
+  LOAD_FEED_REQUEST = 'LOAD_FEED_REQUEST',
+  LOAD_FEED_REQUEST_SUCCESS = 'LOAD_FEED_REQUEST_SUCCESS',
+  LOAD_FEED_REQUEST_FAILURE = 'LOAD_FEED_REQUEST_FAILURE',
+
   ADD_POSTS_REQUEST = 'ADD_POSTS_REQUEST',
   ADD_POSTS_REQUEST_SUCCESS = 'ADD_POSTS_REQUEST_SUCCESS',
   ADD_POSTS_REQUEST_FAILURE = 'ADD_POSTS_REQUEST_FAILURE',
@@ -18,8 +22,6 @@ export enum PostsTypes {
   REMOVE_POST_COMMENT_REQUEST_SUCCESS = 'REMOVE_POST_COMMENT_REQUEST_SUCCESS',
   REMOVE_POST_COMMENT_REQUEST_FAILURE = 'REMOVE_POST_COMMENT_REQUEST_FAILURE',
 }
-
-export interface LoadPostsRequestPayload { };
 
 export interface Like {
   id: string;
@@ -58,29 +60,14 @@ export interface AddPostPayload {
   subtitle?: string;
 }
 
-
-export interface LikePostPayload {
-  post_id: string;
-}
-
-export interface AddPostCommentPayload {
-  post_id: string;
-  content: string;
-}
-
-export interface RemovePostCommentPayload {
-  post_id: string;
-  comment_id: string;
-}
-
-export interface PostAction {
-  type: keyof typeof PostsTypes;
+export interface FeedAction {
+  type: keyof typeof FeedTypes;
   payload: {
     data: any;
   };
 }
 
-export interface PostsState {
+export interface FeedState {
   readonly data: Post[];
   readonly loading: boolean;
   readonly error: boolean;

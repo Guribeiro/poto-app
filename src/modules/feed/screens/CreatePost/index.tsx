@@ -10,12 +10,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 
-import { RootFeedParamsList, CreatePostParams } from '@modules/feed/routes';
 import Spacer from '@shared/common/components/Spacer';
 import Button from '@shared/common/components/Button';
 import Scroll from '@shared/common/components/Scroll';
-import * as PostsActions from '@shared/store/ducks/posts/actions';
+import * as FeedActions from '@shared/store/ducks/feed/actions';
 import { AddPostPayload, PostsState } from '@shared/store/ducks/posts/types';
+
+import { RootFeedParamsList, CreatePostParams } from '@modules/feed/routes';
 
 import { Container, PostImage, Content, TouchableContainer, Touchable, Icon } from './styles';
 
@@ -126,7 +127,7 @@ const mapStateToProps = ({ posts }: ApplicationState) => ({
   posts,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActions, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(FeedActions, dispatch);
 
 export default connect(
   mapStateToProps,

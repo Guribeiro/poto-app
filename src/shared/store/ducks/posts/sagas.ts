@@ -14,8 +14,6 @@ import {
 import { ImageInfo } from 'expo-image-picker';
 
 import {
-  loadPostsFailure,
-  loadPostsSuccess,
   addPostSuccess,
   addPostFailure,
   likePostSuccess,
@@ -66,9 +64,6 @@ interface ApiDeletePostCommentRequest {
   comment_id: string;
 }
 
-function apiGetRequestPosts() {
-  return api.get('/posts');
-}
 
 function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
   const form = new FormData();
@@ -101,21 +96,6 @@ function apiDeletePostCommentRequest({ post_id, comment_id }: ApiDeletePostComme
   return api.delete(`/posts/${post_id}/comments/${comment_id}`);
 }
 
-export function* fetchPosts() {
-  try {
-    const { data }: AxiosResponse<Post[]> = yield call(apiGetRequestPosts);
-
-    yield put(loadPostsSuccess(data));
-
-  } catch (error) {
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
-    yield put(loadPostsFailure());
-  }
-}
 
 export function* addPost({ payload }: CreatePostAction) {
   try {

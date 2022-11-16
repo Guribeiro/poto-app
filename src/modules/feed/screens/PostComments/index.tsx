@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, memo} from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { connect } from 'react-redux';
 import Animated, {
@@ -8,26 +8,26 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { bindActionCreators, Dispatch } from 'redux';
-import { ENDPOINT_URL } from '@env';
-
 import * as yup from 'yup';
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { ENDPOINT_URL } from '@env';
+
 import { RootFeedParamsList, PostCommentsParams } from '@modules/feed/routes';
 
-import { ApplicationState } from '@shared/store';
-import * as PostsActions from '@shared/store/ducks/posts/actions';
-import Touchable from '@shared/common/components/Touchable';
 import {
   AddPostCommentPayload,
   RemovePostCommentPayload,
-  Comment,
-  PostsState,
   Post
 } from '@shared/store/ducks/posts/types';
+import { ApplicationState } from '@shared/store';
+import { FeedState } from '@shared/store/ducks/feed/types';
+import Touchable from '@shared/common/components/Touchable';
+import * as PostsActions from '@shared/store/ducks/posts/actions';
 
 import PostComment from './components/PostComment';
 
@@ -54,7 +54,7 @@ interface FormData {
 }
 
 interface StateProps {
-  posts: PostsState;
+  feed: FeedState;
 }
 
 interface DispatchProps {
@@ -70,17 +70,20 @@ const schema = yup.object().shape({
   content: yup.string().required(),
 })
 
-const PostComments = ({ addPostComment, posts, removePostComment }: PostCommentsProps): JSX.Element => {
+const PostComments = ({ addPostComment, feed, removePostComment }: PostCommentsProps): JSX.Element => {
   const { params } = useRoute();
 
   const { post_id } = params as PostCommentsParams;
 
   const { goBack } = useNavigation<PostCommentsScreenProps>();
 
+  const {data: posts, loading} = feed;
+
   const [post, setPost] = useState<Post>(() => {
-    const post = posts.data.find((post) => post.id === post_id)
+    const post = posts.find((post) => post.id === post_id)
     return post || {} as Post
   });
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const { handleSubmit, control, watch, reset } = useForm<FormData>({
     resolver: yupResolver(schema)
@@ -95,8 +98,6 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
       left: 0,
     }
   });
-
-  const content = watch('content');
 
   const avatarUri = post.user.avatar ?
     `${ENDPOINT_URL}/files/avatars/${post.user.avatar}` :
@@ -128,7 +129,7 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
   }, [removePostComment]);
 
   useEffect(() => {
-    const post = posts.data.find((post) => post.id === post_id);
+    const post = posts.find((post) => post.id === post_id);
 
     setPost(post || {} as Post)
   }, [posts]);
@@ -154,6 +155,12 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
     }
   }, [])
 
+  useEffect(() => {
+    const subscription = watch(({content}) => setButtonDisabled(!content));
+
+    return () => subscription.unsubscribe();
+  },[watch])
+
   return (
     <Container>
       <Header>
@@ -167,10 +174,8 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
         </HeaderContent>
       </Header>
 
-
-
       <PostCommentsList
-        refreshing={posts.loading}
+        refreshing={loading}
         data={post.comments}
         renderItem={({ item }) => <PostComment comment={item} onDelete={() => onDeletePostComment(item.id)} />}
         keyExtractor={item => item.id}
@@ -185,7 +190,7 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
         )}
       />
 
-      {posts.loading && <ActivityIndicator />}
+      {loading && <ActivityIndicator />}
 
       <Animated.View style={inputCommentStyle}>
         <AddPostCommentForm>
@@ -203,10 +208,10 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
           <SendPostCommentTouchable
             onPress={handleSubmit(onSubmitPostComment)}
           >
-            {posts.loading ? (
+            {loading ? (
               <ActivityIndicator />
             ) : (
-              <SendPostCommentTouchableIcon name='send' disabled={!content} />
+              <SendPostCommentTouchableIcon name='send' disabled={buttonDisabled} />
             )}
           </SendPostCommentTouchable>
         </AddPostCommentForm>
@@ -215,8 +220,8 @@ const PostComments = ({ addPostComment, posts, removePostComment }: PostComments
   )
 }
 
-const mapStateToProps = ({ posts }: ApplicationState) => ({
-  posts
+const mapStateToProps = ({ feed }: ApplicationState) => ({
+  feed
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActions, dispatch);
@@ -224,4 +229,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActio
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PostComments)
+)(memo(PostComments))
