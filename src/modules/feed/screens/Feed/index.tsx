@@ -7,7 +7,7 @@ import {
   requestCameraPermissionsAsync,
   launchCameraAsync
 } from 'expo-image-picker';
-import { Platform, RefreshControl, ActivityIndicator, View, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { Platform, RefreshControl, ActivityIndicator, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -20,6 +20,7 @@ import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 
 import { useTheme } from '@shared/hooks/theme';
+import ListEmptyComponent from '@shared/common/components/ListEmptyComponent';
 
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import * as FeedActions from '@shared/store/ducks/feed/actions';
@@ -211,7 +212,7 @@ const Feed = ({ feed, loadFeed }: FeedProps): JSX.Element => {
             colors={[theme.palette.colors.primary]}
           />
         }
-        ListEmptyComponent={<ActivityIndicator />}
+        ListEmptyComponent={<ListEmptyComponent />}
         ListFooterComponent={loading ? <ActivityIndicator /> : <View style={{ height: theme.screen.rem(1) }} />}
       />
 
