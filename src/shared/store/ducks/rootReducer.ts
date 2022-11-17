@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 
-import authentication from './authentication';
+import feed from './feed';
 import posts from './posts';
+import authentication from './authentication';
 
 export default combineReducers({
-  authentication,
-  posts
+  feed,
+  posts,
+  authentication
 });

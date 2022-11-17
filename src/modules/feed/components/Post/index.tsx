@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, memo } from 'react';
 
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -14,10 +14,9 @@ import Animated, {
   runOnJS
 } from 'react-native-reanimated';
 
-import {ENDPOINT_URL} from '@env';
+import { ENDPOINT_URL } from '@env';
 
 import { RootFeedParamsList } from '@modules/feed/routes'
-import { usePostComment } from '@modules/feed/hooks/postComment';
 
 import Touchable from '@shared/common/components/Touchable';
 import { User, AuthenticationState } from '@shared/store/ducks/authentication/types';
@@ -26,8 +25,6 @@ import { Comment, Like } from '@shared/store/ducks/posts/types';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { LikePostPayload } from '@shared/store/ducks/posts/types';
 import heartImage from '@shared/common/assets/heart/heart-like.png';
-
-
 
 import {
   Container,
@@ -231,4 +228,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActio
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Post)
+)(memo(Post))

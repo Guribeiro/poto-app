@@ -64,19 +64,19 @@ const ThemeProvider = ({ children }: Props): JSX.Element => {
   const [theme, setTheme] = useState<Theme>(dark);
   const { breakpoint, padding, baseFontSize, fontScaleFactor } = useScreen();
 
-  // useEffect(() => {
-  //   const loadStorage = async () => {
-  //     const themeStoraged = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-  //     if (themeStoraged) {
-  //       setTheme(JSON.parse(themeStoraged));
-  //     }
-  //   };
-  //   loadStorage();
-  // }, []);
+  useEffect(() => {
+    const loadStorage = async () => {
+      const themeStoraged = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+      if (themeStoraged) {
+        setTheme(JSON.parse(themeStoraged));
+      }
+    };
+    loadStorage();
+  }, []);
 
-  // useEffect(() => {
-  //   AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
-  // }, [theme]);
+  useEffect(() => {
+    AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
+  }, [theme]);
 
   const customTheme = useMemo(() => {
     return {

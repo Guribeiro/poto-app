@@ -5,6 +5,7 @@ import preloadedAuthenticationState from './ducks/authentication/preloadedAuthen
 
 import { AuthenticationState } from './ducks/authentication/types';
 import { PostsState } from './ducks/posts/types';
+import { FeedState } from './ducks/feed/types';
 
 import rootSaga from './ducks/rootSagas';
 
@@ -13,6 +14,7 @@ const sagaMiddleware = createSagaMiddleware();
 export interface ApplicationState {
   authentication: AuthenticationState;
   posts: PostsState;
+  feed: FeedState;
 }
 
 

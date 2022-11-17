@@ -1,11 +1,14 @@
 import styled from 'styled-components/native';
 import { TouchableOpacity, FlatList, FlatListProps, View, TextInput } from 'react-native';
-
+import Constants from 'expo-constants';
 import Animated from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import { Text } from '@shared/common/components/Text';
 
 import { Post } from '@shared/store/ducks/posts/types';
+
+const { statusBarHeight } = Constants;
+
 
 export const Container = styled.View`
   flex: 1;
@@ -13,9 +16,11 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  padding: ${({ theme }) => theme.screen.rem(2)}px ${({ theme }) => theme.screen.rem(.8)}px;
-  flex-direction: row;
+  padding: ${({ theme }) => theme.screen.rem(1) + statusBarHeight}px
+  ${({ theme }) => theme.screen.rem(.8)}px
+  ${({theme}) => theme.screen.rem(1)}px;
 
+  flex-direction: row;
   justify-content: space-between;
 `;
 
@@ -45,8 +50,6 @@ export const Icon = styled(Feather)`
   color: ${({ theme }) => theme.palette.colors.white};
   font-size: ${({ theme }) => theme.screen.rem(1.4, true)}px;
 `;
-
-
 
 export const PostsList = styled(
   Animated.FlatList as new (props: FlatListProps<Post>) => Animated.FlatList<Post>,

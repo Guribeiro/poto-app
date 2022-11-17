@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
