@@ -7,7 +7,7 @@ import {
   requestCameraPermissionsAsync,
   launchCameraAsync
 } from 'expo-image-picker';
-import { Platform, RefreshControl, ActivityIndicator, View } from 'react-native';
+import { Platform, RefreshControl, ActivityIndicator, View, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -201,7 +201,8 @@ const Feed = ({ feed, loadFeed }: FeedProps): JSX.Element => {
         renderItem={({ item }) => <Post post={item} />}
         keyExtractor={item => item.id}
         onEndReached={() => setPage(prev => prev + 1)}
-        onEndReachedThreshold={1.6}
+        onEndReachedThreshold={2}
+        scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={false}
