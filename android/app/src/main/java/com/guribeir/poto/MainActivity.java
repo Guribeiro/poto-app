@@ -1,4 +1,4 @@
-package com.poto;
+package com.guribeir.poto;
 
 import android.os.Build;
 import android.os.Bundle;

@@ -184,6 +184,7 @@ export function* signup({ payload }: SignupAction) {
     );
 
   } catch (error) {
+    console.log({error});
 
     const axiosError = error as AxiosError<{ error: string }>;
 

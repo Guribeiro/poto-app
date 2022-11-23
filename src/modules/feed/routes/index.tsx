@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '@shared/hooks/theme';
 
 import Feed from '../screens/Feed';
+import Post from '../screens/Post';
 import CreatePost from '../screens/CreatePost';
 import PostComments from '../screens/PostComments';
 import PostsLiked from '../screens/PostsLiked';
@@ -18,6 +19,7 @@ export type PostCommentsParams = {
 
 export type RootFeedParamsList = {
   Feed: undefined;
+  Post: undefined;
   CreatePost: CreatePostParams;
   PostComments: PostCommentsParams;
   PostsLiked: undefined;
@@ -44,6 +46,7 @@ const FeedRoutes = (): JSX.Element => {
         }}
       >
         <Screen name="Feed" component={Feed} />
+        <Screen name="Post" component={Post} />
         <Screen name="CreatePost" component={CreatePost} />
         <Screen name="PostComments" component={PostComments} />
         <Screen name="PostsLiked" component={PostsLiked} />

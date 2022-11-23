@@ -2,9 +2,15 @@
   "expo": {
     "name": "poto",
     "slug": "poto",
+    "owner":"guribeir",
+    "githubUrl":"https://github.com/guribeiro/poto-app",
     "version": "1.0.0",
+    "scheme": "poto",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.guribeir.poto"
+    }
   }
 }

@@ -1,4 +1,4 @@
-package com.poto.newarchitecture.components;
+package com.guribeir.poto.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

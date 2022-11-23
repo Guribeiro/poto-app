@@ -1,4 +1,4 @@
-package com.poto.newarchitecture;
+package com.guribeir.poto.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.poto.BuildConfig;
-import com.poto.newarchitecture.components.MainComponentsRegistry;
-import com.poto.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.guribeir.poto.BuildConfig;
+import com.guribeir.poto.newarchitecture.components.MainComponentsRegistry;
+import com.guribeir.poto.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
