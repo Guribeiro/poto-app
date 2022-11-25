@@ -7,6 +7,7 @@ import { createURL, useURL } from 'expo-linking';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -213,12 +214,14 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         </MoreHorizontalTouchable>
       </Header>
 
-      <PostImageContainer>
-        <PostImage source={{ uri }} />
-        <Animated.View style={iconLikeStyle}>
-          <HeartLikeImage source={heartImage} />
-        </Animated.View>
-      </PostImageContainer>
+      <TapGestureHandler numberOfTaps={2} onActivated={handleShowLikeIndicator}>
+        <PostImageContainer>
+          <PostImage source={{ uri }} />
+          <Animated.View style={iconLikeStyle}>
+            <HeartLikeImage source={heartImage} />
+          </Animated.View>
+        </PostImageContainer>
+      </TapGestureHandler>
 
 
       <InteractionContainer>

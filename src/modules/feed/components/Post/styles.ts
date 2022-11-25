@@ -11,7 +11,6 @@ interface IconProps {
 export const Container = styled(View)`
   justify-content: center;
   padding-bottom: ${({ theme }) => theme.screen.rem(.5)}px;
-
 `;
 
 export const Header = styled(View)`
