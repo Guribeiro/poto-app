@@ -7,6 +7,10 @@ const {
   LOAD_FEED_REQUEST_FAILURE,
   LOAD_FEED_REQUEST_SUCCESS,
 
+  REFRESH_FEED_REQUEST,
+  REFRESH_FEED_REQUEST_FAILURE,
+  REFRESH_FEED_REQUEST_SUCCESS,
+
   ADD_POSTS_REQUEST,
   ADD_POSTS_REQUEST_FAILURE,
   ADD_POSTS_REQUEST_SUCCESS,
@@ -38,8 +42,14 @@ const reducer: Reducer<FeedState, FeedAction> = (
     case LOAD_FEED_REQUEST:
       return { ...state, loading: true }
     case LOAD_FEED_REQUEST_SUCCESS:
-      return { ...state, loading: false, error: false, data: action.payload.data as Post[] }
+      return { ...state, loading: false, error: false, data: state.data.concat(action.payload.data) as Post[] }
     case LOAD_FEED_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true }
+    case REFRESH_FEED_REQUEST:
+      return { ...state, loading: true }
+    case REFRESH_FEED_REQUEST_SUCCESS:
+      return { ...state, loading: false, error: false, data: action.payload.data as Post[] }
+    case REFRESH_FEED_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     case ADD_POSTS_REQUEST:
       return { ...state, loading: true }

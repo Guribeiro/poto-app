@@ -25,6 +25,8 @@ import ListEmptyComponent from '@shared/common/components/ListEmptyComponent';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import * as FeedActions from '@shared/store/ducks/feed/actions';
 
+import {LoadFeedPayload} from '@shared/store/ducks/feed/types';
+
 import { RootFeedParamsList } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
 
@@ -48,14 +50,15 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  loadFeed(page: number): void;
+  loadFeed(payload:LoadFeedPayload): void;
+  refreshFeed(payload:LoadFeedPayload): void;
 }
 
 type FeedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
 type FeedProps = StateProps & DispatchProps;
 
-const Feed = ({ feed, loadFeed }: FeedProps): JSX.Element => {
+const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   const INITIAL_VALUE = -1000;
   const FINAL_VALUE = 0;
 
@@ -173,9 +176,18 @@ const Feed = ({ feed, loadFeed }: FeedProps): JSX.Element => {
   }, [requestMediaLibraryPermissions]);
 
 
-  useEffect(() => {
-    loadFeed(page)
+  const handleLoadFeed = useCallback(() => {
+    if (loading) {
+      return;
+    }
+
+    setPage(prev => prev + 1)
+
   }, [page])
+
+  useEffect(() => {
+    loadFeed({page})
+  }, [page, loadFeed])
 
   return (
     <Container>
@@ -201,13 +213,13 @@ const Feed = ({ feed, loadFeed }: FeedProps): JSX.Element => {
         data={data}
         renderItem={({ item }) => <Post post={item} />}
         keyExtractor={item => item.id}
-        onEndReached={() => setPage(prev => prev + 1)}
-        onEndReachedThreshold={2}
+        onEndReached={handleLoadFeed}
+        onEndReachedThreshold={.1}
         scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={false}
-            onRefresh={() => setPage(0)}
+            onRefresh={() => refreshFeed({page})}
             tintColor={theme.palette.colors.secondary}
             colors={[theme.palette.colors.primary]}
           />
@@ -234,7 +246,7 @@ const mapStateToProps = ({ feed }: ApplicationState) => ({
   feed,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({...PostsActions, ...FeedActions}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({ ...PostsActions, ...FeedActions }, dispatch);
 
 export default connect(
   mapStateToProps,

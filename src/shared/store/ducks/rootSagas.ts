@@ -21,7 +21,7 @@ import {
   removePostComment
 } from './posts/sagas';
 
-import { loadFeedCall } from './feed/sagas';
+import { loadFeedCall, refreshFeedCall } from './feed/sagas';
 
 const {
   LOAD_STORAGED_AUTHENTICATION_REQUEST,
@@ -43,6 +43,7 @@ const {
 
 const {
   LOAD_FEED_REQUEST,
+  REFRESH_FEED_REQUEST
 } = FeedTypes;
 
 export default function* rootSaga() {
@@ -60,5 +61,6 @@ export default function* rootSaga() {
     takeLatest(UPDATE_EMAIL_REQUEST, updateEmail),
     takeLatest(UPDATE_USERNAME_REQUEST, updateUsername),
     takeLatest(LOAD_FEED_REQUEST, loadFeedCall),
+    takeLatest(REFRESH_FEED_REQUEST, refreshFeedCall),
   ]);
 }
