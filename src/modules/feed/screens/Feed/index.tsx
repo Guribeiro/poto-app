@@ -1,19 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
-import {
-  requestMediaLibraryPermissionsAsync,
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-  requestCameraPermissionsAsync,
-  launchCameraAsync
-} from 'expo-image-picker';
-import { Platform, RefreshControl, ActivityIndicator, View } from 'react-native';
+import { RefreshControl, ActivityIndicator, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+
+import Toast from 'react-native-toast-message';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -25,10 +20,12 @@ import ListEmptyComponent from '@shared/common/components/ListEmptyComponent';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import * as FeedActions from '@shared/store/ducks/feed/actions';
 
-import {LoadFeedPayload} from '@shared/store/ducks/feed/types';
+import { LoadFeedPayload } from '@shared/store/ducks/feed/types';
 
 import { RootFeedParamsList } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
+
+import { launchCamera, launchImageLibrary, PickerOptions } from '@shared/utils/imagePicker';
 
 import SelectMediaModal from '../../components/SelectMediaModal';
 import Post from '../../components/Post';
@@ -50,8 +47,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  loadFeed(payload:LoadFeedPayload): void;
-  refreshFeed(payload:LoadFeedPayload): void;
+  loadFeed(payload: LoadFeedPayload): void;
+  refreshFeed(payload: LoadFeedPayload): void;
 }
 
 type FeedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
@@ -96,84 +93,58 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
     });
   }, [uploadImageOffset, INITIAL_VALUE]);
 
-  const requestMediaLibraryPermissions = useCallback(async () => {
-    if (Platform.OS !== 'web') {
-      const { status } = await requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        throw new Error(
-          'Desculpe, não temos permissão de acesso às suas fotos',
-        );
-      }
-    }
-  }, []);
 
-  const requestCameraPermissions = useCallback(async () => {
-    try {
-      if (Platform.OS !== 'web') {
-        const { status } = await requestCameraPermissionsAsync();
-
-        if (status !== 'granted') {
-          throw new Error(
-            'Desculpe, não temos permissão de acesso à sua câmera',
-          );
-        }
-      }
-    } catch (error) {
-      throw new Error(error as string);
-    }
-  }, []);
-
-  const launchCamera = useCallback(async (): Promise<void> => {
-    try {
-      await requestCameraPermissions();
-
-      const imagePickerResult = await launchCameraAsync({
-        mediaTypes: MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [9, 16],
-        quality: 1,
-      });
-
-      if (imagePickerResult.cancelled) return;
-
-      closeSelectImageModal();
-
-      navigate('CreatePost', {
-        image: imagePickerResult
-      });
-
-    } catch (error) {
-      console.log({ error })
-    } finally {
-      setMediaLoading(false);
-    }
-  }, [requestCameraPermissions]);
-
-  const launchMediaLibrary = useCallback(async (): Promise<void> => {
+  const handleLaunchCamera = useCallback(async (): Promise<void> => {
     try {
       setMediaLoading(true);
-      await requestMediaLibraryPermissions();
-      const imagePickerResult = await launchImageLibraryAsync({
-        mediaTypes: MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [9, 16],
-        quality: 1,
-      });
+      const imagePickerResult = await launchCamera({} as PickerOptions);
 
-      if (imagePickerResult.cancelled) return;
+      if (imagePickerResult.canceled) return;
 
       closeSelectImageModal();
 
+      const [image] = imagePickerResult.assets;
+
       navigate('CreatePost', {
-        image: imagePickerResult
+        image,
       });
 
     } catch (error) {
-      console.log({ error })
+      const err = error as Error;
+      Toast.show({
+        type: 'error',
+        text1: `${err.message} 😥`,
+      });
     } finally {
       setMediaLoading(false);
     }
-  }, [requestMediaLibraryPermissions]);
+  }, []);
+
+  const handleLaunchMediaLibrary = useCallback(async (): Promise<void> => {
+    try {
+      setMediaLoading(true);
+      const imagePickerResult = await launchImageLibrary({} as PickerOptions);
+
+      if (imagePickerResult.canceled) return;
+
+      closeSelectImageModal();
+
+      const [image] = imagePickerResult.assets;
+
+      navigate('CreatePost', {
+        image,
+      });
+
+    } catch (error) {
+      const err = error as Error;
+      Toast.show({
+        type: 'error',
+        text1: `${err.message} 😥`,
+      });
+    } finally {
+      setMediaLoading(false);
+    }
+  }, []);
 
 
   const handleLoadFeed = useCallback(() => {
@@ -186,7 +157,7 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   }, [page])
 
   useEffect(() => {
-    loadFeed({page})
+    loadFeed({ page })
   }, [page, loadFeed])
 
   return (
@@ -219,7 +190,7 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         refreshControl={
           <RefreshControl
             refreshing={false}
-            onRefresh={() => refreshFeed({page})}
+            onRefresh={() => refreshFeed({ page })}
             tintColor={theme.palette.colors.secondary}
             colors={[theme.palette.colors.primary]}
           />
@@ -234,8 +205,8 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         <SelectMediaModal
           loading={false}
           onRequestClose={closeSelectImageModal}
-          onLaunchMediaLibrary={launchMediaLibrary}
-          onLaunchCamera={launchCamera}
+          onLaunchMediaLibrary={handleLaunchMediaLibrary}
+          onLaunchCamera={handleLaunchCamera}
         />
       </Animated.View>
     </Container>

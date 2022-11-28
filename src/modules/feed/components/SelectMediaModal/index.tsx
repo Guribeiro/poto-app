@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { Alert, TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 import Loading from '@shared/common/components/Loading';
 import Spacer from '@shared/common/components/Spacer';
 
@@ -34,10 +33,10 @@ const SelectMediaModal = ({
         <Content>
           <Body>
             <Title>Selecione o seu momento</Title>
-            {/* <Button onPress={onLaunchCamera}>
+            <Button onPress={onLaunchCamera}>
               <Icon name="camera" />
               <ButtonText>Câmera</ButtonText>
-            </Button> */}
+            </Button>
             <Spacer size={16} />
             <Button onPress={onLaunchMediaLibrary}>
               <Icon name="image" />
