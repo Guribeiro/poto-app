@@ -7,8 +7,6 @@ import { ENDPOINT_URL } from '@env';
 
 import { Container, PostImage, Empty } from './styles';
 
-
-
 export interface Like {
   id: string;
   post?: Post;
@@ -23,7 +21,7 @@ interface PostLikedProps {
 }
 
 const PostLiked = ({ data, onPress }: PostLikedProps): JSX.Element => {
-  const { id, user, post, created_at, empty } = data;
+  const { post, empty } = data;
 
   const postImageUri = useMemo(() => {
     return post?.photo ? `${ENDPOINT_URL}/files/posts/${post.photo}` : ''

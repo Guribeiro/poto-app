@@ -1,7 +1,7 @@
 import { useCallback, useMemo, memo } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Share } from 'react-native';
+import { Share, TouchableOpacity } from 'react-native';
 import { formatDistance } from 'date-fns';
 import { createURL, useURL } from 'expo-linking';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -204,7 +204,11 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
     <Container>
       <Header>
         <UserProfile>
-          <UserAvatar source={{ uri: postOwnerAvatarUri }} />
+          <TouchableOpacity onPress={() => navigate('UserProfile', {
+            user_id: user.id
+          })}>
+            <UserAvatar source={{ uri: postOwnerAvatarUri }} />
+          </TouchableOpacity>
 
           <UserName>{user.full_name}</UserName>
         </UserProfile>
@@ -250,7 +254,7 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
       )}
 
       <PostCommentTouchableContainer>
-        <PostCommentUserAvatar source={{ uri: avatarUri, cache: 'only-if-cached' }} />
+        <PostCommentUserAvatar source={{ uri: avatarUri }} />
         <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
         </PostCommentTouchable>

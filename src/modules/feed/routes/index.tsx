@@ -8,6 +8,7 @@ import Post from '../screens/Post';
 import CreatePost from '../screens/CreatePost';
 import PostComments from '../screens/PostComments';
 import PostsLiked from '../screens/PostsLiked';
+import UserProfile from '../screens/UserProfile';
 
 export type CreatePostParams = {
   image: ImageInfo;
@@ -17,12 +18,17 @@ export type PostCommentsParams = {
   post_id: string;
 }
 
+export interface UserProfileParams {
+  user_id: string;
+}
+
 export type RootFeedParamsList = {
   Feed: undefined;
   Post: undefined;
   CreatePost: CreatePostParams;
   PostComments: PostCommentsParams;
   PostsLiked: undefined;
+  UserProfile:UserProfileParams;
 }
 
 const { Navigator, Screen } = createNativeStackNavigator<RootFeedParamsList>()
@@ -50,6 +56,7 @@ const FeedRoutes = (): JSX.Element => {
         <Screen name="CreatePost" component={CreatePost} />
         <Screen name="PostComments" component={PostComments} />
         <Screen name="PostsLiked" component={PostsLiked} />
+        <Screen name='UserProfile' component={UserProfile} />
       </Navigator>
     </Container>
   )
