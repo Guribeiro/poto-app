@@ -1,9 +1,8 @@
-import { View, FlatList, FlatListProps } from 'react-native';
+import { View } from 'react-native';
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
-import { lighten } from 'polished';
 import { Text } from '@shared/common/components/Text';
-import { Post } from '@shared/store/ducks/posts/types';
+import Animated from 'react-native-reanimated';
 
 export const Container = styled(View)`
   flex: 1;
@@ -11,7 +10,7 @@ export const Container = styled(View)`
   background-color: ${({ theme }) => theme.palette.colors.primary};
 `;
 
-export const HeaderContainer = styled(View)`
+export const HeaderContainer = styled(Animated.View)`
   padding: ${({ theme }) => theme.screen.rem(3)}px
   ${({ theme }) => theme.screen.rem(.8)}px
   ${({ theme }) => theme.screen.rem(1.6)}px;
@@ -19,6 +18,11 @@ export const HeaderContainer = styled(View)`
   background-color: ${({ theme }) => theme.palette.colors.secondary};
   border-bottom-left-radius: ${({ theme }) => theme.screen.rem(1.6)}px;
   border-bottom-right-radius: ${({ theme }) => theme.screen.rem(1.6)}px;
+
+  position: absolute;
+  top: 0;
+  right:0;
+  left: 0;
 `;
 
 export const Row = styled(View)`

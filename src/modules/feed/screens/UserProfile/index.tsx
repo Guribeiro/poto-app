@@ -2,6 +2,13 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message'
 import { ScrollView } from 'react-native';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  useAnimatedScrollHandler,
+  Extrapolate
+} from 'react-native-reanimated';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -53,6 +60,34 @@ const UserProfile = (): JSX.Element => {
   const [user, setUser] = useState<User | undefined>();
   const [loading, setLoading] = useState(true);
 
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    console.log(event.contentOffset.y)
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const headerStyle = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        scrollY.value,
+        [0, 50, 200],
+        [320, 280, 120],
+        Extrapolate.CLAMP
+      )
+    }
+  });
+
+  const profileAvatarStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        scrollY.value,
+        [0, 100,],
+        [1, 0],
+        Extrapolate.CLAMP
+      )
+    }
+  })
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -96,16 +131,29 @@ const UserProfile = (): JSX.Element => {
 
   return (
     <Container>
-      <ScrollView>
-        <HeaderContainer>
-          <Row>
-            <Touchable onPress={goBack}>
-              <Icon name='arrow-left' />
-            </Touchable>
-            <UsernameText>{user.username}</UsernameText>
-          </Row>
+      <Animated.ScrollView
+        contentContainerStyle={{
+          marginTop: 320,
+          paddingBottom: 320
+        }}
+        scrollEventThrottle={16}
+        onScroll={scrollHandler}
+      >
+        {user.posts.map((post) => (
+          <PostItem key={post.id} post={post} />
+        ))}
+      </Animated.ScrollView>
 
-          <Spacer size={16} />
+      <HeaderContainer style={headerStyle}>
+        <Row>
+          <Touchable onPress={goBack}>
+            <Icon name='arrow-left' />
+          </Touchable>
+          <UsernameText>{user.username}</UsernameText>
+        </Row>
+
+        <Spacer size={16} />
+        <Animated.View style={profileAvatarStyle}>
           <UserProfileDetails>
             <ProfileAvatar source={{ uri }} />
           </UserProfileDetails>
@@ -113,12 +161,9 @@ const UserProfile = (): JSX.Element => {
           <UserProfileDetails>
             <Text>{user.full_name}</Text>
           </UserProfileDetails>
-          <Spacer size={32} />
-        </HeaderContainer>
-        {user.posts.map((post) => (
-          <PostItem key={post.id} post={post} />
-        ))}
-      </ScrollView>
+        </Animated.View>
+        <Spacer size={32} />
+      </HeaderContainer>
 
     </Container>
   )
