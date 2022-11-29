@@ -16,8 +16,9 @@ import Touchable from '@shared/common/components/Touchable';
 import ProfileAvatar from '@shared/common/components/ProfileAvatar';
 import ListEmptyComponent from '@shared/common/components/ListEmptyComponent';
 import { Post } from '@shared/store/ducks/posts/types';
-
 import Header from '@shared/common/components/Header';
+
+import { verifyErrorInstance } from '@shared/utils/errors';
 
 import { UserProfileParams, RootFeedParamsList } from '../../routes'
 
@@ -61,7 +62,8 @@ const UserProfile = (): JSX.Element => {
 
         setUser(data);
 
-      } catch (error) {
+      } catch (err) {
+        const { error } = verifyErrorInstance(err);
         Toast.show({
           type: 'error',
           text1: `${error} 😥`,
@@ -74,7 +76,7 @@ const UserProfile = (): JSX.Element => {
     loadUserProfile()
   }, [])
 
-  if(loading){
+  if (loading) {
     return <FullScreenLoading size='large' />
   }
 
@@ -95,24 +97,24 @@ const UserProfile = (): JSX.Element => {
   return (
     <Container>
       <ScrollView>
-         <HeaderContainer>
-        <Row>
-          <Touchable onPress={goBack}>
-            <Icon name='arrow-left' />
-          </Touchable>
-          <UsernameText>{user.username}</UsernameText>
-        </Row>
+        <HeaderContainer>
+          <Row>
+            <Touchable onPress={goBack}>
+              <Icon name='arrow-left' />
+            </Touchable>
+            <UsernameText>{user.username}</UsernameText>
+          </Row>
 
-        <Spacer size={16} />
-        <UserProfileDetails>
-          <ProfileAvatar source={{ uri }} />
-        </UserProfileDetails>
-        <Spacer size={16} />
-        <UserProfileDetails>
-          <Text>{user.full_name}</Text>
-        </UserProfileDetails>
-        <Spacer size={32} />
-      </HeaderContainer>
+          <Spacer size={16} />
+          <UserProfileDetails>
+            <ProfileAvatar source={{ uri }} />
+          </UserProfileDetails>
+          <Spacer size={16} />
+          <UserProfileDetails>
+            <Text>{user.full_name}</Text>
+          </UserProfileDetails>
+          <Spacer size={32} />
+        </HeaderContainer>
         {user.posts.map((post) => (
           <PostItem key={post.id} post={post} />
         ))}

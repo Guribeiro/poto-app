@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 
 import { useTheme } from '@shared/hooks/theme';
 import ListEmptyComponent from '@shared/common/components/ListEmptyComponent';
+import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import * as FeedActions from '@shared/store/ducks/feed/actions';
@@ -41,6 +42,7 @@ import {
   PostsList
 } from './styles';
 import { FeedState } from '@shared/store/ducks/feed/types';
+import { verifyErrorInstance } from '@shared/utils/errors';
 
 interface StateProps {
   feed: FeedState;
@@ -135,11 +137,11 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         image,
       });
 
-    } catch (error) {
-      const err = error as Error;
+    } catch (err) {
+      const { error } = verifyErrorInstance(err)
       Toast.show({
         type: 'error',
-        text1: `${err.message} 😥`,
+        text1: `${error} 😥`,
       });
     } finally {
       setMediaLoading(false);
@@ -159,6 +161,10 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   useEffect(() => {
     loadFeed({ page })
   }, [page, loadFeed])
+
+  if (loading) {
+    return <FullScreenLoading />
+  }
 
   return (
     <Container>

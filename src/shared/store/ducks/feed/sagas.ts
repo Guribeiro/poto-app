@@ -5,7 +5,12 @@ import api from '@shared/services/api'
 
 import { Post, LoadFeedPayload } from './types';
 
-import { loadFeedFailure, loadFeedSuccess, refreshFeedFailure, refreshFeedSuccess } from './actions';
+import {
+  loadFeedFailure,
+  loadFeedSuccess,
+  refreshFeedFailure,
+  refreshFeedSuccess
+} from './actions';
 
 interface LoadFeedAction {
   type: string;
