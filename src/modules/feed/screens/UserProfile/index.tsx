@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 
 import PostItem from '@modules/feed/components/Post';
 
+import FullScreenLoading from '@shared/common/components/FullScreenLoading';
+
 import { Text } from '@shared/common/components/Text';
 import Spacer from '@shared/common/components/Spacer';
 import Touchable from '@shared/common/components/Touchable';
@@ -48,7 +50,7 @@ const UserProfile = (): JSX.Element => {
   const { goBack } = useNavigation<UserProfileScreenProps>()
 
   const [user, setUser] = useState<User | undefined>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -71,6 +73,10 @@ const UserProfile = (): JSX.Element => {
 
     loadUserProfile()
   }, [])
+
+  if(loading){
+    return <FullScreenLoading size='large' />
+  }
 
   if (!user) {
     return (
