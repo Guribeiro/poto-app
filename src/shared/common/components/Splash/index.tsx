@@ -59,7 +59,7 @@ const Splash = (): JSX.Element => {
 
   const startApp = useCallback(() => {
     // navigation.dispatch(StackActions.replace('Home'));
-    navigate('AppRoutes');
+    navigate('App');
   }, [navigate]);
 
   useEffect(() => {
