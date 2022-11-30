@@ -19,6 +19,7 @@ import { AddPostPayload, PostsState } from '@shared/store/ducks/posts/types';
 import { RootFeedParamsList, CreatePostParams } from '@modules/feed/routes';
 
 import { Container, PostImage, Content, TouchableContainer, Touchable, Icon } from './styles';
+import { useLocation } from '@shared/hooks/location';
 
 type CreatePostScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'CreatePost'>
 
@@ -41,7 +42,9 @@ const CreatePost = ({ addPost }: CreatePostProps): JSX.Element => {
   const FINAL_MEDIA_HEIGHT = 240;
 
   const { params } = useRoute();
-  const { goBack } = useNavigation<CreatePostScreenProps>()
+  const { goBack } = useNavigation<CreatePostScreenProps>();
+
+  const { location } = useLocation();
 
   const { image } = params as CreatePostParams;
 
@@ -78,10 +81,11 @@ const CreatePost = ({ addPost }: CreatePostProps): JSX.Element => {
   const onSubmit = useCallback(async ({ subtitle }: FormData) => {
     addPost({
       image,
-      subtitle
+      subtitle,
+      ...location
     });
     goBack()
-  }, [image]);
+  }, [image, location]);
 
   return (
     <Container>

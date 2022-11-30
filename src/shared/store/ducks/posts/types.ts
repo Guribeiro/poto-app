@@ -56,6 +56,8 @@ export interface Post {
 export interface AddPostPayload {
   image: ImageInfo;
   subtitle?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 
