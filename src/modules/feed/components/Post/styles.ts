@@ -95,7 +95,7 @@ export const CreatedAtText = styled(Text)`
 `;
 
 export const PostCommentTouchableContainer = styled(View)`
-  padding: ${({ theme }) => theme.screen.rem(.8)}px;
+  padding: ${({ theme }) => theme.screen.rem(.5)}px;
   flex-direction: row;
   align-items: center;
 `

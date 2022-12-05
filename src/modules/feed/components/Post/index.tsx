@@ -60,8 +60,8 @@ export interface Post {
   user: User;
   likes: Array<Like>
   comments: Array<Comment>
-  _likesCount: number;
-  _commentsCount: number;
+  _likes_count: number;
+  _comments_count: number;
 }
 
 interface OwnProps {
@@ -242,14 +242,14 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
 
       <PostSubtitleContainer>
         <PostSubtitleText>
-          <PostOwnerName>{user.username}{' '}</PostOwnerName>
+          <PostOwnerName>{user.username || user.full_name}{' '}</PostOwnerName>
           {subtitle}
         </PostSubtitleText>
       </PostSubtitleContainer>
 
       {!!post.comments?.length && (
         <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
-          <PostCommentTouchableText>Ver todos os {post._commentsCount} comentários</PostCommentTouchableText>
+          <PostCommentTouchableText>Ver todos os {post._comments_count} comentários</PostCommentTouchableText>
         </Touchable>
       )}
 

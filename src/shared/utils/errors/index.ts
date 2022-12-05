@@ -1,6 +1,6 @@
 import axios from "axios"
 
-interface AxiosError {
+export interface AxiosError {
   error: string;
 }
 

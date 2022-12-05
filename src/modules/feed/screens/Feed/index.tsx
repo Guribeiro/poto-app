@@ -43,6 +43,7 @@ import {
 } from './styles';
 import { FeedState } from '@shared/store/ducks/feed/types';
 import { verifyErrorInstance } from '@shared/utils/errors';
+import { useLocation } from '@shared/hooks/location';
 
 interface StateProps {
   feed: FeedState;
@@ -65,6 +66,8 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   const [page, setPage] = useState(0);
 
   const { theme } = useTheme();
+
+  const { location } = useLocation();
 
   const { navigate } = useNavigation<FeedScreenProps>()
 
@@ -149,22 +152,27 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   }, []);
 
 
-  const handleLoadFeed = useCallback(() => {
-    if (loading) {
-      return;
-    }
+  // const handlePagination = useCallback(() => {
+  //   if (loading) {
+  //     return;
+  //   }
 
-    setPage(prev => prev + 1)
-
-  }, [page])
+  //   setPage(prev => prev + 1)
+  // }, [])
 
   useEffect(() => {
-    loadFeed({ page })
+    loadFeed({
+      page: 0,
+      latitude: location?.latitude,
+      longitude: location?.longitude
+    })
   }, [page, loadFeed])
 
   if (loading) {
     return <FullScreenLoading />
   }
+
+  console.log({loading})
 
   return (
     <Container>
@@ -190,13 +198,17 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         data={data}
         renderItem={({ item }) => <Post post={item} />}
         keyExtractor={item => item.id}
-        onEndReached={handleLoadFeed}
-        onEndReachedThreshold={.1}
+        // onEndReached={handlePagination}
+        onEndReachedThreshold={.7}
         scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={false}
-            onRefresh={() => refreshFeed({ page })}
+            onRefresh={() => refreshFeed({
+              page,
+              latitude: location?.latitude,
+              longitude: location?.longitude
+            })}
             tintColor={theme.palette.colors.secondary}
             colors={[theme.palette.colors.primary]}
           />

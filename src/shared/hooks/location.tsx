@@ -1,5 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useCallback, useEffect } from 'react';
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
+import Toast from 'react-native-toast-message';
 
 interface LocationContextData {
   location: Location | undefined
@@ -21,11 +22,14 @@ const LocationProvider = ({ children }: LocationProviderProps): JSX.Element => {
 
   const requestForegroundPermissions = useCallback(async () => {
     try {
-      const { expires, status, granted } = await requestForegroundPermissionsAsync();
+      await requestForegroundPermissionsAsync();
 
-      console.log({ expires, status, granted })
     } catch (error) {
-      console.log(error);
+      const err = error as Error;
+      Toast.show({
+        type: 'error',
+        text1: `${err.message} 😥`,
+      });
     }
   }, []);
 
@@ -43,7 +47,11 @@ const LocationProvider = ({ children }: LocationProviderProps): JSX.Element => {
       });
 
     } catch (error) {
-
+      const err = error as Error;
+      Toast.show({
+        type: 'error',
+        text1: `${err.message} 😥`,
+      });
     }
   }, [])
 

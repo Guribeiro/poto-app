@@ -19,23 +19,27 @@ interface LoadFeedAction {
 
 interface ApiLoadFeedRequest {
   page: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 
-function apiGetRequestPosts({ page }: ApiLoadFeedRequest) {
-
-  return api.get('/feed/posts', {
+function apiGetRequestPosts({ page, latitude, longitude }: ApiLoadFeedRequest) {
+  return api.get('/feed', {
     params: {
-      page
+      page,
+      latitude,
+      longitude
     }
   });
 }
 
-function apiGetRequestRefreshFeed({ page }: ApiLoadFeedRequest) {
-
-  return api.get('/feed/posts', {
+function apiGetRequestRefreshFeed({ page, latitude, longitude }: ApiLoadFeedRequest) {
+  return api.get('/feed', {
     params: {
-      page
+      page,
+      latitude,
+      longitude
     }
   });
 }
@@ -44,6 +48,7 @@ export function* loadFeedCall({ payload }: LoadFeedAction) {
   try {
     const { data }: AxiosResponse<Post[]> = yield call(apiGetRequestPosts, payload);
 
+    console.log({data});
     yield put(loadFeedSuccess(data));
 
   } catch (error) {

@@ -58,7 +58,7 @@ const reducer: Reducer<FeedState, FeedAction> = (
     case ADD_POSTS_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     case LIKE_POST_REQUEST:
-      return { ...state, loading: true, error: false }
+      return { ...state, error: false }
     case LIKE_POST_REQUEST_SUCCESS:
       const postsData = [...state.data];
 
@@ -76,6 +76,7 @@ const reducer: Reducer<FeedState, FeedAction> = (
 
       const findPostCommentIndex = postsCommentsData.findIndex(post => post.id === action.payload.data.id);
       postsCommentsData[findPostCommentIndex] = action.payload.data;
+      postsCommentsData[findPostCommentIndex]._comments_count = postsCommentsData[findPostCommentIndex].comments.length
 
       return { loading: false, error: false, data: postsCommentsData }
     case ADD_POST_COMMENT_REQUEST_FAILURE:

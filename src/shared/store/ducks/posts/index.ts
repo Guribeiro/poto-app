@@ -32,18 +32,6 @@ const reducer: Reducer<PostsState, PostAction> = (
   action
 ) => {
   switch (action.type) {
-    case LIKE_POST_REQUEST:
-      return { ...state, loading: true, error: false }
-    case LIKE_POST_REQUEST_SUCCESS:
-      const postsData = [...state.data];
-
-      const findPostIndex = postsData.findIndex(post => post.id === action.payload.data.id);
-      postsData[findPostIndex] = action.payload.data;
-
-      return { loading: false, error: false, data: postsData }
-    case LIKE_POST_REQUEST_FAILURE:
-      return { ...state, loading: false, error: true }
-
     case ADD_POST_COMMENT_REQUEST:
       return { ...state, loading: true, error: false }
     case ADD_POST_COMMENT_REQUEST_SUCCESS:

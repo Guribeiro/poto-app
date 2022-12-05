@@ -55,8 +55,8 @@ export interface Post {
   user: User;
   likes: Array<Like>
   comments: Array<Comment>
-  _likesCount: number;
-  _commentsCount: number;
+  _likes_count: number;
+  _comments_count: number;
 }
 
 export interface AddPostPayload {
@@ -66,6 +66,8 @@ export interface AddPostPayload {
 
 export interface LoadFeedPayload {
   page: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface FeedAction {
