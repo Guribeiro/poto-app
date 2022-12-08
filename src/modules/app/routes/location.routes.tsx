@@ -20,8 +20,6 @@ const LocationRoutes = (): JSX.Element => {
   const { theme } = useTheme();
   const { location } = useLocation();
 
-  console.log({ location })
-
   return (
     <Navigator
       initialRouteName="SplashLocation"

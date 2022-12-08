@@ -42,7 +42,7 @@ const reducer: Reducer<FeedState, FeedAction> = (
     case LOAD_FEED_REQUEST:
       return { ...state, loading: true }
     case LOAD_FEED_REQUEST_SUCCESS:
-      return { ...state, loading: false, error: false, data: state.data.concat(action.payload.data) as Post[] }
+      return { ...state, loading: false, error: false, data: action.payload.data }
     case LOAD_FEED_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     case REFRESH_FEED_REQUEST:

@@ -14,6 +14,10 @@ export type CreatePostParams = {
   image: ImageInfo;
 }
 
+export type PostParams = {
+  post_id: string;
+}
+
 export type PostCommentsParams = {
   post_id: string;
 }
@@ -24,7 +28,7 @@ export interface UserProfileParams {
 
 export type RootFeedParamsList = {
   Feed: undefined;
-  Post: undefined;
+  Post: PostParams;
   CreatePost: CreatePostParams;
   PostComments: PostCommentsParams;
   PostsLiked: undefined;

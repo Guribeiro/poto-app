@@ -166,13 +166,11 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
       latitude: location?.latitude,
       longitude: location?.longitude
     })
-  }, [page, loadFeed])
+  }, [])
 
-  if (loading) {
-    return <FullScreenLoading />
-  }
-
-  console.log({loading})
+  // if (loading) {
+  //   return <FullScreenLoading />
+  // }
 
   return (
     <Container>
@@ -203,7 +201,7 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
-            refreshing={false}
+            refreshing={loading}
             onRefresh={() => refreshFeed({
               page,
               latitude: location?.latitude,

@@ -52,6 +52,8 @@ export interface Post {
   photo: string;
   created_at: Date;
   updated_at: Date;
+  latitude: number;
+  longitude: number;
   user: User;
   likes: Array<Like>
   comments: Array<Comment>
