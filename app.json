@@ -7,7 +7,7 @@
     "version": "1.0.0",
     "scheme": "poto",
     "config": {
-      "googleMapsApiKey": "AIzaSyAEcIW71jKEnWQ3VwmJPjKND2lvbWIC05Y"
+      "googleMapsApiKey": ""
     },
     "assetBundlePatterns": [
       "**/*"
