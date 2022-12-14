@@ -1,12 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, NavigatorScreenParams } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
 import TabBar from '../components/Tabbar';
 
 import ProfileRoutes from '@modules/profile/routes';
+import FeedRoutes, { RootFeedParamsList } from '@modules/feed/routes';
+import Explore from '@modules/explore/Explore';
 
-import FeedRoutes from '@modules/feed/routes';
 
 const Container = styled.View`
   flex: 1;
@@ -14,8 +15,9 @@ const Container = styled.View`
 `;
 
 export type RootAppParamsList = {
-  FeedRoutes: undefined;
+  FeedRoutes?: NavigatorScreenParams<RootFeedParamsList>;
   ProfileRoutes: undefined;
+  Explore: undefined;
 }
 
 const hiddenRoutesTabBar = [
@@ -23,7 +25,8 @@ const hiddenRoutesTabBar = [
   'Settings',
   'CreatePost',
   'PostComments',
-  'PostsLiked'
+  'PostsLiked',
+  'PostDetails'
 ];
 
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();
@@ -46,6 +49,23 @@ const AppRoutes = (): JSX.Element => {
           options={({ route }) => {
             const focusedRouteName =
               getFocusedRouteNameFromRoute(route) || 'FeedRoutes';
+            if (hiddenRoutesTabBar.includes(focusedRouteName)) {
+              return {
+                tabBarStyle: { display: 'none' },
+              };
+            }
+
+            return {
+              tabBarStyle: { display: 'flex' },
+            };
+          }}
+        />
+        <Screen
+          name='Explore'
+          component={Explore}
+          options={({ route }) => {
+            const focusedRouteName =
+              getFocusedRouteNameFromRoute(route) || 'Explore';
             if (hiddenRoutesTabBar.includes(focusedRouteName)) {
               return {
                 tabBarStyle: { display: 'none' },

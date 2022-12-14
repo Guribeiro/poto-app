@@ -12,7 +12,7 @@ const Loading = ({ size = 'small' }: ActivityIndicatorProps): JSX.Element => {
   const { theme } = useTheme();
   return (
     <Container>
-      <ActivityIndicator size={size} color={theme.palette.colors.white} />
+      <ActivityIndicator size={size} color={theme.palette.colors.secondary} />
     </Container>
   );
 };

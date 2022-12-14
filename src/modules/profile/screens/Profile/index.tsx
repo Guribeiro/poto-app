@@ -1,15 +1,8 @@
 import { useCallback, useState } from 'react';
-import { Alert, Platform } from 'react-native';
 import { Text } from '@shared/common/components/Text';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import {
-  requestMediaLibraryPermissionsAsync,
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-  requestCameraPermissionsAsync,
-  launchCameraAsync
-} from 'expo-image-picker';
+import Toast from 'react-native-toast-message';
 
 import Animated, {
   useSharedValue,
@@ -26,6 +19,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootProfileRoutesParamsList } from '@modules/profile/routes';
 
 import { ApplicationState } from '@shared/store';
+
+import { launchImageLibrary, launchCamera, PickerOptions } from '@shared/utils/imagePicker';
 
 import Spacer from '@shared/common/components/Spacer';
 import Touchable from '@shared/common/components/Touchable';
@@ -81,6 +76,9 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
   const updateImageStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: positionY.value }],
+      width: '100%',
+      height: '100%',
+      position: 'absolute'
     };
   });
 
@@ -99,81 +97,60 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
   }, [positionY, SELECT_MEDIA_INITIAL_VALUE]);
 
 
-  const requestCameraPermissions = useCallback(async () => {
-    try {
-      if (Platform.OS !== 'web') {
-        const { status } = await requestCameraPermissionsAsync();
 
-        if (status !== 'granted') {
-          throw new Error(
-            'Desculpe, não temos permissão de acesso à sua câmera',
-          );
-        }
-      }
-    } catch (error) {
-      throw new Error(error as string);
-    }
-  }, []);
-
-  const launchCamera = useCallback(async (): Promise<void> => {
-    try {
-      await requestCameraPermissions();
-
-      const imagePickerResult = await launchCameraAsync({
-        mediaTypes: MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [9, 16],
-        quality: 1,
-      });
-
-      if (imagePickerResult.cancelled) return;
-
-      closeSelectImageModal();
-
-    } catch (error) {
-      console.log({ error })
-    } finally {
-      setMediaLoading(false);
-    }
-  }, [requestCameraPermissions]);
-
-  const requestMediaLibraryPermissions = useCallback(async () => {
-    if (Platform.OS !== 'web') {
-      const { status } = await requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        throw new Error(
-          'Desculpe, não temos permissão de acesso às suas fotos',
-        );
-      }
-    }
-  }, []);
-
-  const launchMediaLibrary = useCallback(async (): Promise<void> => {
+  const handleLaunchCamera = useCallback(async (): Promise<void> => {
     try {
       setMediaLoading(true);
-      await requestMediaLibraryPermissions();
-      const imagePickerResult = await launchImageLibraryAsync({
-        mediaTypes: MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [9, 16],
-        quality: 1,
-      });
+      const imagePickerResult = await launchCamera({} as PickerOptions);
 
-      if (imagePickerResult.cancelled) return;
+      if (imagePickerResult.canceled) return;
+
+      closeSelectImageModal();
+
+      const [image] = imagePickerResult.assets;
 
       updateAvatarRequest({
-        image: imagePickerResult.uri
+        image: image.uri,
+      });
+
+
+    } catch (error) {
+      const err = error as Error;
+      Toast.show({
+        type: 'error',
+        text1: `${err.message} 😥`,
+      });
+    } finally {
+      setMediaLoading(false);
+    }
+  }, []);
+
+
+  const handleLaunchMediaLibrary = useCallback(async (): Promise<void> => {
+    try {
+      setMediaLoading(true);
+      const imagePickerResult = await launchImageLibrary({} as PickerOptions);
+
+      if (imagePickerResult.canceled) return;
+
+      const [image] = imagePickerResult.assets;
+
+      updateAvatarRequest({
+        image: image.uri,
       });
 
       closeSelectImageModal();
 
     } catch (error) {
-      const err = new Error(error as string);
-      Alert.alert(err.message)
+      const err = error as Error;
+      Toast.show({
+        type: 'error',
+        text1: `${err.message} 😥`,
+      });
     } finally {
       setMediaLoading(false);
     }
-  }, [requestMediaLibraryPermissions, updateAvatarRequest]);
+  }, []);
 
   return (
     <Container>
@@ -203,16 +180,13 @@ const Profile = ({ authentication, updateAvatarRequest }: ProfileProps): JSX.Ele
         </UpdateProfileButton>
       </Header>
       <Animated.View
-        style={[
-          updateImageStyle,
-          { width: '100%', height: '100%', position: 'absolute' },
-        ]}
+        style={updateImageStyle}
       >
         <SelectMediaModal
           loading={false}
           onRequestClose={closeSelectImageModal}
-          onLaunchMediaLibrary={launchMediaLibrary}
-          onLaunchCamera={launchCamera}
+          onLaunchMediaLibrary={handleLaunchMediaLibrary}
+          onLaunchCamera={handleLaunchCamera}
         />
       </Animated.View>
       {loading || mediaLoading && <FullScreenLoading />}

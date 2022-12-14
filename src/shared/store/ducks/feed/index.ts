@@ -7,6 +7,10 @@ const {
   LOAD_FEED_REQUEST_FAILURE,
   LOAD_FEED_REQUEST_SUCCESS,
 
+  REFRESH_FEED_REQUEST,
+  REFRESH_FEED_REQUEST_FAILURE,
+  REFRESH_FEED_REQUEST_SUCCESS,
+
   ADD_POSTS_REQUEST,
   ADD_POSTS_REQUEST_FAILURE,
   ADD_POSTS_REQUEST_SUCCESS,
@@ -38,8 +42,14 @@ const reducer: Reducer<FeedState, FeedAction> = (
     case LOAD_FEED_REQUEST:
       return { ...state, loading: true }
     case LOAD_FEED_REQUEST_SUCCESS:
-      return { ...state, loading: false, error: false, data: action.payload.data as Post[] }
+      return { ...state, loading: false, error: false, data: action.payload.data }
     case LOAD_FEED_REQUEST_FAILURE:
+      return { ...state, loading: false, error: true }
+    case REFRESH_FEED_REQUEST:
+      return { ...state, loading: true }
+    case REFRESH_FEED_REQUEST_SUCCESS:
+      return { ...state, loading: false, error: false, data: action.payload.data as Post[] }
+    case REFRESH_FEED_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     case ADD_POSTS_REQUEST:
       return { ...state, loading: true }
@@ -48,7 +58,7 @@ const reducer: Reducer<FeedState, FeedAction> = (
     case ADD_POSTS_REQUEST_FAILURE:
       return { ...state, loading: false, error: true }
     case LIKE_POST_REQUEST:
-      return { ...state, loading: true, error: false }
+      return { ...state, error: false }
     case LIKE_POST_REQUEST_SUCCESS:
       const postsData = [...state.data];
 
@@ -66,6 +76,7 @@ const reducer: Reducer<FeedState, FeedAction> = (
 
       const findPostCommentIndex = postsCommentsData.findIndex(post => post.id === action.payload.data.id);
       postsCommentsData[findPostCommentIndex] = action.payload.data;
+      postsCommentsData[findPostCommentIndex]._comments_count = postsCommentsData[findPostCommentIndex].comments.length
 
       return { loading: false, error: false, data: postsCommentsData }
     case ADD_POST_COMMENT_REQUEST_FAILURE:

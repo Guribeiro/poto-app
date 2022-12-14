@@ -1,11 +1,13 @@
 import { useCallback, useMemo, memo } from 'react';
-
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Share, TouchableOpacity } from 'react-native';
 import { formatDistance } from 'date-fns';
+import { createURL, useURL } from 'expo-linking';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -33,6 +35,7 @@ import {
   Header,
   MoreHorizontalTouchable,
   UserName,
+  PostImageContainer,
   PostImage,
   InteractionContainer,
   Icon,
@@ -57,8 +60,8 @@ export interface Post {
   user: User;
   likes: Array<Like>
   comments: Array<Comment>
-  _likesCount: number;
-  _commentsCount: number;
+  _likes_count: number;
+  _comments_count: number;
 }
 
 interface OwnProps {
@@ -83,10 +86,17 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
   const { photo, subtitle, user, created_at, likes } = post;
 
   const { navigate } = useNavigation<PostScreenProps>()
+  const calledUrl = useURL()
 
   const uri = `${ENDPOINT_URL}/files/posts/${photo}`;
 
   const avatarUri = useMemo(() => {
+    return data.user.avatar ?
+      `${ENDPOINT_URL}/files/avatars/${data.user.avatar}` :
+      `https://ui-avatars.com/api/?name=${data.user.full_name}&length=1`;
+  }, [data])
+
+  const postOwnerAvatarUri = useMemo(() => {
     return user.avatar ?
       `${ENDPOINT_URL}/files/avatars/${user.avatar}` :
       `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
@@ -106,10 +116,11 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
       opacity: iconLikeOpacity.value,
       transform: [{ scale: iconLikeScale.value }],
       width: '100%',
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       display: 'flex',
-      position: 'absolute'
+      position: 'absolute',
     }
   })
 
@@ -120,7 +131,6 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
   }, []);
 
   const handleShowLikeIndicator = useCallback(() => {
-
     iconLikeOpacity.value = withTiming(
       1,
       {
@@ -157,12 +167,48 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
     )
   }, [post]);
 
+  const onShare = useCallback(async () => {
+    try {
+      const url = createURL(`post`, {
+        scheme: 'poto',
+        isTripleSlashed: true,
+        queryParams: {
+          'post_id': post.id
+        }
+      });
+
+      console.log(url);
+
+      const result = await Share.share({
+        title: 'Título',
+        url,
+      }, {
+        dialogTitle: `Compartilhar post de ${post.user.full_name}`,
+        subject: post.subtitle,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [post, createURL])
 
   return (
     <Container>
       <Header>
         <UserProfile>
-          <UserAvatar source={{ uri: avatarUri }} />
+          <TouchableOpacity onPress={() => navigate('UserProfile', {
+            user_id: user.id
+          })}>
+            <UserAvatar source={{ uri: postOwnerAvatarUri }} />
+          </TouchableOpacity>
 
           <UserName>{user.full_name}</UserName>
         </UserProfile>
@@ -172,11 +218,15 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         </MoreHorizontalTouchable>
       </Header>
 
-      <PostImage source={{ uri }} />
+      <TapGestureHandler numberOfTaps={2} onActivated={handleShowLikeIndicator}>
+        <PostImageContainer>
+          <PostImage source={{ uri }} />
+          <Animated.View style={iconLikeStyle}>
+            <HeartLikeImage source={heartImage} />
+          </Animated.View>
+        </PostImageContainer>
+      </TapGestureHandler>
 
-      <Animated.View style={iconLikeStyle}>
-        <HeartLikeImage source={heartImage} />
-      </Animated.View>
 
       <InteractionContainer>
         <Touchable onPress={handleShowLikeIndicator}>
@@ -185,26 +235,26 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <Icon name='message-circle' />
         </Touchable>
-        <Touchable>
+        <Touchable onPress={onShare}>
           <Icon name='share-2' />
         </Touchable>
       </InteractionContainer>
 
       <PostSubtitleContainer>
         <PostSubtitleText>
-          <PostOwnerName>{user.full_name}{' '}</PostOwnerName>
+          <PostOwnerName>{user.username || user.full_name}{' '}</PostOwnerName>
           {subtitle}
         </PostSubtitleText>
       </PostSubtitleContainer>
 
       {!!post.comments?.length && (
         <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
-          <PostCommentTouchableText>Ver todos os {post._commentsCount} comentários</PostCommentTouchableText>
+          <PostCommentTouchableText>Ver todos os {post._comments_count} comentários</PostCommentTouchableText>
         </Touchable>
       )}
 
       <PostCommentTouchableContainer>
-        <PostCommentUserAvatar source={{ uri: avatarUri, cache: 'only-if-cached' }} />
+        <PostCommentUserAvatar source={{ uri: avatarUri }} />
         <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
           <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
         </PostCommentTouchable>

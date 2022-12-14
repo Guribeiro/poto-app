@@ -31,6 +31,10 @@ const routesNameVariations: RoutesNameVariations = {
     name: 'Perfil',
     icon: 'user',
   },
+  Explore: {
+    name: 'Explore',
+    icon: 'map',
+  },
   PostForm: {
     name: 'Post',
     icon: 'user',

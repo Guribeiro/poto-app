@@ -49,13 +49,15 @@ export interface Post {
   user: User;
   likes: Array<Like>
   comments: Array<Comment>
-  _likesCount: number;
-  _commentsCount: number;
+  _likes_count: number;
+  _comments_count: number;
 }
 
 export interface AddPostPayload {
   image: ImageInfo;
   subtitle?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 

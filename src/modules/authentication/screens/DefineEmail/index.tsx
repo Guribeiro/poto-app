@@ -71,8 +71,6 @@ const DefineEmail = (): JSX.Element => {
 
     if (data instanceof AxiosError) {
 
-      console.log(data);
-
       throw new Error('error')
     }
   }, [])

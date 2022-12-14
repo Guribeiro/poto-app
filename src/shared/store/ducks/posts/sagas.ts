@@ -29,6 +29,8 @@ import {
 interface ApiPostRequestPost {
   image: ImageInfo;
   subtitle?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface ApiPostCommentRequest {
@@ -65,14 +67,19 @@ interface ApiDeletePostCommentRequest {
 }
 
 
-function apiPostRequestPost({ image, subtitle }: ApiPostRequestPost) {
+function apiPostRequestPost({ image, subtitle, latitude, longitude }: ApiPostRequestPost) {
   const form = new FormData();
   const filename = image.uri.split('/').pop();
   const match = /\.(\w+)$/.exec(filename!!);
   const type = match ? `image/${match[1]}` : `image`;
 
+  const latitudeAsString = String(latitude);
+  const longitudeAsString = String(longitude);
+
   form.append('photo', { uri: image.uri, name: image.fileName, type });
   form.append('subtitle', subtitle || '');
+  form.append('latitude', latitudeAsString);
+  form.append('longitude', longitudeAsString);
 
   return api.post('posts/me', form, {
     headers: {

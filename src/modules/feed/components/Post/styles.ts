@@ -11,7 +11,6 @@ interface IconProps {
 export const Container = styled(View)`
   justify-content: center;
   padding-bottom: ${({ theme }) => theme.screen.rem(.5)}px;
-
 `;
 
 export const Header = styled(View)`
@@ -27,7 +26,7 @@ export const UserProfile = styled(View)`
 `;
 
 export const MoreHorizontalTouchable = styled(TouchableOpacity)`
-  padding: ${({theme}) => theme.screen.rem(1)}px;
+  padding: ${({ theme }) => theme.screen.rem(1)}px;
   align-items: center;
   justify-content: center;
 `
@@ -42,9 +41,15 @@ export const UserName = styled(Text)`
   margin-left: ${({ theme }) => theme.screen.rem(.5)}px;
 `;
 
+export const PostImageContainer = styled(View)`
+  width: 100%;
+  height: ${({ theme }) => theme.screen.rem(24)}px;
+`;
+
 export const PostImage = styled(Image)`
   width: 100%;
-  height: ${({ theme }) => theme.screen.rem(17.0625)}px;
+  /* height: ${({ theme }) => theme.screen.rem(17.0625)}px; */
+  height: 100%;
 `;
 
 export const Icon = styled(Feather) <IconProps>`
@@ -90,7 +95,7 @@ export const CreatedAtText = styled(Text)`
 `;
 
 export const PostCommentTouchableContainer = styled(View)`
-  padding: ${({ theme }) => theme.screen.rem(.8)}px;
+  padding: ${({ theme }) => theme.screen.rem(.5)}px;
   flex-direction: row;
   align-items: center;
 `

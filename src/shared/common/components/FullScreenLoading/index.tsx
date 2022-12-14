@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components/native';
 import { transparentize } from 'polished';
-import {ActivityIndicator} from 'react-native';
+import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
+import { useTheme } from '@shared/hooks/theme';
 
 const Container = styled.View`
   flex: 1;
@@ -16,10 +17,11 @@ const Container = styled.View`
   background: ${({ theme }) => transparentize(.5, theme.palette.colors.primary)};
 `;
 
-const FullScreenLoading = (): JSX.Element => {
+const FullScreenLoading = ({ size = 'small' }: ActivityIndicatorProps): JSX.Element => {
+  const { theme } = useTheme();
   return (
     <Container>
-      <ActivityIndicator />
+      <ActivityIndicator size={size} color={theme.palette.colors.secondary} />
     </Container>
   )
 }

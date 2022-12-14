@@ -52,7 +52,7 @@ interface FormData {
 const schema = yup.object().shape({
   fullName: yup.string().required('required field'),
   email: yup.string().email().required(),
-  username: yup.string().email().required(),
+  username: yup.string().required(),
   password: yup.string().required().min(8, 'password must have at least 8 caracteres'),
   password_confirmation: yup.string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
@@ -91,7 +91,7 @@ const ConfirmCredentials = ({ authentication, signupRequest }: ConfirmCredential
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = useCallback(({ fullName, email, password }: FormData) => {
+  const onSubmit = useCallback(({ fullName, email, password, username }: FormData) => {
 
     signupRequest({
       name: fullName,

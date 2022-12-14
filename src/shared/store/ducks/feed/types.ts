@@ -6,6 +6,10 @@ export enum FeedTypes {
   LOAD_FEED_REQUEST_SUCCESS = 'LOAD_FEED_REQUEST_SUCCESS',
   LOAD_FEED_REQUEST_FAILURE = 'LOAD_FEED_REQUEST_FAILURE',
 
+  REFRESH_FEED_REQUEST = 'REFRESH_FEED_REQUEST',
+  REFRESH_FEED_REQUEST_SUCCESS = 'REFRESH_FEED_REQUEST_SUCCESS',
+  REFRESH_FEED_REQUEST_FAILURE = 'REFRESH_FEED_REQUEST_FAILURE',
+
   ADD_POSTS_REQUEST = 'ADD_POSTS_REQUEST',
   ADD_POSTS_REQUEST_SUCCESS = 'ADD_POSTS_REQUEST_SUCCESS',
   ADD_POSTS_REQUEST_FAILURE = 'ADD_POSTS_REQUEST_FAILURE',
@@ -48,16 +52,24 @@ export interface Post {
   photo: string;
   created_at: Date;
   updated_at: Date;
+  latitude: number;
+  longitude: number;
   user: User;
   likes: Array<Like>
   comments: Array<Comment>
-  _likesCount: number;
-  _commentsCount: number;
+  _likes_count: number;
+  _comments_count: number;
 }
 
 export interface AddPostPayload {
   image: ImageInfo;
   subtitle?: string;
+}
+
+export interface LoadFeedPayload {
+  page: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface FeedAction {

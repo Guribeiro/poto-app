@@ -43,8 +43,8 @@ import { connect } from 'react-redux';
 type SigninScreenProps = NativeStackNavigationProp<RootAuthenticationParamsList, 'SigninRoutes'>;
 
 const schema = yup.object().shape({
-  email: yup.string().email(),
-  password: yup.string()
+  email: yup.string().email().required('preencha este campo'),
+  password: yup.string().required('preencha este campo')
 })
 
 interface FormData {

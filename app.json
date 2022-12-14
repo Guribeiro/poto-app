@@ -2,9 +2,30 @@
   "expo": {
     "name": "poto",
     "slug": "poto",
+    "owner":"guribeir",
+    "githubUrl":"https://github.com/guribeiro/poto-app",
     "version": "1.0.0",
+    "scheme": "poto",
+    "config": {
+      "googleMapsApiKey": "AIzaSyAEcIW71jKEnWQ3VwmJPjKND2lvbWIC05Y"
+    },
     "assetBundlePatterns": [
       "**/*"
+    ],
+    "android": {
+      "package": "com.guribeir.poto"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "custom photos permission",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+
+          "//": "Disables the microphone permission",
+          "microphonePermission": false
+        }
+      ]
     ]
   }
 }

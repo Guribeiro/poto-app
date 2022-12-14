@@ -9,11 +9,13 @@ import AuthenticationRoutes from '@modules/authentication/routes';
 import * as AuthenticationActions from '@shared/store/ducks/authentication/actions';
 import { AuthenticationState, LoginRequestPayload } from '@shared/store/ducks/authentication/types';
 
-import AppRoutes from '@modules/app/routes';
+import { LocationProvider } from '@shared/hooks/location';
+
+import LocationRoutes from '@modules/app/routes/location.routes';
 
 export type RootSplashParamsList = {
   Splash: undefined;
-  AppRoutes: undefined;
+  App: undefined;
 };
 
 const { Navigator, Screen } =
@@ -35,24 +37,26 @@ const SplashRoutes = ({ authentication }: SplashRoutesProps): JSX.Element => {
   const { theme } = useTheme();
 
   return (
-    <Navigator
-      initialRouteName="Splash"
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          backgroundColor: theme.palette.colors.primary,
-        },
-      }}
-    >
-      {!data.token && (
-        <Screen name="Splash" component={Splash} />
-      )}
+    <LocationProvider>
+      <Navigator
+        initialRouteName="Splash"
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: theme.palette.colors.primary,
+          },
+        }}
+      >
+        {!data.token && (
+          <Screen name="Splash" component={Splash} />
+        )}
 
-      <Screen
-        name="AppRoutes"
-        component={data.token ? AppRoutes : AuthenticationRoutes}
-      />
-    </Navigator>
+        <Screen
+          name="App"
+          component={data.token ? LocationRoutes : AuthenticationRoutes}
+        />
+      </Navigator>
+    </LocationProvider>
   );
 };
 
