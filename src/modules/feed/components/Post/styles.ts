@@ -42,8 +42,8 @@ export const UserName = styled(Text)`
 `;
 
 export const PostImageContainer = styled(View)`
-    width: 100%;
-    height: ${({ theme }) => theme.screen.rem(17.0625)}px;
+  width: 100%;
+  height: ${({ theme }) => theme.screen.rem(24)}px;
 `;
 
 export const PostImage = styled(Image)`

@@ -6,6 +6,9 @@
     "githubUrl":"https://github.com/guribeiro/poto-app",
     "version": "1.0.0",
     "scheme": "poto",
+    "config": {
+      "googleMapsApiKey": "AIzaSyAEcIW71jKEnWQ3VwmJPjKND2lvbWIC05Y"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],

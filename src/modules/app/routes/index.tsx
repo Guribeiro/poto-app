@@ -26,6 +26,7 @@ const hiddenRoutesTabBar = [
   'CreatePost',
   'PostComments',
   'PostsLiked',
+  'PostDetails'
 ];
 
 const { Screen, Navigator } = createBottomTabNavigator<RootAppParamsList>();

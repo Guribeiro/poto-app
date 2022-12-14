@@ -42,6 +42,7 @@ const Explore = ({ feed }: ExploreProps): JSX.Element => {
   return (
     <MapViewContainer
       provider={PROVIDER_GOOGLE}
+      showsUserLocation
       mapType={Platform.OS == "android" ? "none" : "standard"}
       initialRegion={{
         latitude: location?.latitude!,
@@ -66,7 +67,7 @@ const Explore = ({ feed }: ExploreProps): JSX.Element => {
             <CustomMapCallout
               tooltip
               title={post.user.username}
-              onPress={() => navigate('FeedRoutes', { screen: 'Post', params: { post_id: post.id } })}
+              onPress={() => navigate('FeedRoutes', { screen: 'PostDetails', params: { post_id: post.id } })}
             >
               <Image resizeMode='contain' source={{ uri: postUri }} style={{ width: '100%', height: 80, borderRadius: 4 }} />
             </CustomMapCallout>

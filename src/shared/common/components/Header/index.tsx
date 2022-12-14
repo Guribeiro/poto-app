@@ -23,6 +23,7 @@ export const HeaderContent = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  height: ${({theme}) => theme.screen.rem(1)}px;
 `;
 
 export const TouchableContainer = styled(View)`
@@ -42,7 +43,7 @@ export const UsernameText = styled(Text)`
 
 interface HeaderProps {
   onGoback: () => void;
-  label: string;
+  label?: string;
 }
 
 const Header = ({label, onGoback}:HeaderProps): JSX.Element => {
@@ -54,7 +55,7 @@ const Header = ({label, onGoback}:HeaderProps): JSX.Element => {
             <Icon name='x' />
           </Touchable>
         </TouchableContainer>
-        <UsernameText>{label}</UsernameText>
+        {label && <UsernameText>{label}</UsernameText>}
       </HeaderContent>
     </Container>
 
