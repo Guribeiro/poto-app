@@ -79,7 +79,7 @@ Technologies that I used to develop this mobile application
 
 **Clone the project and access the folder**
 
-```bash
+```
  git clone git@github.com:Guribeiro/poto-app.git && cd poto-app
 ```
 
@@ -87,7 +87,7 @@ Technologies that I used to develop this mobile application
 
 ### Install the dependencies
 
-```bash
+```
 yarn
 ```
 ### Start the client
@@ -96,8 +96,8 @@ For running it on your phone, make sure you've installed Expo Go
 
 Start the application
 
-```bash
-yarn start
+```
+npx expo start
 ```
 Open the Expo Go on you phone and select the poto-app project
 
