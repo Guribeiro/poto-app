@@ -1,5 +1,5 @@
 import { call, put } from 'redux-saga/effects'
-import { AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import Toast from 'react-native-toast-message';
 import api from '@shared/services/api'
 
@@ -11,7 +11,7 @@ import {
   RemovePostCommentPayload,
 } from './types';
 
-import { ImageInfo } from 'expo-image-picker';
+import { ImagePickerAsset } from 'expo-image-picker';
 
 import {
   addPostSuccess,
@@ -24,10 +24,8 @@ import {
   removePostCommentSuccess
 } from './actions';
 
-
-
 interface ApiPostRequestPost {
-  image: ImageInfo;
+  image: ImagePickerAsset;
   subtitle?: string;
   latitude?: number;
   longitude?: number;
@@ -81,7 +79,7 @@ function apiPostRequestPost({ image, subtitle, latitude, longitude }: ApiPostReq
   form.append('latitude', latitudeAsString);
   form.append('longitude', longitudeAsString);
 
-  return api.post('posts/me', form, {
+  return api.post('/posts/me', form, {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data',
@@ -117,6 +115,14 @@ export function* addPost({ payload }: CreatePostAction) {
     });
 
   } catch (error) {
+    console.log(error);
+    if (axios.isAxiosError(error)) {
+      console.log(error.response)
+      Toast.show({
+        type: 'error',
+        text1: `${error.response?.data?.message} 😥`,
+      });
+    }
     const err = error as AxiosError<{ error: string }>;
     Toast.show({
       type: 'error',

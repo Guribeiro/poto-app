@@ -102,13 +102,13 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   const handleLaunchCamera = useCallback(async (): Promise<void> => {
     try {
       setMediaLoading(true);
-      const imagePickerResult = await launchCamera({} as PickerOptions);
+      const { canceled, assets } = await launchCamera({} as PickerOptions);
 
-      if (imagePickerResult.canceled) return;
+      if (canceled) return;
 
       closeSelectImageModal();
 
-      const [image] = imagePickerResult.assets;
+      const [image] = assets;
 
       navigate('CreatePost', {
         image,
@@ -151,15 +151,6 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
     }
   }, []);
 
-
-  // const handlePagination = useCallback(() => {
-  //   if (loading) {
-  //     return;
-  //   }
-
-  //   setPage(prev => prev + 1)
-  // }, [])
-
   useEffect(() => {
     loadFeed({
       page: 0,
@@ -196,7 +187,6 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         data={data}
         renderItem={({ item }) => <Post post={item} />}
         keyExtractor={item => item.id}
-        // onEndReached={handlePagination}
         onEndReachedThreshold={.7}
         scrollEventThrottle={16}
         refreshControl={

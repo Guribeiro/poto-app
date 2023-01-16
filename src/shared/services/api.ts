@@ -44,9 +44,11 @@ api.interceptors.response.use((response) => {
       return;
     }
 
-    AsyncStorage.removeItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
+    //I'm not sure about what to do now...
 
-    delete api.defaults.headers.common['Authorization'];
+    // AsyncStorage.removeItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
+
+    // delete api.defaults.headers.common['Authorization'];
 
     console.log({ error1: error });
 
