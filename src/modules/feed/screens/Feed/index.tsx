@@ -1,14 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RefreshControl, ActivityIndicator, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
-
-import Toast from 'react-native-toast-message';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +8,6 @@ import { connect } from 'react-redux';
 
 import { useTheme } from '@shared/hooks/theme';
 import ListEmptyComponent from '@shared/common/components/ListEmptyComponent';
-import FullScreenLoading from '@shared/common/components/FullScreenLoading';
 
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import * as FeedActions from '@shared/store/ducks/feed/actions';
@@ -25,10 +16,6 @@ import { LoadFeedPayload } from '@shared/store/ducks/feed/types';
 
 import { RootFeedParamsList } from '@modules/feed/routes';
 import { ApplicationState } from '@shared/store';
-
-import { launchCamera, launchImageLibrary, PickerOptions } from '@shared/utils/imagePicker';
-
-import SelectMediaModal from '../../components/SelectMediaModal';
 import Post from '../../components/Post';
 
 import {
@@ -42,8 +29,8 @@ import {
   PostsList
 } from './styles';
 import { FeedState } from '@shared/store/ducks/feed/types';
-import { verifyErrorInstance } from '@shared/utils/errors';
 import { useLocation } from '@shared/hooks/location';
+import { useSelectMediaModal } from '@modules/feed/hooks/selectMediaModal';
 
 interface StateProps {
   feed: FeedState;
@@ -59,97 +46,16 @@ type FeedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 type FeedProps = StateProps & DispatchProps;
 
 const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
-  const INITIAL_VALUE = -1000;
-  const FINAL_VALUE = 0;
-
-  const [mediaLoading, setMediaLoading] = useState(false);
   const [page, setPage] = useState(0);
 
   const { theme } = useTheme();
+  const { openSelectImageModal } = useSelectMediaModal();
 
   const { location } = useLocation();
 
   const { navigate } = useNavigation<FeedScreenProps>()
 
   const { data, loading } = feed;
-
-  const uploadImageOffset = useSharedValue(INITIAL_VALUE);
-
-  const updateImageStyle = useAnimatedStyle(() => {
-    return {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      bottom: uploadImageOffset.value,
-    };
-  });
-
-  const openSelectImageModal = useCallback(() => {
-    uploadImageOffset.value = withTiming(FINAL_VALUE, {
-      duration: 400,
-      easing: Easing.ease,
-    });
-  }, [uploadImageOffset]);
-
-  const closeSelectImageModal = useCallback(() => {
-    uploadImageOffset.value = withTiming(INITIAL_VALUE, {
-      duration: 400,
-      easing: Easing.ease,
-    });
-  }, [uploadImageOffset, INITIAL_VALUE]);
-
-
-  const handleLaunchCamera = useCallback(async (): Promise<void> => {
-    try {
-      setMediaLoading(true);
-      const { canceled, assets } = await launchCamera({} as PickerOptions);
-
-      if (canceled) return;
-
-      closeSelectImageModal();
-
-      const [image] = assets;
-
-      navigate('CreatePost', {
-        image,
-      });
-
-    } catch (error) {
-      const err = error as Error;
-      Toast.show({
-        type: 'error',
-        text1: `${err.message} 😥`,
-      });
-    } finally {
-      setMediaLoading(false);
-    }
-  }, []);
-
-  const handleLaunchMediaLibrary = useCallback(async (): Promise<void> => {
-    try {
-      setMediaLoading(true);
-      const imagePickerResult = await launchImageLibrary({} as PickerOptions);
-
-      if (imagePickerResult.canceled) return;
-
-      closeSelectImageModal();
-
-      const [image] = imagePickerResult.assets;
-
-      navigate('CreatePost', {
-        image,
-      });
-
-    } catch (err) {
-      const { error } = verifyErrorInstance(err)
-      Toast.show({
-        type: 'error',
-        text1: `${error} 😥`,
-      });
-    } finally {
-      setMediaLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
     loadFeed({
@@ -205,7 +111,7 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
         ListFooterComponent={loading ? <ActivityIndicator /> : <View style={{ height: theme.screen.rem(1) }} />}
       />
 
-      <Animated.View
+      {/* <Animated.View
         style={updateImageStyle}
       >
         <SelectMediaModal
@@ -214,7 +120,7 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
           onLaunchMediaLibrary={handleLaunchMediaLibrary}
           onLaunchCamera={handleLaunchCamera}
         />
-      </Animated.View>
+      </Animated.View> */}
     </Container>
   )
 }

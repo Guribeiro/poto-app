@@ -10,6 +10,8 @@ import PostComments from '../screens/PostComments';
 import PostsLiked from '../screens/PostsLiked';
 import UserProfile from '../screens/UserProfile';
 
+import { SelectMediaModalProvider } from '../hooks/selectMediaModal';
+
 export type CreatePostParams = {
   image: ImageInfo;
 }
@@ -32,7 +34,7 @@ export type RootFeedParamsList = {
   CreatePost: CreatePostParams;
   PostComments: PostCommentsParams;
   PostsLiked: undefined;
-  UserProfile:UserProfileParams;
+  UserProfile: UserProfileParams;
 }
 
 const { Navigator, Screen } = createNativeStackNavigator<RootFeedParamsList>()
@@ -46,22 +48,24 @@ const FeedRoutes = (): JSX.Element => {
   const { theme } = useTheme();
   return (
     <Container>
-      <Navigator
-        initialRouteName="Feed"
-        screenOptions={{
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: theme.palette.colors.primary,
-          },
-        }}
-      >
-        <Screen name="Feed" component={Feed} />
-        <Screen name="PostDetails" component={PostDetails} />
-        <Screen name="CreatePost" component={CreatePost} />
-        <Screen name="PostComments" component={PostComments} />
-        <Screen name="PostsLiked" component={PostsLiked} />
-        <Screen name='UserProfile' component={UserProfile} />
-      </Navigator>
+      <SelectMediaModalProvider>
+        <Navigator
+          initialRouteName="Feed"
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: theme.palette.colors.primary,
+            },
+          }}
+        >
+          <Screen name="Feed" component={Feed} />
+          <Screen name="PostDetails" component={PostDetails} />
+          <Screen name="CreatePost" component={CreatePost} />
+          <Screen name="PostComments" component={PostComments} />
+          <Screen name="PostsLiked" component={PostsLiked} />
+          <Screen name='UserProfile' component={UserProfile} />
+        </Navigator>
+      </SelectMediaModalProvider>
     </Container>
   )
 }
