@@ -1,13 +1,11 @@
 import styled from 'styled-components/native';
 import {TouchableOpacityProps, TouchableOpacity, ActivityIndicator} from 'react-native';
 
-
 import { Text } from '../Text';
 
 const Container = styled.View`
   background: ${({theme}) => theme.palette.colors.secondary};
   border-radius: ${({theme}) => theme.screen.rem(0.5)}px;
-
 `;
 
 const Touchable = styled(TouchableOpacity)`

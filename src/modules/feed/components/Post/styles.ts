@@ -115,5 +115,3 @@ export const PostCommentUserAvatar = styled(Image)`
 
   border-radius: ${({ theme }) => theme.screen.rem(1)}px;
 `
-
-

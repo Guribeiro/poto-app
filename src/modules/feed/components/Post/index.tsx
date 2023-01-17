@@ -27,6 +27,7 @@ import { Comment, Like } from '@shared/store/ducks/posts/types';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { LikePostPayload } from '@shared/store/ducks/posts/types';
 import heartImage from '@shared/common/assets/heart/heart-like.png';
+import PostHiddenMessage from './components/PostHiddenMessage';
 
 import {
   Container,
@@ -48,9 +49,10 @@ import {
   PostCommentTouchableContainer,
   PostCommentTouchable,
   PostCommentTouchableText,
-  PostCommentUserAvatar
+  PostCommentUserAvatar,
 } from './styles';
 
+import { FeedState } from '@shared/store/ducks/feed/types';
 
 export interface Post {
   id: string;
@@ -69,7 +71,8 @@ interface OwnProps {
 }
 
 interface StateProps {
-  authentication: AuthenticationState
+  authentication: AuthenticationState;
+  feed: FeedState
 }
 
 interface DispatchProps {
@@ -80,10 +83,18 @@ type PostProps = OwnProps & StateProps & DispatchProps;
 
 type PostScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
-const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
+const Post = ({ post, feed, authentication, likePost }: PostProps): JSX.Element => {
 
   const { data } = authentication;
+  const { data: posts } = feed;
   const { photo, subtitle, user, created_at, likes } = post;
+
+  const userHasPostedToday = useMemo(() => {
+    const findUserPost = posts.find(post => post.user_id === data.user.id);
+
+    return Boolean(findUserPost)
+  }, [posts, data])
+
 
   const { navigate } = useNavigation<PostScreenProps>()
   const calledUrl = useURL()
@@ -218,34 +229,48 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         </MoreHorizontalTouchable>
       </Header>
 
-      <TapGestureHandler numberOfTaps={2} onActivated={handleShowLikeIndicator}>
+
+      {userHasPostedToday ? (
+        <>
+          <TapGestureHandler numberOfTaps={2} onActivated={handleShowLikeIndicator}>
+            <PostImageContainer>
+              <PostImage source={{ uri }} />
+              <Animated.View style={iconLikeStyle}>
+                <HeartLikeImage source={heartImage} />
+              </Animated.View>
+            </PostImageContainer>
+          </TapGestureHandler>
+
+          <InteractionContainer>
+            <Touchable onPress={handleShowLikeIndicator}>
+              <Icon isLiked={isPostLiked} name='heart' />
+            </Touchable>
+            <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
+              <Icon name='message-circle' />
+            </Touchable>
+            <Touchable onPress={onShare}>
+              <Icon name='share-2' />
+            </Touchable>
+          </InteractionContainer>
+
+          <PostSubtitleContainer>
+            <PostSubtitleText>
+              <PostOwnerName>{user.username || user.full_name}{' '}</PostOwnerName>
+              {subtitle}
+            </PostSubtitleText>
+          </PostSubtitleContainer>
+
+          <CreatedAtContainer>
+            <CreatedAtText>{createdAtPostFormatDistance}</CreatedAtText>
+          </CreatedAtContainer>
+        </>
+
+      ) : (
         <PostImageContainer>
-          <PostImage source={{ uri }} />
-          <Animated.View style={iconLikeStyle}>
-            <HeartLikeImage source={heartImage} />
-          </Animated.View>
+          <PostImage source={{ uri }} blurRadius={60} />
+          <PostHiddenMessage />
         </PostImageContainer>
-      </TapGestureHandler>
-
-
-      <InteractionContainer>
-        <Touchable onPress={handleShowLikeIndicator}>
-          <Icon isLiked={isPostLiked} name='heart' />
-        </Touchable>
-        <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
-          <Icon name='message-circle' />
-        </Touchable>
-        <Touchable onPress={onShare}>
-          <Icon name='share-2' />
-        </Touchable>
-      </InteractionContainer>
-
-      <PostSubtitleContainer>
-        <PostSubtitleText>
-          <PostOwnerName>{user.username || user.full_name}{' '}</PostOwnerName>
-          {subtitle}
-        </PostSubtitleText>
-      </PostSubtitleContainer>
+      )}
 
       {!!post.comments?.length && (
         <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
@@ -253,23 +278,24 @@ const Post = ({ post, authentication, likePost }: PostProps): JSX.Element => {
         </Touchable>
       )}
 
-      <PostCommentTouchableContainer>
-        <PostCommentUserAvatar source={{ uri: avatarUri }} />
-        <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
-          <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
-        </PostCommentTouchable>
-      </PostCommentTouchableContainer>
+      {userHasPostedToday && (
+        <PostCommentTouchableContainer>
+          <PostCommentUserAvatar source={{ uri: avatarUri }} />
+          <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
+            <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
+          </PostCommentTouchable>
+        </PostCommentTouchableContainer>
+      )}
 
-      <CreatedAtContainer>
-        <CreatedAtText>{createdAtPostFormatDistance}</CreatedAtText>
-      </CreatedAtContainer>
+
 
     </Container>
   )
 }
 
-const mapStateToProps = ({ authentication }: ApplicationState) => ({
-  authentication
+const mapStateToProps = ({ authentication, feed }: ApplicationState) => ({
+  authentication,
+  feed
 })
 
 
