@@ -2,6 +2,7 @@ import { call, put } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 import { verifyErrorInstance } from '@shared/utils/errors';
 import api from '../../../services/api';
@@ -15,6 +16,8 @@ import {
   UpdateUsernameRequestPayload,
   User,
 } from './types';
+
+import { AxiosErrorResponse, ErrorResponse } from '@shared/store/ducks/rootSagas'
 
 import {
   signupRequestFailure,
@@ -182,14 +185,23 @@ export function* signup({ payload }: SignupAction) {
         refresh_token
       }),
     );
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
 
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
-    yield put(signupRequestFailure());
+    yield put(signupRequestFailure())
+    yield put(loginRequestFailure())
   }
 }
 
@@ -201,8 +213,6 @@ export function* login({ payload }: Action) {
       apiRequestAuthentication,
       { email, password },
     );
-
-    console.log(response);
 
     const { user, token, refresh_token } = response.data;
 
@@ -220,14 +230,22 @@ export function* login({ payload }: Action) {
         refresh_token
       }),
     );
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
-    yield put(loginRequestFailure());
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
 
+    yield put(loginRequestFailure());
   }
 }
 
@@ -238,15 +256,22 @@ export function* logout() {
     delete api.defaults.headers.common['Authorization']
 
     yield put(logoutRequestSuccess());
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
 
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
     yield put(logoutRequestFailure());
-
   }
 }
 
@@ -270,12 +295,21 @@ export function* loadStorageAuth() {
     };
 
     yield put(loadStorageAuthenticationSuccess(data));
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
+
     yield put(loadStorageAuthenticationFailure());
   }
 }
@@ -318,12 +352,21 @@ export function* updateAvatar({ payload }: UpdateAvatarAction) {
       position: 'bottom',
     });
 
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
+
     yield put(updateAvatarRequestFailure());
   }
 }
@@ -362,12 +405,21 @@ export function* updateName({ payload }: UpdateNameAction) {
       position: 'bottom',
     });
 
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
+
     yield put(updateNameRequestFailure());
   }
 }
@@ -406,12 +458,21 @@ export function* updateEmail({ payload }: UpdateEmailAction) {
       position: 'bottom',
     });
 
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
+
     yield put(updateEmailRequestFailure());
   }
 }
@@ -450,12 +511,21 @@ export function* updateUsername({ payload }: UpdateUsernameAction) {
       position: 'bottom',
     });
 
-  } catch (err) {
-    const {error} = verifyErrorInstance(err)
-    Toast.show({
-      type: 'error',
-      text1: `${error} 😥`,
-    });
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
+
     yield put(updateUsernameRequestFailure());
   }
 }

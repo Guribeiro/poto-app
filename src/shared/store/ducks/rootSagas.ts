@@ -46,6 +46,14 @@ const {
   REFRESH_FEED_REQUEST
 } = FeedTypes;
 
+export interface AxiosErrorResponse {
+  message: string
+}
+
+export interface ErrorResponse {
+  message: string;
+}
+
 export default function* rootSaga() {
   yield all([
     takeLatest(LOGOUT_REQUEST, logout),

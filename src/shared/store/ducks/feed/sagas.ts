@@ -1,5 +1,5 @@
 import { call, put } from 'redux-saga/effects'
-import { AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import Toast from 'react-native-toast-message';
 import api from '@shared/services/api'
 
@@ -11,6 +11,7 @@ import {
   refreshFeedFailure,
   refreshFeedSuccess
 } from './actions';
+import { AxiosErrorResponse, ErrorResponse } from '../rootSagas';
 
 interface LoadFeedAction {
   type: string;
@@ -47,16 +48,22 @@ function apiGetRequestRefreshFeed({ page, latitude, longitude }: ApiLoadFeedRequ
 export function* loadFeedCall({ payload }: LoadFeedAction) {
   try {
     const { data }: AxiosResponse<Post[]> = yield call(apiGetRequestPosts, payload);
-
-    console.log({data});
     yield put(loadFeedSuccess(data));
 
   } catch (error) {
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
     yield put(loadFeedFailure());
   }
 }
@@ -67,11 +74,19 @@ export function* refreshFeedCall({ payload }: LoadFeedAction) {
     yield put(refreshFeedSuccess(data));
 
   } catch (error) {
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
     yield put(refreshFeedFailure());
   }
 }

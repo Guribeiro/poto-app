@@ -17,44 +17,35 @@ const api = axios.create({
 });
 
 
-api.interceptors.response.use((response) => {
-  return response
-}, async (error: AxiosError) => {
-  try {
-    const storagedData = await AsyncStorage.getItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
+// api.interceptors.response.use((response) => {
+//   return response
+// }, async (error: AxiosError) => {
 
-    if (!storagedData) return Promise.reject(error);
+//   const storagedData = await AsyncStorage.getItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
 
-    const { user, token, refresh_token } = JSON.parse(storagedData);
+//   if (!storagedData) return Promise.reject(error);
 
-    if (error.response?.status === 401 && token) {
-      const { data } = await api.post<RefreshTokenResponse>('/sessions/refresh_token', {
-        token: refresh_token
-      });
+//   const { user, token, refresh_token } = JSON.parse(storagedData);
 
-      const { refresh_token: refreshed_token, updated_token } = data;
+//   if (error.response?.status === 401 && token) {
+//     const { data } = await api.post<RefreshTokenResponse>('/sessions/refresh_token', {
+//       token: refresh_token
+//     });
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${updated_token}`;
+//     const { refresh_token: refreshed_token, updated_token } = data;
 
-      await AsyncStorage.setItem(
-        StorageKeys.STORAGE_AUTHENTICATION_KEY,
-        JSON.stringify({ token: updated_token, user, refresh_token: refreshed_token }),
-      );
+//     api.defaults.headers.common['Authorization'] = `Bearer ${updated_token}`;
 
-      return;
-    }
+//     await AsyncStorage.setItem(
+//       StorageKeys.STORAGE_AUTHENTICATION_KEY,
+//       JSON.stringify({ token: updated_token, user, refresh_token: refreshed_token }),
+//     );
 
-    //I'm not sure about what to do now...
+//     return
+//   }
 
-    // AsyncStorage.removeItem(StorageKeys.STORAGE_AUTHENTICATION_KEY);
+//   return Promise.reject(error)
 
-    // delete api.defaults.headers.common['Authorization'];
-
-    console.log({ error1: error });
-
-  } catch (error) {
-    console.log({ error2: error });
-  }
-})
+// })
 
 export default api;

@@ -23,6 +23,7 @@ import {
   removePostCommentFailure,
   removePostCommentSuccess
 } from './actions';
+import { AxiosErrorResponse, ErrorResponse } from '../rootSagas';
 
 interface ApiPostRequestPost {
   image: ImagePickerAsset;
@@ -103,6 +104,7 @@ function apiDeletePostCommentRequest({ post_id, comment_id }: ApiDeletePostComme
 
 
 export function* addPost({ payload }: CreatePostAction) {
+
   try {
     const { data }: AxiosResponse<Post> = yield call(apiPostRequestPost, payload);
 
@@ -113,21 +115,20 @@ export function* addPost({ payload }: CreatePostAction) {
       text1: 'Seu post foi publicado com sucesso!',
       position: 'bottom',
     });
-
   } catch (error) {
-    console.log(error);
-    if (axios.isAxiosError(error)) {
-      console.log(error.response)
+      if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
       Toast.show({
         type: 'error',
-        text1: `${error.response?.data?.message} 😥`,
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
       });
     }
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
     yield put(addPostFailure());
   }
 }
@@ -139,11 +140,19 @@ export function* likePost({ payload }: LikePostAction) {
     yield put(likePostSuccess(data));
 
   } catch (error) {
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
+      if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
     yield put(likePostFailure());
   }
 }
@@ -155,28 +164,43 @@ export function* addPostComment({ payload }: AddPostCommentAction) {
     yield put(addPostCommentSuccess(data))
 
   } catch (error) {
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
+      if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
     yield put(addPostCommentFailure());
   }
 }
 
 export function* removePostComment({ payload }: RemovePostCommentAction) {
   try {
-
     const { data }: AxiosResponse<Post> = yield call(apiDeletePostCommentRequest, payload);
 
     yield put(removePostCommentSuccess(data))
 
   } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+      const { message } = error.response?.data as AxiosErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    } else {
+      const { message } = error as ErrorResponse;
+      Toast.show({
+        type: 'error',
+        text1: `${message} 😥`,
+      });
+    }
     yield put(removePostCommentFailure());
-    const err = error as AxiosError<{ error: string }>;
-    Toast.show({
-      type: 'error',
-      text1: `${err.message} 😥`,
-    });
   }
 }
