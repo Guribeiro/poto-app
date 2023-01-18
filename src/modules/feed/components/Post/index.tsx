@@ -23,7 +23,7 @@ import { RootFeedParamsList } from '@modules/feed/routes'
 import Touchable from '@shared/common/components/Touchable';
 import { User, AuthenticationState } from '@shared/store/ducks/authentication/types';
 import { ApplicationState } from '@shared/store';
-import { Comment, Like } from '@shared/store/ducks/posts/types';
+import { Post } from '@shared/store/ducks/posts/types';
 import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { LikePostPayload } from '@shared/store/ducks/posts/types';
 import heartImage from '@shared/common/assets/heart/heart-like.png';
@@ -54,17 +54,6 @@ import {
 
 import { FeedState } from '@shared/store/ducks/feed/types';
 
-export interface Post {
-  id: string;
-  subtitle: string;
-  photo: string;
-  created_at: Date;
-  user: User;
-  likes: Array<Like>
-  comments: Array<Comment>
-  _likes_count: number;
-  _comments_count: number;
-}
 
 interface OwnProps {
   post: Post;
@@ -83,7 +72,7 @@ type PostProps = OwnProps & StateProps & DispatchProps;
 
 type PostScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
-const Post = ({ post, feed, authentication, likePost }: PostProps): JSX.Element => {
+const PostCard = ({ post, feed, authentication, likePost }: PostProps): JSX.Element => {
 
   const { data } = authentication;
   const { data: posts } = feed;
@@ -97,22 +86,10 @@ const Post = ({ post, feed, authentication, likePost }: PostProps): JSX.Element 
 
 
   const { navigate } = useNavigation<PostScreenProps>()
+
   const calledUrl = useURL()
 
   const uri = `${ENDPOINT_URL}/files/posts/${photo}`;
-
-  const avatarUri = useMemo(() => {
-    return data.user.avatar ?
-      `${ENDPOINT_URL}/files/avatars/${data.user.avatar}` :
-      `https://ui-avatars.com/api/?name=${data.user.full_name}&length=1`;
-  }, [data])
-
-  const postOwnerAvatarUri = useMemo(() => {
-    return user.avatar ?
-      `${ENDPOINT_URL}/files/avatars/${user.avatar}` :
-      `https://ui-avatars.com/api/?name=${user.full_name}&length=1`;
-  }, [user])
-
 
   const isPostLiked = useMemo(() => {
     const isLiked = likes.find(like => like.user_id === data.user.id);
@@ -122,24 +99,22 @@ const Post = ({ post, feed, authentication, likePost }: PostProps): JSX.Element 
   const iconLikeOpacity = useSharedValue(0);
   const iconLikeScale = useSharedValue(1);
 
-  const iconLikeStyle = useAnimatedStyle(() => {
-    return {
-      opacity: iconLikeOpacity.value,
-      transform: [{ scale: iconLikeScale.value }],
-      width: '100%',
-      height: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      display: 'flex',
-      position: 'absolute',
-    }
-  })
+  const iconLikeStyle = useAnimatedStyle(() => ({
+    opacity: iconLikeOpacity.value,
+    transform: [{ scale: iconLikeScale.value }],
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    position: 'absolute',
+  }))
 
   const createdAtPostFormatDistance = useMemo(() => {
     const todayDate = new Date();
     return formatDistance(new Date(created_at),
       todayDate, { addSuffix: true, locale: ptBR })
-  }, []);
+  }, [created_at]);
 
   const handleShowLikeIndicator = useCallback(() => {
     iconLikeOpacity.value = withTiming(
@@ -218,7 +193,7 @@ const Post = ({ post, feed, authentication, likePost }: PostProps): JSX.Element 
           <TouchableOpacity onPress={() => navigate('UserProfile', {
             user_id: user.id
           })}>
-            <UserAvatar source={{ uri: postOwnerAvatarUri }} />
+            <UserAvatar source={{ uri: user.avatar_url }} />
           </TouchableOpacity>
 
           <UserName>{user.full_name}</UserName>
@@ -280,15 +255,12 @@ const Post = ({ post, feed, authentication, likePost }: PostProps): JSX.Element 
 
       {userHasPostedToday && (
         <PostCommentTouchableContainer>
-          <PostCommentUserAvatar source={{ uri: avatarUri }} />
+          <PostCommentUserAvatar source={{ uri: data.user.avatar_url }} />
           <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
             <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
           </PostCommentTouchable>
         </PostCommentTouchableContainer>
       )}
-
-
-
     </Container>
   )
 }
@@ -304,4 +276,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(PostsActio
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(memo(Post))
+)(memo(PostCard))

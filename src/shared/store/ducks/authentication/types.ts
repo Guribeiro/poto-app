@@ -66,6 +66,7 @@ export interface User {
   full_name: string;
   email: string;
   avatar?: string;
+  avatar_url: string;
   username: string;
 }
 

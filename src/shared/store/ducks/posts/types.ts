@@ -1,5 +1,5 @@
 import { User } from '@shared/store/ducks/authentication/types';
-import { ImageInfo } from 'expo-image-picker';
+import { ImagePickerAsset } from 'expo-image-picker';
 
 export enum PostsTypes {
   ADD_POSTS_REQUEST = 'ADD_POSTS_REQUEST',
@@ -44,6 +44,7 @@ export interface Post {
   user_id: string;
   subtitle: string;
   photo: string;
+  photo_url: string;
   created_at: Date;
   updated_at: Date;
   user: User;
@@ -54,7 +55,7 @@ export interface Post {
 }
 
 export interface AddPostPayload {
-  image: ImageInfo;
+  image: ImagePickerAsset;
   subtitle?: string;
   latitude?: number;
   longitude?: number;
