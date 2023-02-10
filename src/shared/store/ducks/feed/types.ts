@@ -50,6 +50,7 @@ export interface Post {
   user_id: string;
   subtitle: string;
   photo: string;
+  photo_url: string;
   created_at: Date;
   updated_at: Date;
   latitude: number;
