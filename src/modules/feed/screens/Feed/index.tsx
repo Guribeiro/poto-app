@@ -49,7 +49,6 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   const [page, setPage] = useState(0);
 
   const { theme } = useTheme();
-  const { openSelectImageModal } = useSelectMediaModal();
 
   const { location } = useLocation();
 
@@ -77,9 +76,6 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
           <HeaderWelcomeTextEmphasized>moments</HeaderWelcomeTextEmphasized>
         </HeaderWelcomeText>
         <ButtonsContainer>
-          <Touchable onPress={openSelectImageModal}>
-            <Icon name='plus-square' />
-          </Touchable>
           <Touchable>
             <Icon name='user' />
           </Touchable>
