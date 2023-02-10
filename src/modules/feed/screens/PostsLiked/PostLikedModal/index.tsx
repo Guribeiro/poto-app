@@ -4,10 +4,6 @@ import { Image, Modal, View, ModalProps } from 'react-native';
 
 import { Like } from '../PostLiked';
 
-import Touchable from '@shared/common/components/Touchable';
-import { Feather } from '@expo/vector-icons';
-
-
 export const Container = styled(Modal)`
   border: 1px solid red;
   padding: ${({ theme }) => theme.screen.rem(2)}px;
@@ -15,29 +11,17 @@ export const Container = styled(Modal)`
 
 export const ImageFullScreen = styled(Image)`
   width: 100%;
-  height: 200px;
+  height: 100%;
 
   border-radius: ${({theme}) => theme.screen.rem(.4)}px;
 `;
 
 export const Content = styled(View)`
   flex: 1;
-  padding: ${({theme}) => theme.screen.rem(.5)}px;
   justify-content: space-between;
   background: ${({ theme }) => theme.palette.colors.primary};
 `;
 
-export const CloseModalButton = styled(Touchable)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${({ theme }) => theme.palette.colors.secondary};
-`;
-
-const Icon = styled(Feather)`
-  color: ${({ theme }) => theme.palette.colors.white};
-  font-size: ${({ theme }) => theme.screen.rem(1.8, true)}px;
-`;
 
 interface PostLikedModal extends ModalProps {
   like: Like | undefined;
@@ -57,9 +41,6 @@ const PostLikedModal = ({ like, visible, onRequestClose }: PostLikedModal): JSX.
     >
       <Content>
         <ImageFullScreen source={{ uri: postImageUri }} />
-        <CloseModalButton onPress={onRequestClose}>
-          <Icon name='arrow-down' />
-        </CloseModalButton>
       </Content>
     </Container>
   )
