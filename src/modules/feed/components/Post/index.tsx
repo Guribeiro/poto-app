@@ -1,7 +1,7 @@
-import { useCallback, useMemo, memo } from 'react';
+import { useCallback, useMemo, memo, useEffect, useState } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Share, TouchableOpacity } from 'react-native';
+import { Share, TouchableOpacity, View } from 'react-native';
 import { formatDistance } from 'date-fns';
 import { createURL, useURL } from 'expo-linking';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -28,7 +28,7 @@ import * as PostsActions from '@shared/store/ducks/posts/actions';
 import { LikePostPayload } from '@shared/store/ducks/posts/types';
 import heartImage from '@shared/common/assets/heart/heart-like.png';
 import PostHiddenMessage from './components/PostHiddenMessage';
-
+import Spacer from '@shared/common/components/Spacer';
 import {
   Container,
   UserProfile,
@@ -52,11 +52,14 @@ import {
   PostCommentUserAvatar,
 } from './styles';
 
+
 import { FeedState } from '@shared/store/ducks/feed/types';
+import { useTheme } from '@shared/hooks/theme';
 
 
 interface OwnProps {
   post: Post;
+  visibleItem?: Post;
 }
 
 interface StateProps {
@@ -72,7 +75,15 @@ type PostProps = OwnProps & StateProps & DispatchProps;
 
 type PostScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
-const PostCard = ({ post, feed, authentication, likePost }: PostProps): JSX.Element => {
+const PostCard = ({
+  post,
+  feed,
+  authentication,
+  likePost,
+  visibleItem
+}: PostProps): JSX.Element => {
+
+  const { theme } = useTheme();
 
   const { data } = authentication;
   const { data: posts } = feed;
@@ -184,7 +195,50 @@ const PostCard = ({ post, feed, authentication, likePost }: PostProps): JSX.Elem
     } catch (error) {
       console.log(error);
     }
-  }, [post, createURL])
+  }, [post, createURL]);
+
+  const isVisibleItem = useMemo(() => {
+    return visibleItem && visibleItem.id === post.id
+  }, [visibleItem])
+
+  const commentSectionOpacity = useSharedValue(0)
+  const commentSectionPositionY = useSharedValue(-15)
+  const createdAtSectionPositionY = useSharedValue(-45)
+
+  useEffect(() => {
+    const showCommentSection = () => {
+      Animated.block([
+        commentSectionOpacity.value = withTiming(1,
+          {
+            duration: 200,
+            easing: Easing.ease
+          }),
+        commentSectionPositionY.value = withTiming(0,
+          {
+            duration: 100,
+            easing: Easing.ease
+          }),
+          createdAtSectionPositionY.value = withTiming(0,
+          {
+            duration: 100,
+            easing: Easing.ease
+          }),
+      ])
+    }
+
+    if (!isVisibleItem) return;
+
+    showCommentSection()
+  }, [isVisibleItem])
+
+  const commentSectionStyle = useAnimatedStyle(() => ({
+    opacity: commentSectionOpacity.value,
+    transform: [{ translateY: commentSectionPositionY.value }],
+  }))
+
+  const createdAtSectionStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: createdAtSectionPositionY.value }],
+  }))
 
   return (
     <Container>
@@ -196,7 +250,7 @@ const PostCard = ({ post, feed, authentication, likePost }: PostProps): JSX.Elem
             <UserAvatar source={{ uri: user.avatar_url }} />
           </TouchableOpacity>
 
-          <UserName>{user.full_name}</UserName>
+          <UserName>{user.username || user.full_name}</UserName>
         </UserProfile>
 
         <MoreHorizontalTouchable>
@@ -204,29 +258,39 @@ const PostCard = ({ post, feed, authentication, likePost }: PostProps): JSX.Elem
         </MoreHorizontalTouchable>
       </Header>
 
-
       {userHasPostedToday ? (
-        <>
-          <TapGestureHandler numberOfTaps={2} onActivated={handleShowLikeIndicator}>
-            <PostImageContainer>
-              <PostImage source={{ uri }} />
-              <Animated.View style={iconLikeStyle}>
-                <HeartLikeImage source={heartImage} />
-              </Animated.View>
-            </PostImageContainer>
-          </TapGestureHandler>
+        <TapGestureHandler numberOfTaps={2} onActivated={handleShowLikeIndicator}>
+          <PostImageContainer>
+            <PostImage source={{ uri }} />
+            <Animated.View style={iconLikeStyle}>
+              <HeartLikeImage source={heartImage} />
+            </Animated.View>
+          </PostImageContainer>
+        </TapGestureHandler>
+      ) : (
+        <PostImageContainer>
+          <PostImage source={{ uri }} blurRadius={60} />
+          <PostHiddenMessage />
+        </PostImageContainer>
+      )}
 
+      {userHasPostedToday && (
+        <View style={{ padding: theme.screen.rem(.5) }}>
           <InteractionContainer>
             <Touchable onPress={handleShowLikeIndicator}>
               <Icon isLiked={isPostLiked} name='heart' />
             </Touchable>
+            <Spacer size={14} horizontal />
             <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
               <Icon name='message-circle' />
             </Touchable>
+            <Spacer size={14} horizontal />
             <Touchable onPress={onShare}>
               <Icon name='share-2' />
             </Touchable>
           </InteractionContainer>
+
+          <Spacer size={8} />
 
           <PostSubtitleContainer>
             <PostSubtitleText>
@@ -235,31 +299,34 @@ const PostCard = ({ post, feed, authentication, likePost }: PostProps): JSX.Elem
             </PostSubtitleText>
           </PostSubtitleContainer>
 
-          <CreatedAtContainer>
-            <CreatedAtText>{createdAtPostFormatDistance}</CreatedAtText>
-          </CreatedAtContainer>
-        </>
+          <Spacer size={8} />
 
-      ) : (
-        <PostImageContainer>
-          <PostImage source={{ uri }} blurRadius={60} />
-          <PostHiddenMessage />
-        </PostImageContainer>
-      )}
+          {!!post.comments?.length && (
+            <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
+              <PostCommentTouchableText>Ver todos os {post._comments_count} comentários</PostCommentTouchableText>
+            </Touchable>
+          )}
 
-      {!!post.comments?.length && (
-        <Touchable onPress={() => navigate('PostComments', { post_id: post.id })}>
-          <PostCommentTouchableText>Ver todos os {post._comments_count} comentários</PostCommentTouchableText>
-        </Touchable>
-      )}
+          <Spacer size={8} />
 
-      {userHasPostedToday && (
-        <PostCommentTouchableContainer>
-          <PostCommentUserAvatar source={{ uri: data.user.avatar_url }} />
-          <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
-            <PostCommentTouchableText>Adicionar comentário</PostCommentTouchableText>
-          </PostCommentTouchable>
-        </PostCommentTouchableContainer>
+          <Animated.View style={commentSectionStyle}>
+            <PostCommentTouchableContainer>
+              <PostCommentUserAvatar source={{ uri: data.user.avatar_url }} />
+              <PostCommentTouchable onPress={() => navigate('PostComments', { post_id: post.id })}>
+                <PostCommentTouchableText>Adicionar comentário...</PostCommentTouchableText>
+              </PostCommentTouchable>
+            </PostCommentTouchableContainer>
+          </Animated.View>
+
+          <Spacer size={8} />
+
+          <Animated.View style={createdAtSectionStyle}>
+            <CreatedAtContainer>
+              <CreatedAtText>{createdAtPostFormatDistance}</CreatedAtText>
+            </CreatedAtContainer>
+          </Animated.View>
+
+        </View>
       )}
     </Container>
   )
