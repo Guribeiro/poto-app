@@ -29,7 +29,7 @@ const Username = ({
           <Ionicons
             name="at-outline"
             size={22}
-            color={theme.palette.colors.texts.medium}
+            color={theme.palette.colors.white}
           />
         </AtSignContainer>
         <InputText>{children}</InputText>
