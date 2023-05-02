@@ -15,6 +15,8 @@ export const Container = styled(View)`
 
 export const Header = styled(View)`
   flex-direction: row;
+  padding: ${({ theme }) => theme.screen.rem(.5)}px
+  ${({ theme }) => theme.screen.rem(.3)}px;
 `;
 
 export const UserProfile = styled(View)`
@@ -22,11 +24,9 @@ export const UserProfile = styled(View)`
 
   flex-direction: row;
   align-items: center;
-  padding: ${({ theme }) => theme.screen.rem(1)}px ${({ theme }) => theme.screen.rem(.8)}px;
 `;
 
 export const MoreHorizontalTouchable = styled(TouchableOpacity)`
-  padding: ${({ theme }) => theme.screen.rem(1)}px;
   align-items: center;
   justify-content: center;
 `
@@ -48,17 +48,17 @@ export const PostImageContainer = styled(View)`
 
 export const PostImage = styled(Image)`
   width: 100%;
-  /* height: ${({ theme }) => theme.screen.rem(17.0625)}px; */
   height: 100%;
 `;
 
 export const Icon = styled(Feather) <IconProps>`
   color: ${({ theme }) => theme.palette.colors.white};
-  font-size: ${({ theme }) => theme.screen.rem(1.4, true)}px;
+  font-size: ${({ theme }) => theme.screen.rem(1.5, true)}px;
 
   ${({ isLiked, theme }) => isLiked && css`
     color: ${theme.palette.colors.red};
   `}
+
 `;
 
 export const HeartLikeImage = styled(Image)`
@@ -70,11 +70,10 @@ export const HeartLikeImage = styled(Image)`
 export const InteractionContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  padding: ${({ theme }) => theme.screen.rem(.5)}px  ${({ theme }) => theme.screen.rem(.3)}px 0;
+
 `;
 
 export const PostSubtitleContainer = styled.View`
-  padding: ${({ theme }) => theme.screen.rem(.5)}px ${({ theme }) => theme.screen.rem(.8)}px;
 `;
 
 export const PostOwnerName = styled(Text)`
@@ -86,7 +85,6 @@ export const PostSubtitleText = styled(Text)`
 `;
 
 export const CreatedAtContainer = styled.View`
-  padding: 0 ${({ theme }) => theme.screen.rem(.8)}px;
 `;
 
 export const CreatedAtText = styled(Text)`
@@ -95,7 +93,6 @@ export const CreatedAtText = styled(Text)`
 `;
 
 export const PostCommentTouchableContainer = styled(View)`
-  padding: ${({ theme }) => theme.screen.rem(.5)}px;
   flex-direction: row;
   align-items: center;
 `

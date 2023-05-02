@@ -4,7 +4,6 @@ import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
 
 export const Container = styled(TouchableOpacity)`
-  padding: ${({ theme }) => theme.screen.rem(.5)}px;
 `;
 
 export const Icon = styled(Feather)`

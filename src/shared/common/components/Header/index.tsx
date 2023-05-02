@@ -23,7 +23,6 @@ export const HeaderContent = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: ${({theme}) => theme.screen.rem(1)}px;
 `;
 
 export const TouchableContainer = styled(View)`

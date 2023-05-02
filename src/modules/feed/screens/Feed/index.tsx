@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
-import { RefreshControl, ActivityIndicator, View } from 'react-native';
+import { RefreshControl, ActivityIndicator, View, ViewToken } from 'react-native';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -30,7 +30,7 @@ import {
 } from './styles';
 import { FeedState } from '@shared/store/ducks/feed/types';
 import { useLocation } from '@shared/hooks/location';
-import { useSelectMediaModal } from '@modules/feed/hooks/selectMediaModal';
+import { Post as PostType } from '@shared/store/ducks/posts/types';
 
 interface StateProps {
   feed: FeedState;
@@ -45,11 +45,15 @@ type FeedScreenProps = NativeStackNavigationProp<RootFeedParamsList, 'Feed'>;
 
 type FeedProps = StateProps & DispatchProps;
 
+export type OnViewableItemsChanged = {
+  viewableItems: ViewToken[]
+}
+
 const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   const [page, setPage] = useState(0);
+  const [visibleItem, setVisibleItem] = useState<undefined | PostType>();
 
   const { theme } = useTheme();
-  const { openSelectImageModal } = useSelectMediaModal();
 
   const { location } = useLocation();
 
@@ -69,6 +73,25 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
   //   return <FullScreenLoading />
   // }
 
+  const onViewableItemsChanged = ({
+    viewableItems
+  }:OnViewableItemsChanged) => {
+    viewableItems.forEach(item => {
+      if (item.isViewable) {
+        setVisibleItem(item.item);
+      } else {
+        console.log(`Component with id ${item.item.id} is not visible`)
+      }
+    });
+  };
+
+  const viewabilityConfig = {
+    minimumViewTime: 3000,
+    viewAreaCoveragePercentThreshold: 80
+  }
+
+  const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }])
+
   return (
     <Container>
       <Header>
@@ -77,9 +100,6 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
           <HeaderWelcomeTextEmphasized>moments</HeaderWelcomeTextEmphasized>
         </HeaderWelcomeText>
         <ButtonsContainer>
-          <Touchable onPress={openSelectImageModal}>
-            <Icon name='plus-square' />
-          </Touchable>
           <Touchable>
             <Icon name='user' />
           </Touchable>
@@ -91,10 +111,13 @@ const Feed = ({ feed, loadFeed, refreshFeed }: FeedProps): JSX.Element => {
 
       <PostsList
         data={data}
-        renderItem={({ item }) => <Post post={item} />}
+        renderItem={({ item }) => <Post post={item} visibleItem={visibleItem} />}
         keyExtractor={item => item.id}
         onEndReachedThreshold={.7}
         scrollEventThrottle={16}
+        viewabilityConfigCallbackPairs={
+          viewabilityConfigCallbackPairs.current
+        }
         refreshControl={
           <RefreshControl
             refreshing={loading}
